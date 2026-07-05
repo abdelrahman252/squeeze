@@ -1,6 +1,6 @@
 import { LayoutGroup, motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 import { Titlebar } from "@/components/titlebar/Titlebar";
 import { Dropzone } from "@/components/dropzone/Dropzone";
 import { FileList } from "@/components/filelist/FileList";
@@ -15,6 +15,7 @@ import { useShortcuts } from "@/hooks/useShortcuts";
 import { useJobsStore } from "@/store/jobs";
 import { useTranslation } from "@/lib/i18n";
 import { useUiStore } from "@/store/ui";
+import { check } from "@tauri-apps/plugin-updater";
 
 export default function App() {
   const { isRtl } = useTranslation();
@@ -46,6 +47,33 @@ export default function App() {
     };
     window.addEventListener("squeeze-auto-squeeze", handleAutoSqueeze);
     return () => window.removeEventListener("squeeze-auto-squeeze", handleAutoSqueeze);
+  }, []);
+
+  useEffect(() => {
+    async function runUpdateCheck() {
+      if (typeof window === "undefined" || !(window as any).__TAURI_INTERNALS__ || !(window as any).__TAURI_INTERNALS__.metadata) {
+        return;
+      }
+      try {
+        const update = await check();
+        if (update) {
+          const yes = window.confirm(
+            `A new version (v${update.version}) is available. Would you like Squeeze to download and install it now?`
+          );
+          if (yes) {
+            toast.info("Downloading update in the background...");
+            await update.downloadAndInstall();
+            alert("Update installed successfully! Please restart Squeeze to apply the update.");
+          }
+        }
+      } catch (err) {
+        console.error("Update check failed:", err);
+      }
+    }
+    const timer = setTimeout(() => {
+      void runUpdateCheck();
+    }, 2000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
