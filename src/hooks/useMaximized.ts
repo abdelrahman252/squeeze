@@ -5,14 +5,23 @@ export function useMaximized(): boolean {
   const [maximized, setMaximized] = useState(false);
 
   useEffect(() => {
-    const win = getCurrentWindow();
-    win.isMaximized().then(setMaximized);
-    const unlisten = win.onResized(async () => {
-      setMaximized(await win.isMaximized());
-    });
-    return () => {
-      unlisten.then((f) => f());
-    };
+    if (typeof window === "undefined" || !(window as any).__TAURI_INTERNALS__ || !(window as any).__TAURI_INTERNALS__.metadata) {
+      return;
+    }
+    try {
+      const win = getCurrentWindow();
+      win.isMaximized().then(setMaximized).catch(() => {});
+      const unlisten = win.onResized(async () => {
+        try {
+          setMaximized(await win.isMaximized());
+        } catch {}
+      });
+      return () => {
+        unlisten.then((f) => f()).catch(() => {});
+      };
+    } catch (e) {
+      console.warn("Tauri window APIs not available:", e);
+    }
   }, []);
 
   return maximized;

@@ -62,27 +62,34 @@ export function useDragDrop() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined" || !(window as any).__TAURI_INTERNALS__ || !(window as any).__TAURI_INTERNALS__.metadata) {
+      return;
+    }
     let unlisten: (() => void) | undefined;
     let mounted = true;
     const setup = async () => {
-      const win = getCurrentWebviewWindow();
-      const u = await win.onDragDropEvent((event) => {
-        if (event.payload.type === "over" || event.payload.type === "enter") {
-          setIsDraggingOver(true);
-        } else if (event.payload.type === "leave") {
-          setIsDraggingOver(false);
-        } else if (event.payload.type === "drop") {
-          setIsDraggingOver(false);
-          const rawPaths = event.payload.paths;
-          if (rawPaths && rawPaths.length > 0) {
-            void enqueuePaths(rawPaths);
+      try {
+        const win = getCurrentWebviewWindow();
+        const u = await win.onDragDropEvent((event) => {
+          if (event.payload.type === "over" || event.payload.type === "enter") {
+            setIsDraggingOver(true);
+          } else if (event.payload.type === "leave") {
+            setIsDraggingOver(false);
+          } else if (event.payload.type === "drop") {
+            setIsDraggingOver(false);
+            const rawPaths = event.payload.paths;
+            if (rawPaths && rawPaths.length > 0) {
+              void enqueuePaths(rawPaths);
+            }
           }
+        });
+        if (!mounted) {
+          u();
+        } else {
+          unlisten = u;
         }
-      });
-      if (!mounted) {
-        u();
-      } else {
-        unlisten = u;
+      } catch (e) {
+        console.warn("Tauri drag-drop APIs not available:", e);
       }
     };
     void setup();

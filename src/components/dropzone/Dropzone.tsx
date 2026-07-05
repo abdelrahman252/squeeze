@@ -24,6 +24,10 @@ interface DropzoneProps {
 export function Dropzone({ isDraggingOver, hasFiles }: DropzoneProps) {
 
   async function handleOpenDialog() {
+    if (typeof window === "undefined" || !(window as any).__TAURI_INTERNALS__ || !(window as any).__TAURI_INTERNALS__.metadata) {
+      alert("Opening files is only supported when running the Squeeze Desktop App!");
+      return;
+    }
     const selected = await open({
       multiple: true,
       filters: [

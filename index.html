@@ -5,6 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Squeeze</title>
+    <script>
+      // Mock Tauri globals in the browser to prevent crashes when running outside the Tauri container
+      if (typeof window !== 'undefined' && !window.__TAURI_INTERNALS__) {
+        window.__TAURI_INTERNALS__ = {
+          metadata: {},
+          plugins: {}
+        };
+      }
+    </script>
   </head>
 
   <body>
