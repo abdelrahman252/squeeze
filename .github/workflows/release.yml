@@ -53,8 +53,11 @@ jobs:
       - name: Build & publish
         uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
         with:
+          owner: abdelrahman252
+          repo: squeeze-releases
           tagName: ${{ github.ref_name }}
           releaseName: "Squeeze ${{ github.ref_name }}"
           releaseBody: "See CHANGELOG for details."

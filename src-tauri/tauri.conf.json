@@ -63,7 +63,7 @@
   "plugins": {
     "updater": {
       "endpoints": [
-        "https://raw.githubusercontent.com/abdelrahman252/squeeze/main/updater.json"
+        "https://github.com/abdelrahman252/squeeze-releases/releases/latest/download/updater.json"
       ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDYzQjRFMzRDMzlCMDIzMEIKUldRTEk3QTVUT08wWStDNUdIT2JjMEl0Y3F0MUQxVmRZaHRtT0dmNzlkNlluNDRud0xyNHVSSVMK"
     }
