@@ -67,7 +67,7 @@ export function AdvancedDrawer() {
                   className={`
                     flex-1 py-3 text-sm font-medium transition-colors cursor-pointer
                     ${activeTab === tab.id
-                      ? "text-indigo-400 border-b-2 border-indigo-500"
+                      ? "text-emerald-400 border-b-2 border-emerald-500"
                       : "text-text-sub hover:text-main"
                     }
                   `}
@@ -92,7 +92,7 @@ export function AdvancedDrawer() {
                     max="16"
                     value={parallelJobs}
                     onChange={(e) => useSettingsStore.getState().patch({ parallelJobs: parseInt(e.target.value) })}
-                    className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-emerald-500"
                   />
                 </div>
 
@@ -101,7 +101,7 @@ export function AdvancedDrawer() {
                   <label className="block text-sm text-text-sub mb-2">{t("targetFileSizeOptional")}</label>
                   <div className="flex gap-2">
                     <select
-                      value={targetFileSize?.mode ?? "absolute"}
+                       value={targetFileSize?.mode ?? "absolute"}
                       onChange={(e) =>
                         useSettingsStore.getState().patch({
                           targetFileSize: {
@@ -110,7 +110,7 @@ export function AdvancedDrawer() {
                           },
                         })
                       }
-                      className="bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500"
+                      className="bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-emerald-500"
                     >
                       <option value="absolute" className="bg-bg-app">MB</option>
                       <option value="percent" className="bg-bg-app">%</option>
@@ -127,7 +127,7 @@ export function AdvancedDrawer() {
                         })
                       }
                       placeholder={t("none")}
-                      className="flex-1 bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-indigo-500"
+                      className="flex-1 bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-emerald-500"
                     />
                   </div>
                 </div>

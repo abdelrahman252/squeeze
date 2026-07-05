@@ -193,7 +193,7 @@ export function QueueTotalBanner() {
         {allReady && (
           <>
             <span className="text-zinc-600">→</span>
-            <span className="font-mono text-indigo-400 font-medium">
+            <span className="font-mono text-emerald-400 font-medium">
               {formatBytes(totalEstimated)}
             </span>
             {savedPct !== undefined && savedPct > 0 && (

@@ -30,7 +30,7 @@ export function TypeFilterChips({ counts, active, onSelect }: Props) {
           className={cn(
             "flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors cursor-pointer",
             active === chip.value
-              ? "bg-indigo-600 text-white"
+              ? "bg-emerald-600 text-white"
               : "bg-bg-panel text-text-sub hover:bg-bg-panel-hover hover:text-main border border-border-sub"
           )}
         >
@@ -38,7 +38,7 @@ export function TypeFilterChips({ counts, active, onSelect }: Props) {
           <span
             className={cn(
               "text-[10px] font-semibold",
-              active === chip.value ? "text-indigo-200" : "text-text-sub"
+              active === chip.value ? "text-emerald-200" : "text-text-sub"
             )}
           >
             {counts[chip.value]}

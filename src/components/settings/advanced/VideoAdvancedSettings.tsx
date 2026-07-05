@@ -13,7 +13,7 @@ export function VideoAdvancedSettings() {
         <select
           value={settings?.codec ?? "h264"}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ codec: e.target.value as "h264" | "h265" | "av1" })}
-          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500 cursor-pointer"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-emerald-500 cursor-pointer"
         >
           <option value="h264" className="bg-bg-app">H.264</option>
           <option value="h265" className="bg-bg-app">H.265 (HEVC)</option>
@@ -32,7 +32,7 @@ export function VideoAdvancedSettings() {
           max="51"
           value={settings?.crf ?? 23}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ crf: parseInt(e.target.value) })}
-          className="w-full accent-indigo-500 cursor-pointer"
+          className="w-full accent-emerald-500 cursor-pointer"
         />
         <div className="flex justify-between text-xs text-text-sub mt-1">
           <span>0 ({t("lossless")})</span>
@@ -46,7 +46,7 @@ export function VideoAdvancedSettings() {
         <select
           value={settings?.targetResolution ?? "original"}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ targetResolution: e.target.value as "original" | "4k" | "1080p" | "720p" | "480p" | "custom" })}
-          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500 cursor-pointer"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-emerald-500 cursor-pointer"
         >
           <option value="original" className="bg-bg-app">{t("originalRes")}</option>
           <option value="4k" className="bg-bg-app">4K (2160p)</option>
@@ -65,7 +65,7 @@ export function VideoAdvancedSettings() {
           value={settings?.fps ?? ""}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ fps: e.target.value ? parseInt(e.target.value) : undefined })}
           placeholder={t("noCap")}
-          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-indigo-500"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-emerald-500"
         />
       </div>
 
@@ -75,7 +75,7 @@ export function VideoAdvancedSettings() {
         <select
           value={settings?.hwEncoder ?? "auto"}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ hwEncoder: e.target.value as "auto" | "nvenc" | "qsv" | "amf" | "none" })}
-          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500 cursor-pointer"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-emerald-500 cursor-pointer"
         >
           <option value="auto" className="bg-bg-app">{t("default")}</option>
           <option value="nvenc" className="bg-bg-app">NVENC (NVIDIA)</option>
@@ -92,7 +92,7 @@ export function VideoAdvancedSettings() {
           type="number"
           value={settings?.audioKbps ?? 128}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ audioKbps: parseInt(e.target.value) })}
-          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-emerald-500"
         />
       </div>
 
@@ -103,7 +103,7 @@ export function VideoAdvancedSettings() {
           id="faststart"
           checked={settings?.faststart ?? true}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ faststart: e.target.checked })}
-          className="accent-indigo-500 cursor-pointer"
+          className="accent-emerald-500 cursor-pointer"
         />
         <label htmlFor="faststart" className="text-sm text-main cursor-pointer">{t("faststartLabel")} ({t("webPlayback")})</label>
       </div>
@@ -115,7 +115,7 @@ export function VideoAdvancedSettings() {
           id="strip-metadata"
           checked={settings?.stripMetadata ?? false}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ stripMetadata: e.target.checked })}
-          className="accent-indigo-500 cursor-pointer"
+          className="accent-emerald-500 cursor-pointer"
         />
         <label htmlFor="strip-metadata" className="text-sm text-main cursor-pointer">{t("stripMetadataLabel")}</label>
       </div>

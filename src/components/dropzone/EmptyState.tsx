@@ -5,7 +5,7 @@ export function EmptyState({ isDraggingOver }: { isDraggingOver: boolean }) {
   return (
     <div className="flex flex-col items-center justify-center gap-2">
       <p className="text-zinc-400 text-base font-medium transition-colors">
-        {isDraggingOver ? <span className="text-indigo-400">{t("releaseToAdd")}</span> : t("dropFilesHere")}
+        {isDraggingOver ? <span className="text-emerald-400">{t("releaseToAdd")}</span> : t("dropFilesHere")}
       </p>
       <p className="text-zinc-500 text-sm">{t("videoAudioImagePdf")}</p>
     </div>

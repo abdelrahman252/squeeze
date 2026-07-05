@@ -95,7 +95,7 @@ export function Dropzone({ isDraggingOver, hasFiles }: DropzoneProps) {
                 "flex flex-col flex-1 items-center justify-center gap-4 min-h-[260px]",
                 "rounded-xl border-2 border-dashed transition-colors",
                 isDraggingOver
-                  ? "border-indigo-500 bg-indigo-950/30 shadow-lg shadow-indigo-500/20"
+                  ? "border-emerald-500 bg-emerald-950/30 shadow-lg shadow-emerald-500/20"
                   : "border-border-main hover:border-zinc-500"
               )}
             >
@@ -127,7 +127,7 @@ export function Dropzone({ isDraggingOver, hasFiles }: DropzoneProps) {
             className={cn(
               "flex items-center justify-between h-full px-3 py-2 rounded-xl border transition-colors",
               isDraggingOver
-                ? "border-indigo-500 bg-indigo-950/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+                ? "border-emerald-500 bg-emerald-950/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
                 : "border-border-main bg-bg-panel"
             )}
           >
@@ -135,7 +135,7 @@ export function Dropzone({ isDraggingOver, hasFiles }: DropzoneProps) {
               <motion.div animate={{ y: isDraggingOver ? -2 : 0, opacity: isDraggingOver ? 1 : 0.5 }}>
                 <Upload className="h-4 w-4" />
               </motion.div>
-              {isDraggingOver ? <span className="text-indigo-400">{t("releaseToAddEllipsis")}</span> : t("dropFilesAnywhere")}
+              {isDraggingOver ? <span className="text-emerald-400">{t("releaseToAddEllipsis")}</span> : t("dropFilesAnywhere")}
             </span>
             <div className="flex items-center gap-2">
               <button

@@ -35,7 +35,7 @@ function PresetCard({
       className={`
         relative flex-1 min-w-[140px] p-2.5 rounded-xl border transition-all text-start
         ${isSelected
-          ? "border-indigo-500 bg-indigo-950/30 shadow-lg shadow-indigo-500/10"
+          ? "border-emerald-500 bg-emerald-950/30 shadow-lg shadow-emerald-500/10"
           : "border-border-main bg-bg-panel hover:border-zinc-500 hover:bg-bg-panel-hover"
         }
         ${isDisabled ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}
@@ -44,19 +44,19 @@ function PresetCard({
     >
       {isSelected && (
         <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2">
-          <div className="bg-indigo-500 rounded-full p-1">
+          <div className="bg-emerald-500 rounded-full p-1">
             <Check className="h-3 w-3 text-white" />
           </div>
         </div>
       )}
       {isDefault && !isSelected && (
         <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2">
-          <Zap className="h-3.5 w-3.5 text-indigo-400" />
+          <Zap className="h-3.5 w-3.5 text-emerald-400" />
         </div>
       )}
       <div className="font-semibold text-main text-sm mb-1">{t(labelKey)}</div>
       <div className="text-xs text-text-sub mb-1">{t(subtitleKey as any) || t("presetRecDesc")}</div>
-      <div className="font-mono text-xs text-indigo-400 font-medium">
+      <div className="font-mono text-xs text-emerald-400 font-medium">
         {estimate}
       </div>
     </button>

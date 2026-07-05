@@ -63,7 +63,7 @@ export function OutputControls() {
       <select
         value={outputMode}
         onChange={(e) => handleModeChange(e.target.value as OutputMode)}
-        className="bg-bg-panel border border-border-main rounded-lg px-2 py-1.5 text-xs text-main focus:outline-none focus:border-indigo-500 cursor-pointer shrink-0 max-w-[140px] truncate"
+        className="bg-bg-panel border border-border-main rounded-lg px-2 py-1.5 text-xs text-main focus:outline-none focus:border-emerald-500 cursor-pointer shrink-0 max-w-[140px] truncate"
       >
         {modes.map((mode) => (
           <option key={mode.id} value={mode.id} className="bg-bg-app">
@@ -79,7 +79,7 @@ export function OutputControls() {
         onChange={(e) =>
           useSettingsStore.getState().patch({ filenamePattern: e.target.value })
         }
-        className="flex-1 bg-bg-panel border border-border-main rounded-lg px-2 py-1.5 text-xs text-main placeholder-text-sub focus:outline-none focus:border-indigo-500"
+        className="flex-1 bg-bg-panel border border-border-main rounded-lg px-2 py-1.5 text-xs text-main placeholder-text-sub focus:outline-none focus:border-emerald-500"
         placeholder="{name}_squeeze{ext}"
       />
 
@@ -91,7 +91,7 @@ export function OutputControls() {
           px-5 py-2 rounded-lg font-bold text-sm flex items-center gap-1.5 transition-all shrink-0 cursor-pointer
           ${!canSqueeze
             ? "bg-bg-card text-text-sub opacity-50 cursor-not-allowed"
-            : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30"
+            : "bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30"
           }
         `}
       >

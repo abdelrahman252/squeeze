@@ -13,7 +13,7 @@ export function PdfAdvancedSettings() {
         <select
           value={settings?.preset ?? "ebook"}
           onChange={(e) => useSettingsStore.getState().patchPdfAdvanced({ preset: e.target.value as "screen" | "ebook" | "printer" | "prepress" })}
-          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500 cursor-pointer"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-emerald-500 cursor-pointer"
         >
           <option value="screen" className="bg-bg-app">/screen (72 dpi, {t("presetLess").toLowerCase()})</option>
           <option value="ebook" className="bg-bg-app">/ebook (150 dpi, {t("presetRecommended").toLowerCase()})</option>
@@ -30,7 +30,7 @@ export function PdfAdvancedSettings() {
           value={settings?.dpi ?? ""}
           onChange={(e) => useSettingsStore.getState().patchPdfAdvanced({ dpi: e.target.value ? parseInt(e.target.value) : undefined })}
           placeholder={t("default")}
-          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-indigo-500"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-emerald-500"
         />
       </div>
 
@@ -42,7 +42,7 @@ export function PdfAdvancedSettings() {
           value={settings?.downsampleThreshold ?? ""}
           onChange={(e) => useSettingsStore.getState().patchPdfAdvanced({ downsampleThreshold: e.target.value ? parseInt(e.target.value) : undefined })}
           placeholder={t("default")}
-          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-indigo-500"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-emerald-500"
         />
         <p className="text-xs text-text-sub mt-1">{t("downsampleDesc")}</p>
       </div>

@@ -139,10 +139,10 @@ export function JobRow({ jobId }: { jobId: string }) {
           <div className="mt-1 flex flex-col gap-0.5">
             <div className="h-1 w-full rounded-full bg-bg-card overflow-hidden">
               {(job.kind === "image" || job.kind === "pdf") ? (
-                <div className="h-full w-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 bg-[length:200%_100%] animate-[pulse_1.5s_ease-in-out_infinite]" />
+                <div className="h-full w-full rounded-full bg-gradient-to-r from-emerald-500 via-cyan-500 to-emerald-500 bg-[length:200%_100%] animate-[pulse_1.5s_ease-in-out_infinite]" />
               ) : (
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-[width] duration-300"
+                  className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-[width] duration-300"
                   style={{ width: `${job.progress ?? 0}%` }}
                 />
               )}
@@ -169,7 +169,7 @@ export function JobRow({ jobId }: { jobId: string }) {
       {estimateLabel && (
         <span className={cn(
           "font-mono text-xs font-medium whitespace-nowrap tabular-nums shrink-0 self-start mt-0.5",
-          isProbing ? "text-text-sub animate-pulse italic" : "text-indigo-400"
+          isProbing ? "text-text-sub animate-pulse italic" : "text-emerald-400"
         )}>
           {isProbing ? t("statusAnalyzing") : estimateLabel}
         </span>
@@ -241,7 +241,7 @@ function JobRowSettings({ jobId }: { jobId: string }) {
           <select 
             value={overrides.targetFileSize || ""} 
             onChange={e => update({ targetFileSize: e.target.value ? parseInt(e.target.value) : undefined })}
-            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
+            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
           >
             <option value="" className="bg-bg-app">{t("none")}</option>
             <option value="8" className="bg-bg-app">8MB (Discord)</option>
@@ -255,7 +255,7 @@ function JobRowSettings({ jobId }: { jobId: string }) {
           <select 
             value={overrides.codec || ""} 
             onChange={e => update({ codec: e.target.value || undefined })}
-            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
+            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
           >
             <option value="" className="bg-bg-app">{t("default")}</option>
             <option value="h264" className="bg-bg-app">H.264</option>
@@ -268,7 +268,7 @@ function JobRowSettings({ jobId }: { jobId: string }) {
           <select 
             value={overrides.targetFormat || ""} 
             onChange={e => update({ targetFormat: e.target.value || undefined })}
-            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
+            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
           >
             <option value="" className="bg-bg-app">{t("original")}</option>
             <option value="mp4" className="bg-bg-app">MP4</option>
@@ -287,7 +287,7 @@ function JobRowSettings({ jobId }: { jobId: string }) {
           <select 
             value={overrides.targetFormat || ""} 
             onChange={e => update({ targetFormat: e.target.value || undefined })}
-            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
+            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
           >
             <option value="" className="bg-bg-app">{t("original")}</option>
             <option value="jpeg" className="bg-bg-app">JPEG</option>
@@ -301,7 +301,7 @@ function JobRowSettings({ jobId }: { jobId: string }) {
               type="checkbox" 
               checked={overrides.resize !== false} 
               onChange={e => update({ resize: e.target.checked })} 
-              className="peer appearance-none w-4 h-4 rounded-[4px] border border-border-main bg-bg-app checked:bg-indigo-500 checked:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all cursor-pointer"
+              className="peer appearance-none w-4 h-4 rounded-[4px] border border-border-main bg-bg-app checked:bg-emerald-500 checked:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all cursor-pointer"
             />
             <svg className="absolute w-3 h-3 text-white left-0.5 top-0.5 pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 14 14" fill="none">
               <path d="M3 8L6 11L11 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -321,7 +321,7 @@ function JobRowSettings({ jobId }: { jobId: string }) {
           <select 
             value={overrides.preset || ""} 
             onChange={e => update({ preset: (e.target.value as CompressionPreset) || undefined })}
-            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
+            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
           >
             <option value="" className="bg-bg-app">{t("useGlobalPreset")}</option>
             <option value="less" className="bg-bg-app">{t("presetLess")}</option>
@@ -334,7 +334,7 @@ function JobRowSettings({ jobId }: { jobId: string }) {
           <select 
             value={overrides.targetFormat || ""} 
             onChange={e => update({ targetFormat: e.target.value || undefined })}
-            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
+            className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
           >
             <option value="" className="bg-bg-app">{t("original")}</option>
             <option value="mp3" className="bg-bg-app">MP3</option>
@@ -354,7 +354,7 @@ function JobRowSettings({ jobId }: { jobId: string }) {
         <select 
           value={overrides.preset || ""} 
           onChange={e => update({ preset: (e.target.value as CompressionPreset) || undefined })}
-          className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
+          className="bg-bg-app border border-border-main rounded-md px-2 py-1.5 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer hover:border-zinc-500 text-main"
         >
           <option value="" className="bg-bg-app">{t("useGlobalPreset")}</option>
           <option value="less" className="bg-bg-app">{t("presetLess")}</option>
