@@ -13,8 +13,12 @@ import { useMaximized } from "@/hooks/useMaximized";
 import { useDragDrop } from "@/hooks/useDragDrop";
 import { useShortcuts } from "@/hooks/useShortcuts";
 import { useJobsStore } from "@/store/jobs";
+import { useTranslation } from "@/lib/i18n";
+import { useUiStore } from "@/store/ui";
 
 export default function App() {
+  const { isRtl } = useTranslation();
+  const theme = useUiStore((s) => s.theme);
   const maximized  = useMaximized();
   useShortcuts();
   const { isDraggingOver, onDragOver, onDragLeave, onDrop } = useDragDrop();
@@ -46,7 +50,8 @@ export default function App() {
 
   return (
     <div
-      className={`flex flex-col h-screen bg-zinc-950 text-zinc-100 overflow-hidden ${
+      dir={isRtl ? "rtl" : "ltr"}
+      className={`${theme} flex flex-col h-screen bg-app text-main overflow-hidden ${
         maximized ? "" : "rounded-xl"
       }`}
     >

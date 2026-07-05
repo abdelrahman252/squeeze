@@ -6,7 +6,10 @@ import type { FileKind, Job } from "@/types";
 import { TypeFilterChips } from "./TypeFilterChips";
 import { JobRow } from "./JobRow";
 
+import { useTranslation } from "@/lib/i18n";
+
 export function FileList() {
+  const { t } = useTranslation();
   const storeJobIds = useAllJobIds();
   const storeJobs   = useJobsStore((s) => s.jobs);
   const [activeFilter, setActiveFilter] = useState<FileKind | "all">("all");
@@ -40,6 +43,17 @@ export function FileList() {
     activeFilter === "all"
       ? jobIds
       : jobIds.filter((id) => jobs[id]?.kind === activeFilter);
+
+  const getEmptyLabel = () => {
+    switch (activeFilter) {
+      case "video": return t("noFilesFilterVideo");
+      case "audio": return t("noFilesFilterAudio");
+      case "image": return t("noFilesFilterImage");
+      case "pdf": return t("noFilesFilterPdf");
+      default: return t("noFilesFilterAll");
+    }
+  };
+
   return (
     // flex-col flex-1 min-h-0 — required by smol-flex-scroll-fix skill
     <div className="flex flex-col flex-1 min-h-0 mx-3 mb-3">
@@ -66,8 +80,8 @@ export function FileList() {
           </AnimatePresence>
 
           {visibleIds.length === 0 && (
-            <p className="text-center text-zinc-600 text-sm py-8">
-              No {activeFilter} files in queue
+            <p className="text-center text-text-sub text-sm py-8">
+              {getEmptyLabel()}
             </p>
           )}
         </div>

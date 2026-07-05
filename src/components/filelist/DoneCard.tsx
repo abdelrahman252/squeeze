@@ -7,6 +7,7 @@ import { useJobsStore } from "@/store/jobs";
 import { PreviewModal } from "./../results/PreviewModal";
 import { Thumbnail } from "./Thumbnail";
 import type { Job } from "@/types";
+import { useTranslation } from "@/lib/i18n";
 
 // ── Animated SVG checkmark ────────────────────────────────────────────────────
 // Circle outline draws in, then the tick draws in 150 ms later.
@@ -71,6 +72,7 @@ function useCountUp(target: number, duration = 900): number {
 // ── Done card ─────────────────────────────────────────────────────────────────
 
 export function DoneCard({ job }: { job: Job }) {
+  const { t, isRtl } = useTranslation();
   const outputLarger =
     job.outputBytes === undefined || job.outputBytes >= job.inputBytes;
 
@@ -90,7 +92,7 @@ export function DoneCard({ job }: { job: Job }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
-      className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-zinc-900/30 border border-emerald-900/25 group"
+      className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-bg-panel border border-emerald-800/20 group"
       onMouseEnter={() => useJobsStore.getState().setHoveredJob(job.id)}
       onMouseLeave={() => useJobsStore.getState().setHoveredJob(null)}
     >
@@ -101,41 +103,41 @@ export function DoneCard({ job }: { job: Job }) {
       {/* Name + parent directory */}
       <div className="flex flex-col flex-1 min-w-0">
         <span
-          className="text-sm font-medium text-zinc-400 truncate"
+          className="text-sm font-medium text-main truncate"
           title={job.name}
         >
           {displayName}
         </span>
         {dir && (
-          <span className="text-[10px] text-zinc-600 truncate">{dir}</span>
+          <span className="text-[10px] text-text-sub truncate">{dir}</span>
         )}
       </div>
 
       {/* Savings info: input → output · saved X% */}
       {!outputLarger && job.outputBytes !== undefined ? (
         <div className="flex items-center gap-1.5 shrink-0 font-mono text-xs tabular-nums">
-          <span className="text-zinc-500">
+          <span className="text-text-sub">
             {formatBytesExact(job.inputBytes)}
           </span>
-          <span className="text-zinc-700">→</span>
+          <span className="text-text-sub">→</span>
           <span className="text-emerald-400 font-medium">
             {formatBytesExact(job.outputBytes)}
           </span>
-          <span className="text-zinc-700">·</span>
-          <span className="text-emerald-300 font-semibold">
-            saved {animPct}%
+          <span className="text-text-sub">·</span>
+          <span className="text-emerald-400 font-semibold">
+            {isRtl ? `وفر ${animPct}%` : `saved ${animPct}%`}
           </span>
         </div>
       ) : (
         <div className="flex items-center gap-1.5 shrink-0 font-mono text-xs tabular-nums">
-          <span className="text-zinc-500">
+          <span className="text-text-sub">
             {formatBytesExact(job.inputBytes)}
           </span>
           {outputLarger && (
             <>
-              <span className="text-zinc-700">·</span>
-              <span className="text-amber-400/80 font-medium bg-amber-500/10 px-1.5 py-0.5 rounded">
-                Already optimal
+              <span className="text-text-sub">·</span>
+              <span className="text-amber-500/80 font-medium bg-amber-500/10 px-1.5 py-0.5 rounded">
+                {t("statusOptimal")}
               </span>
             </>
           )}
@@ -147,8 +149,8 @@ export function DoneCard({ job }: { job: Job }) {
         {job.kind === "image" && job.outputPath && !outputLarger && (
           <button
             onClick={() => setShowPreview(true)}
-            className="p-1 rounded hover:bg-zinc-700 text-zinc-500 hover:text-zinc-300"
-            title="Preview Before/After"
+            className="p-1 rounded hover:bg-bg-panel-hover text-text-sub hover:text-main cursor-pointer"
+            title={t("previewBeforeAfter")}
           >
             <Eye className="h-3.5 w-3.5" />
           </button>
@@ -158,18 +160,18 @@ export function DoneCard({ job }: { job: Job }) {
         {job.outputPath && (
           <button
             onClick={() => revealInExplorer(job.outputPath!).catch(() => {})}
-            className="p-1 rounded hover:bg-zinc-700 text-zinc-500 hover:text-zinc-300"
-            aria-label="Reveal in Explorer"
-            title="Reveal in Explorer"
+            className="p-1 rounded hover:bg-bg-panel-hover text-text-sub hover:text-main cursor-pointer"
+            aria-label={t("revealInExplorer")}
+            title={t("revealInExplorer")}
           >
             <FolderSearch className="h-3.5 w-3.5" />
           </button>
         )}
         <button
           onClick={() => useJobsStore.getState().removeJob(job.id)}
-          className="p-1 rounded hover:bg-zinc-700 text-zinc-500 hover:text-zinc-300"
-          aria-label="Remove file"
-          title="Remove file"
+          className="p-1 rounded hover:bg-bg-panel-hover text-text-sub hover:text-main cursor-pointer"
+          aria-label={t("removeFile")}
+          title={t("removeFile")}
         >
           <X className="h-3.5 w-3.5" />
         </button>

@@ -1,48 +1,50 @@
 import { usePdfAdvanced, useSettingsStore } from "@/store/settings";
+import { useTranslation } from "@/lib/i18n";
 
 export function PdfAdvancedSettings() {
+  const { t } = useTranslation();
   const settings = usePdfAdvanced();
 
   return (
     <div className="space-y-6">
       {/* Preset */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">Compression preset</label>
+        <label className="block text-sm font-medium text-main mb-2">{t("compressionPreset")}</label>
         <select
           value={settings?.preset ?? "ebook"}
           onChange={(e) => useSettingsStore.getState().patchPdfAdvanced({ preset: e.target.value as "screen" | "ebook" | "printer" | "prepress" })}
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500 cursor-pointer"
         >
-          <option value="screen">/screen (72 dpi, low quality)</option>
-          <option value="ebook">/ebook (150 dpi, good quality)</option>
-          <option value="printer">/printer (300 dpi, high quality)</option>
-          <option value="prepress">/prepress (300 dpi, color preserving)</option>
+          <option value="screen" className="bg-bg-app">/screen (72 dpi, {t("presetLess").toLowerCase()})</option>
+          <option value="ebook" className="bg-bg-app">/ebook (150 dpi, {t("presetRecommended").toLowerCase()})</option>
+          <option value="printer" className="bg-bg-app">/printer (300 dpi, {t("presetExtreme").toLowerCase()})</option>
+          <option value="prepress" className="bg-bg-app">/prepress (300 dpi, {t("presetLossless").toLowerCase()})</option>
         </select>
       </div>
 
       {/* DPI override */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">DPI override</label>
+        <label className="block text-sm font-medium text-main mb-2">{t("dpiOverride")}</label>
         <input
           type="number"
           value={settings?.dpi ?? ""}
           onChange={(e) => useSettingsStore.getState().patchPdfAdvanced({ dpi: e.target.value ? parseInt(e.target.value) : undefined })}
-          placeholder="Auto"
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-indigo-500"
+          placeholder={t("default")}
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-indigo-500"
         />
       </div>
 
       {/* Downsample threshold */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">Downsample threshold (dpi)</label>
+        <label className="block text-sm font-medium text-main mb-2">{t("downsampleThreshold")} (dpi)</label>
         <input
           type="number"
           value={settings?.downsampleThreshold ?? ""}
           onChange={(e) => useSettingsStore.getState().patchPdfAdvanced({ downsampleThreshold: e.target.value ? parseInt(e.target.value) : undefined })}
-          placeholder="Auto"
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-indigo-500"
+          placeholder={t("default")}
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-indigo-500"
         />
-        <p className="text-xs text-zinc-500 mt-1">Images above this DPI will be downsampled</p>
+        <p className="text-xs text-text-sub mt-1">{t("downsampleDesc")}</p>
       </div>
     </div>
   );

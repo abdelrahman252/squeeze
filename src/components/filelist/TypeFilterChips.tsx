@@ -1,18 +1,6 @@
 import { cn } from "@/lib/utils";
 import type { FileKind } from "@/types";
-
-interface Chip {
-  label: string;
-  value: FileKind | "all";
-}
-
-const CHIPS: Chip[] = [
-  { label: "All",    value: "all"   },
-  { label: "Videos", value: "video" },
-  { label: "Audio",  value: "audio" },
-  { label: "Images", value: "image" },
-  { label: "PDFs",   value: "pdf"   },
-];
+import { useTranslation } from "@/lib/i18n";
 
 interface Props {
   counts: Record<FileKind | "all", number>;
@@ -21,7 +9,17 @@ interface Props {
 }
 
 export function TypeFilterChips({ counts, active, onSelect }: Props) {
-  const visible = CHIPS.filter((c) => c.value === "all" || counts[c.value] > 0);
+  const { t } = useTranslation();
+
+  const chipsList = [
+    { labelKey: "filterAll" as const,    value: "all" as const   },
+    { labelKey: "filterVideo" as const,  value: "video" as const },
+    { labelKey: "filterAudio" as const,  value: "audio" as const },
+    { labelKey: "filterImage" as const,  value: "image" as const },
+    { labelKey: "filterPdf" as const,    value: "pdf" as const   },
+  ];
+
+  const visible = chipsList.filter((c) => c.value === "all" || counts[c.value] > 0);
 
   return (
     <div className="flex items-center gap-1.5 px-3 py-2 shrink-0 flex-wrap">
@@ -30,17 +28,17 @@ export function TypeFilterChips({ counts, active, onSelect }: Props) {
           key={chip.value}
           onClick={() => onSelect(chip.value)}
           className={cn(
-            "flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors",
+            "flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors cursor-pointer",
             active === chip.value
               ? "bg-indigo-600 text-white"
-              : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200"
+              : "bg-bg-panel text-text-sub hover:bg-bg-panel-hover hover:text-main border border-border-sub"
           )}
         >
-          {chip.label}
+          {t(chip.labelKey)}
           <span
             className={cn(
               "text-[10px] font-semibold",
-              active === chip.value ? "text-indigo-200" : "text-zinc-500"
+              active === chip.value ? "text-indigo-200" : "text-text-sub"
             )}
           >
             {counts[chip.value]}

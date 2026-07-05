@@ -16,16 +16,10 @@ import { usePreset } from "@/store/settings";
 import { formatBytes, formatBytesExact } from "@/lib/format";
 import { estimateOutputBytes } from "@/lib/estimate";
 import { revealInExplorer } from "@/lib/tauri";
+import { useTranslation } from "@/lib/i18n";
 
-/**
- * HR-7 clean: every selector returns a primitive or a direct state ref.
- *
- * Two states:
- *   1. "Estimating" — shows total input → estimated output and % savings
- *   2. "Batch complete" — fires when all active jobs are done; shows actual
- *      total savings and an "Open output folder" button.
- */
 export function QueueTotalBanner() {
+  const { t, isRtl } = useTranslation();
   const jobCount        = useJobCount();
   const totalInput      = useTotalInputBytes();
   const preset          = usePreset();
@@ -44,11 +38,10 @@ export function QueueTotalBanner() {
   if (allDone) {
     const totalSaved   = Math.max(0, totalInput - totalOutput);
     const savedLabel   = formatBytesExact(totalSaved);
-    const fileWord     = doneCount === 1 ? "file" : "files";
     const failedCount  = jobIds.filter(id => jobs[id]?.status === "failed").length;
 
     const copySummary = () => {
-      let text = `Squeeze Compression Summary:\n`;
+      let text = `${t("summaryTitle")}:\n`;
       text += `Total Input: ${formatBytesExact(totalInput)}\n`;
       text += `Total Output: ${formatBytesExact(totalOutput)}\n`;
       text += `Saved: ${savedLabel}\n`;
@@ -59,8 +52,9 @@ export function QueueTotalBanner() {
           text += `- ${j.name}: ${formatBytesExact(j.inputBytes)} -> ${formatBytesExact(j.outputBytes)}\n`;
         }
       }
-      navigator.clipboard.writeText(text).catch(() => {});
-      toast.success("Summary copied to clipboard");
+      navigator.clipboard.writeText(text)
+        .then(() => toast.success(t("copiedSummary")))
+        .catch(() => toast.error(t("failedCopySummary")));
     };
 
     return (
@@ -79,39 +73,45 @@ export function QueueTotalBanner() {
             onClick={() => setIsExpanded(!isExpanded)}
           >
             <CheckCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-            <span className="font-semibold text-emerald-300">All done!</span>
+            <span className="font-semibold text-emerald-300">
+              {isRtl ? "اكتمل الكل!" : "All done!"}
+            </span>
             <span className="text-zinc-500">·</span>
             <span className="text-zinc-300">
-              Saved{" "}
-              <span className="font-mono font-semibold text-emerald-400">
-                {savedLabel}
-              </span>{" "}
-              across{" "}
-              <span className="font-semibold text-zinc-200">{doneCount}</span>{" "}
-              {fileWord}.
+              {isRtl ? (
+                <>
+                  وفرت <span className="font-mono font-semibold text-emerald-400">{savedLabel}</span> عبر <span className="font-semibold text-zinc-200">{doneCount}</span> ملفات.
+                </>
+              ) : (
+                <>
+                  Saved <span className="font-mono font-semibold text-emerald-400">{savedLabel}</span> across <span className="font-semibold text-zinc-200">{doneCount}</span> files.
+                </>
+              )}
             </span>
             {failedCount > 0 && (
               <>
                 <span className="text-zinc-500">·</span>
-                <span className="text-red-400 font-medium">{failedCount} failed</span>
+                <span className="text-red-400 font-medium">
+                  {failedCount} {isRtl ? "فشل" : "failed"}
+                </span>
               </>
             )}
 
-            <div className="ml-auto flex items-center gap-2">
+            <div className="ms-auto flex items-center gap-2">
               <button
                 onClick={(e) => { e.stopPropagation(); copySummary(); }}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md hover:bg-emerald-800/40 text-emerald-400 hover:text-emerald-200 transition-colors shrink-0 font-medium"
-                title="Copy text summary"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md hover:bg-emerald-800/40 text-emerald-400 hover:text-emerald-200 transition-colors shrink-0 font-medium cursor-pointer"
+                title={t("copySummary")}
               >
                 <Copy className="h-3.5 w-3.5" />
               </button>
               {firstOutputPath && (
                 <button
                   onClick={(e) => { e.stopPropagation(); revealInExplorer(firstOutputPath).catch(() => {}); }}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-800/40 hover:bg-emerald-700/50 text-emerald-300 hover:text-emerald-100 transition-colors shrink-0 font-medium"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-800/40 hover:bg-emerald-700/50 text-emerald-300 hover:text-emerald-100 transition-colors shrink-0 font-medium cursor-pointer"
                 >
                   <FolderOpen className="h-3.5 w-3.5" />
-                  Open output
+                  {isRtl ? "فتح المخرج" : "Open output"}
                 </button>
               )}
               {isExpanded ? <ChevronUp className="h-4 w-4 text-emerald-500" /> : <ChevronDown className="h-4 w-4 text-emerald-500" />}
@@ -136,7 +136,7 @@ export function QueueTotalBanner() {
                       <div key={id} className="flex items-center justify-between text-[11px]">
                         <span className="text-zinc-400 truncate max-w-[200px]" title={j.name}>{j.name}</span>
                         {j.status === "failed" ? (
-                          <span className="text-red-400 font-medium">Failed</span>
+                          <span className="text-red-400 font-medium">{t("statusFailed")}</span>
                         ) : (
                           <div className="flex items-center gap-1 font-mono">
                             <span className="text-zinc-500">{formatBytesExact(j.inputBytes)}</span>
@@ -185,9 +185,9 @@ export function QueueTotalBanner() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -4 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="flex items-center gap-2 px-4 py-2 mx-3 mb-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-zinc-400 shrink-0"
+        className="flex items-center gap-2 px-4 py-2 mx-3 mb-2 rounded-lg bg-bg-panel border border-border-main text-xs text-text-sub shrink-0"
       >
-        <span className="font-medium text-zinc-300">Estimated total</span>
+        <span className="font-medium text-main">{t("estimatingTotal")}</span>
         <span className="text-zinc-600">·</span>
         <span className="font-mono">{formatBytesExact(totalInput)}</span>
         {allReady && (
@@ -199,13 +199,15 @@ export function QueueTotalBanner() {
             {savedPct !== undefined && savedPct > 0 && (
               <>
                 <span className="text-zinc-600">·</span>
-                <span className="text-emerald-400">saves ~{savedPct}%</span>
+                <span className="text-emerald-400">
+                  {isRtl ? `يوفر ~${savedPct}%` : `saves ~${savedPct}%`}
+                </span>
               </>
             )}
           </>
         )}
         {!allReady && (
-          <span className="text-zinc-600 italic">estimating…</span>
+          <span className="text-zinc-600 italic">{t("statusAnalyzing")}</span>
         )}
       </motion.div>
     </AnimatePresence>

@@ -7,20 +7,22 @@ import { VideoAdvancedSettings } from "./advanced/VideoAdvancedSettings";
 import { AudioAdvancedSettings } from "./advanced/AudioAdvancedSettings";
 import { ImageAdvancedSettings } from "./advanced/ImageAdvancedSettings";
 import { PdfAdvancedSettings } from "./advanced/PdfAdvancedSettings";
-
-const TABS = [
-  { id: "video" as const, label: "Video" },
-  { id: "audio" as const, label: "Audio" },
-  { id: "image" as const, label: "Image" },
-  { id: "pdf" as const, label: "PDF" },
-];
+import { useTranslation } from "@/lib/i18n";
 
 export function AdvancedDrawer() {
+  const { t, isRtl } = useTranslation();
   const isOpen = useUiStore((s) => s.isAdvancedOpen);
   const [activeTab, setActiveTab] = useState<"video" | "audio" | "image" | "pdf">("video");
 
   const targetFileSize = useTargetFileSize();
   const parallelJobs = useParallelJobs();
+
+  const tabsList = [
+    { id: "video" as const, labelKey: "filterVideo" as const },
+    { id: "audio" as const, labelKey: "filterAudio" as const },
+    { id: "image" as const, labelKey: "filterImage" as const },
+    { id: "pdf" as const, labelKey: "filterPdf" as const },
+  ];
 
   return (
     <AnimatePresence>
@@ -37,38 +39,40 @@ export function AdvancedDrawer() {
 
           {/* Drawer */}
           <motion.div
-            initial={{ x: "100%" }}
+            initial={{ x: isRtl ? "-100%" : "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: "100%" }}
+            exit={{ x: isRtl ? "-100%" : "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed right-0 top-0 h-full w-[384px] bg-zinc-900 shadow-2xl z-50 flex flex-col border-l border-zinc-800"
+            className={`fixed top-0 h-full w-[384px] bg-bg-panel shadow-2xl z-50 flex flex-col ${
+              isRtl ? "left-0 border-r border-border-main" : "right-0 border-l border-border-main"
+            }`}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
-              <h2 className="text-lg font-semibold text-zinc-100">Advanced Settings</h2>
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border-main">
+              <h2 className="text-lg font-semibold text-main">{t("advancedSettings")}</h2>
               <button
                 onClick={() => useUiStore.getState().setAdvancedOpen(false)}
-                className="p-1 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 transition-colors"
+                className="p-1 rounded hover:bg-bg-panel-hover text-text-sub hover:text-main transition-colors cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-zinc-800">
-              {TABS.map((tab) => (
+            <div className="flex border-b border-border-main">
+              {tabsList.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`
-                    flex-1 py-3 text-sm font-medium transition-colors
+                    flex-1 py-3 text-sm font-medium transition-colors cursor-pointer
                     ${activeTab === tab.id
                       ? "text-indigo-400 border-b-2 border-indigo-500"
-                      : "text-zinc-400 hover:text-zinc-200"
+                      : "text-text-sub hover:text-main"
                     }
                   `}
                 >
-                  {tab.label}
+                  {t(tab.labelKey)}
                 </button>
               ))}
             </div>
@@ -76,25 +80,25 @@ export function AdvancedDrawer() {
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-4">
               {/* Global settings */}
-              <div className="mb-6 pb-6 border-b border-zinc-800">
-                <h3 className="text-sm font-medium text-zinc-300 mb-4">Global</h3>
+              <div className="mb-6 pb-6 border-b border-border-main">
+                <h3 className="text-sm font-medium text-main mb-4">{t("globalLabel")}</h3>
 
                 {/* Parallel jobs */}
                 <div className="mb-4">
-                  <label className="block text-sm text-zinc-400 mb-2">Parallel jobs</label>
+                  <label className="block text-sm text-text-sub mb-2">{t("parallelJobs")}</label>
                   <input
                     type="number"
                     min="1"
                     max="16"
                     value={parallelJobs}
                     onChange={(e) => useSettingsStore.getState().patch({ parallelJobs: parseInt(e.target.value) })}
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
                 {/* Target file size */}
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-2">Target file size (optional)</label>
+                  <label className="block text-sm text-text-sub mb-2">{t("targetFileSizeOptional")}</label>
                   <div className="flex gap-2">
                     <select
                       value={targetFileSize?.mode ?? "absolute"}
@@ -106,10 +110,10 @@ export function AdvancedDrawer() {
                           },
                         })
                       }
-                      className="bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
+                      className="bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500"
                     >
-                      <option value="absolute">MB</option>
-                      <option value="percent">%</option>
+                      <option value="absolute" className="bg-bg-app">MB</option>
+                      <option value="percent" className="bg-bg-app">%</option>
                     </select>
                     <input
                       type="number"
@@ -122,8 +126,8 @@ export function AdvancedDrawer() {
                           },
                         })
                       }
-                      placeholder="None"
-                      className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-indigo-500"
+                      placeholder={t("none")}
+                      className="flex-1 bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main placeholder-text-sub focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                 </div>

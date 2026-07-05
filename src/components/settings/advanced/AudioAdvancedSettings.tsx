@@ -1,49 +1,51 @@
 import { useAudioAdvanced, useSettingsStore } from "@/store/settings";
+import { useTranslation } from "@/lib/i18n";
 
 export function AudioAdvancedSettings() {
+  const { t } = useTranslation();
   const settings = useAudioAdvanced();
 
   return (
     <div className="space-y-6">
       {/* Codec */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">Codec</label>
+        <label className="block text-sm font-medium text-main mb-2">{t("codec")}</label>
         <select
           value={settings?.codec ?? "aac"}
           onChange={(e) => useSettingsStore.getState().patchAudioAdvanced({ codec: e.target.value as "mp3" | "aac" | "opus" | "flac" | "wav" })}
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500 cursor-pointer"
         >
-          <option value="aac">AAC</option>
-          <option value="mp3">MP3</option>
-          <option value="opus">Opus</option>
-          <option value="flac">FLAC (lossless)</option>
-          <option value="wav">WAV (uncompressed)</option>
+          <option value="aac" className="bg-bg-app">AAC</option>
+          <option value="mp3" className="bg-bg-app">MP3</option>
+          <option value="opus" className="bg-bg-app">Opus</option>
+          <option value="flac" className="bg-bg-app">FLAC (lossless)</option>
+          <option value="wav" className="bg-bg-app">WAV (uncompressed)</option>
         </select>
       </div>
 
       {/* Bitrate */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">Bitrate (kbps)</label>
+        <label className="block text-sm font-medium text-main mb-2">{t("bitrateLabel")} (kbps)</label>
         <input
           type="number"
           value={settings?.kbps ?? 128}
           onChange={(e) => useSettingsStore.getState().patchAudioAdvanced({ kbps: parseInt(e.target.value) })}
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500"
         />
       </div>
 
       {/* Sample rate */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">Sample rate (Hz)</label>
+        <label className="block text-sm font-medium text-main mb-2">{t("sampleRateLabel")} (Hz)</label>
         <select
           value={settings?.sampleRate ?? ""}
           onChange={(e) => useSettingsStore.getState().patchAudioAdvanced({ sampleRate: e.target.value ? parseInt(e.target.value) : undefined })}
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
+          className="w-full bg-bg-app border border-border-main rounded-lg px-3 py-2 text-sm text-main focus:outline-none focus:border-indigo-500 cursor-pointer"
         >
-          <option value="">Auto</option>
-          <option value="48000">48000</option>
-          <option value="44100">44100</option>
-          <option value="22050">22050</option>
+          <option value="" className="bg-bg-app">{t("default")}</option>
+          <option value="48000" className="bg-bg-app">48000</option>
+          <option value="44100" className="bg-bg-app">44100</option>
+          <option value="22050" className="bg-bg-app">22050</option>
         </select>
       </div>
     </div>

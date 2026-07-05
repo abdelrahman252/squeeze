@@ -4,10 +4,28 @@
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  
+  --color-bg-app: var(--bg-app);
+  --color-bg-panel: var(--bg-panel);
+  --color-bg-panel-hover: var(--bg-panel-hover);
+  --color-bg-card: var(--bg-card);
+  --color-text-main: var(--text-main);
+  --color-text-sub: var(--text-sub);
+  --color-border-main: var(--border-main);
+  --color-border-sub: var(--border-sub);
 }
 
 @layer base {
   :root {
+    --bg-app: #09090b;
+    --bg-panel: rgba(24, 24, 27, 0.5);
+    --bg-panel-hover: #18181b;
+    --bg-card: #27272a;
+    --text-main: #f4f4f5;
+    --text-sub: #a1a1aa;
+    --border-main: #27272a;
+    --border-sub: rgba(39, 39, 42, 0.5);
+
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 7%;
@@ -29,15 +47,31 @@
     --ring: 263 70% 60%;
     --radius: 0.5rem;
   }
+
+  .light {
+    --bg-app: #fafafa;
+    --bg-panel: rgba(244, 244, 245, 0.5);
+    --bg-panel-hover: #f4f4f5;
+    --bg-card: #e4e4e7;
+    --text-main: #09090b;
+    --text-sub: #52525b;
+    --border-main: #e4e4e7;
+    --border-sub: rgba(228, 228, 230, 0.5);
+
+    --background: 240 5.9% 98%;
+    --foreground: 240 10% 3.9%;
+    --border: 240 5.9% 90%;
+  }
 }
 
 @layer base {
   * {
-    border-color: hsl(var(--border));
+    border-color: var(--border-main);
+    transition: background-color 0.15s ease, border-color 0.15s ease, text-decoration-color 0.15s ease;
   }
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background-color: var(--bg-app);
+    color: var(--text-main);
     font-family: var(--font-sans);
   }
 }
