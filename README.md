@@ -12,9 +12,8 @@
   <a href="https://github.com/abdelrahman252/squeeze/releases/latest/download/Squeeze_1.0.0_x64-setup.exe">
     <img src="https://img.shields.io/badge/⬇_Download_for_Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Download for Windows" />
   </a><br/>
-  <em>Windows 10 / 11 · 64-bit · 70 MB</em>
+  <em>Windows 10 / 11 · 64-bit · ~70 MB</em>
   <br/><br/>
-  <img src="Marketing-Assets/hero_showcase.png" alt="Squeeze , hero screenshot" width="90%" />
 </div>
 
 ---
@@ -26,7 +25,9 @@ Most compression tools make you juggle separate apps for video, audio, images, a
 | | |
 |---|---|
 | **No uploads, ever** | All compression runs locally using FFmpeg, Ghostscript, and native Rust libraries. Your files stay yours. |
-| **No codec knowledge required** | Pick from four plain-English presets. Squeeze maps them to the right encoder settings automatically. |
+| **Bilingual & RTL** | Full Arabic & English support with native Right-to-Left layout flipping for a comfortable bilingual experience. |
+| **Light & Dark Theme** | Fluid light and dark theme styling with persistent preference savings. |
+| **Secure Auto-Updates** | Integrates built-in, secure app updater checks directly from GitHub Releases. |
 | **Hardware-accelerated video** | Automatically uses your NVIDIA, Intel, or AMD GPU for video encoding , no manual setup needed. |
 | **One queue, every format** | MP4, MKV, MOV, MP3, FLAC, JPEG, PNG, WebP, AVIF, and PDF , all in one drop zone. |
 
@@ -39,6 +40,12 @@ Drop any mix of file types at once. Squeeze detects each format and routes it to
 
 ### Per-File Precision
 Set a specific target size on individual files right inside the queue row , e.g. exactly 8 MB for a Discord upload , without changing the global preset for the rest of the batch.
+
+### Bilingual (EN/AR) & Light Mode
+Toggle between English and Arabic with full Right-to-Left (RTL) layout support, and swap themes dynamically using theSun and Moon header buttons. Your configuration is automatically persisted.
+
+### Secure Auto-Updates
+When launching, Squeeze checks for signed releases on GitHub and prompts you to update automatically so you always have the latest tools.
 
 ### Three Plain-English Presets
 **Less Compression** · **Recommended** · **Extreme Compression**. No CRF values, no bitrate sliders, no jargon. Recommended is the default and hits the best quality-to-size balance for almost every file.
