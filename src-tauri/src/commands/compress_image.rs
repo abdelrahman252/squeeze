@@ -61,8 +61,19 @@ fn encode_jpeg(input_bytes: &[u8], quality: u8) -> Result<Vec<u8>, AppError> {
 }
 
 fn encode_png(input_bytes: &[u8], opt_level: u8) -> Result<Vec<u8>, AppError> {
+    let is_png = input_bytes.starts_with(&[137, 80, 78, 71, 13, 10, 26, 10]);
+    let png_bytes = if is_png {
+        input_bytes.to_vec()
+    } else {
+        let img = image::load_from_memory(input_bytes)
+            .map_err(|e| AppError::Other(format!("Image decode: {e}")))?;
+        let mut buf = std::io::Cursor::new(Vec::new());
+        img.write_to(&mut buf, image::ImageFormat::Png)
+            .map_err(|e| AppError::Other(format!("PNG encode: {e}")))?;
+        buf.into_inner()
+    };
     let opts = oxipng::Options::from_preset(opt_level);
-    oxipng::optimize_from_memory(input_bytes, &opts)
+    oxipng::optimize_from_memory(&png_bytes, &opts)
         .map_err(|e| AppError::Other(format!("PNG optimize: {e}")))
 }
 
@@ -91,6 +102,7 @@ pub async fn compress_image(
     // compressImage with the same signature as compressVideo/compressAudio.
     duration_sec: Option<f64>,
     on_progress: tauri::ipc::Channel<ProgressEvent>,
+    target_format: Option<String>,
 ) -> Result<CompressResult, AppError> {
     let _ = duration_sec; // intentionally unused
 
@@ -100,7 +112,7 @@ pub async fn compress_image(
         .unwrap_or("")
         .to_lowercase();
 
-    let effective_ext = input_ext.clone();
+    let effective_ext = target_format.clone().unwrap_or(input_ext.clone());
 
     // Unsupported format: return original unchanged
     let Some(out_ext) = image_output_ext(&effective_ext) else {
@@ -156,7 +168,9 @@ pub async fn compress_image(
     let output_size = compressed.len() as u64;
 
     // Output-larger-than-input guard: keep the original when compression fails to shrink
-    if output_size >= input_size {
+    // Bypassed if the user explicitly requested a format conversion (target_format is Some and differs from input_ext)
+    let is_converted = target_format.is_some() && target_format.as_ref().unwrap().to_lowercase() != input_ext.to_lowercase();
+    if output_size >= input_size && !is_converted {
         return Ok(CompressResult {
             output_path: input_path,
             output_bytes: input_size,

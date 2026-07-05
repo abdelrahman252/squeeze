@@ -28,6 +28,7 @@ export interface JobOverrides {
   codec?: string;
   lossless?: boolean;
   resize?: boolean;
+  targetFormat?: string;
 }
 
 export interface Job {

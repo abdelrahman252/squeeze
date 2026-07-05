@@ -76,6 +76,7 @@ export const compressVideo = (
   durationSec: number | null,
   onProgress: Channel<VideoProgressEvent>,
   targetFileSize: number | null,
+  targetFormat: string | null,
 ) =>
   invoke<CompressResult>("compress_video", {
     jobId,
@@ -85,6 +86,7 @@ export const compressVideo = (
     targetFileSize,
     durationSec,
     onProgress,
+    targetFormat,
   });
 
 /** Kill a running FFmpeg process and clean up the partial output file. */
@@ -105,6 +107,7 @@ export const compressImage = (
   preset: string,
   durationSec: number | null,
   onProgress: Channel<VideoProgressEvent>,
+  targetFormat: string | null,
 ) =>
   invoke<CompressResult>("compress_image", {
     jobId,
@@ -113,6 +116,7 @@ export const compressImage = (
     preset,
     durationSec,
     onProgress,
+    targetFormat,
   });
 
 /**
@@ -128,6 +132,7 @@ export const compressAudio = (
   preset: string,
   durationSec: number | null,
   onProgress: Channel<VideoProgressEvent>,
+  targetFormat: string | null,
 ) =>
   invoke<CompressResult>("compress_audio", {
     jobId,
@@ -136,6 +141,7 @@ export const compressAudio = (
     preset,
     durationSec,
     onProgress,
+    targetFormat,
   });
 
 /**

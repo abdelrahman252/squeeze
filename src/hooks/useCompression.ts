@@ -70,6 +70,7 @@ export async function startSqueeze(): Promise<void> {
         outputMode,
         filenamePattern,
         customOutputDir,
+        job.overrides?.targetFormat,
       );
 
       // Each job gets its own channel — events carry jobId so routing is exact
@@ -85,6 +86,8 @@ export async function startSqueeze(): Promise<void> {
 
       try {
         let result;
+        const targetFormat = job.overrides?.targetFormat ?? null;
+
         if (job.kind === "image") {
           result = await compressImage(
             jobId,
@@ -93,25 +96,38 @@ export async function startSqueeze(): Promise<void> {
             preset,
             job.probe?.durationSec ?? null,
             channel,
+            targetFormat,
           );
-        } else {
-          const compressFn =
-            job.kind === "audio" ? compressAudio :
-            job.kind === "pdf"   ? compressPdf   :
-            compressVideo;
-            
-          const targetFileSize = job.kind === "video" 
-            ? (useSettingsStore.getState().targetFileSize?.value ?? null)
-            : null;
-
-          result = await (compressFn as unknown as CallableFunction)(
+        } else if (job.kind === "audio") {
+          result = await compressAudio(
             jobId,
             job.inputPath,
             outputPath,
             preset,
             job.probe?.durationSec ?? null,
             channel,
-            targetFileSize
+            targetFormat,
+          );
+        } else if (job.kind === "video") {
+          const targetFileSize = job.overrides?.targetFileSize ?? null;
+          result = await compressVideo(
+            jobId,
+            job.inputPath,
+            outputPath,
+            preset,
+            job.probe?.durationSec ?? null,
+            channel,
+            targetFileSize,
+            targetFormat,
+          );
+        } else {
+          result = await compressPdf(
+            jobId,
+            job.inputPath,
+            outputPath,
+            preset,
+            job.probe?.durationSec ?? null,
+            channel,
           );
         }
 

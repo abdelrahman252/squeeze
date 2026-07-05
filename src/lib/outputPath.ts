@@ -9,6 +9,7 @@ export function buildOutputPath(
   outputMode: "same-folder" | "subfolder" | "custom",
   filenamePattern: string,
   customOutputDir?: string,
+  targetFormat?: string,
 ): string {
   // Detect path separator (Windows-first since that's the only v1.0 target)
   const sep = inputPath.includes("\\") ? "\\" : "/";
@@ -19,7 +20,8 @@ export function buildOutputPath(
 
   const dotIdx = filename.lastIndexOf(".");
   const name = dotIdx >= 0 ? filename.slice(0, dotIdx) : filename;
-  const ext = dotIdx >= 0 ? filename.slice(dotIdx) : ""; // e.g. ".mp4"
+  const originalExt = dotIdx >= 0 ? filename.slice(dotIdx) : ""; // e.g. ".mp4"
+  const ext = targetFormat ? `.${targetFormat.toLowerCase()}` : originalExt;
 
   const outFilename = filenamePattern
     .replace("{name}", name)

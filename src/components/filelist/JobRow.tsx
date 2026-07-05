@@ -260,6 +260,18 @@ function JobRowSettings({ jobId }: { jobId: string }) {
             <option value="av1">AV1</option>
           </select>
         </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          Format:
+          <select 
+            value={overrides.targetFormat || ""} 
+            onChange={e => update({ targetFormat: e.target.value || undefined })}
+            className="bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-700"
+          >
+            <option value="">Original</option>
+            <option value="mp4">MP4</option>
+            <option value="webm">WebM</option>
+          </select>
+        </label>
       </div>
     );
   }
@@ -267,6 +279,19 @@ function JobRowSettings({ jobId }: { jobId: string }) {
   if (job.kind === "image") {
     return (
       <div className="flex items-center gap-4 text-xs text-zinc-300">
+        <label className="flex items-center gap-2 cursor-pointer">
+          Format:
+          <select 
+            value={overrides.targetFormat || ""} 
+            onChange={e => update({ targetFormat: e.target.value || undefined })}
+            className="bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-700"
+          >
+            <option value="">Original</option>
+            <option value="jpeg">JPEG</option>
+            <option value="png">PNG</option>
+            <option value="webp">WebP</option>
+          </select>
+        </label>
         <label className="flex items-center gap-2 cursor-pointer group">
           <div className="relative flex items-center">
             <input 
@@ -280,6 +305,40 @@ function JobRowSettings({ jobId }: { jobId: string }) {
             </svg>
           </div>
           <span className="group-hover:text-zinc-100 transition-colors">Allow Resize</span>
+        </label>
+      </div>
+    );
+  }
+
+  if (job.kind === "audio") {
+    return (
+      <div className="flex items-center gap-4 text-xs text-zinc-300">
+        <label className="flex items-center gap-2 cursor-pointer">
+          Preset Override:
+          <select 
+            value={overrides.preset || ""} 
+            onChange={e => update({ preset: (e.target.value as CompressionPreset) || undefined })}
+            className="bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-700"
+          >
+            <option value="">Use Global Preset</option>
+            <option value="less">Less Compression</option>
+            <option value="recommended">Recommended</option>
+            <option value="extreme">Extreme Compression</option>
+          </select>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          Format:
+          <select 
+            value={overrides.targetFormat || ""} 
+            onChange={e => update({ targetFormat: e.target.value || undefined })}
+            className="bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer hover:border-zinc-700"
+          >
+            <option value="">Original</option>
+            <option value="mp3">MP3</option>
+            <option value="m4a">M4A</option>
+            <option value="wav">WAV</option>
+            <option value="ogg">OGG</option>
+          </select>
         </label>
       </div>
     );

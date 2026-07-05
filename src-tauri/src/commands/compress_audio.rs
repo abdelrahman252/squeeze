@@ -24,6 +24,7 @@ pub async fn compress_audio(
     duration_sec: Option<f64>,
     on_progress: tauri::ipc::Channel<ProgressEvent>,
     active_jobs: tauri::State<'_, ActiveJobPids>,
+    target_format: Option<String>,
 ) -> Result<CompressResult, AppError> {
     let ffmpeg = ffmpeg_sidecar_path();
     if !ffmpeg.exists() {
@@ -45,7 +46,9 @@ pub async fn compress_audio(
         .and_then(|e| e.to_str())
         .unwrap_or("")
         .to_lowercase();
-    let out_ext = audio_output_ext(&preset, &input_ext);
+    let out_ext = target_format.clone().unwrap_or_else(|| {
+        audio_output_ext(&preset, &input_ext).to_string()
+    });
 
     // Override extension in output_path when the container format changes
     let output_path = {
@@ -193,7 +196,8 @@ pub async fn compress_audio(
     // ── Output-larger-than-input guard ────────────────────────────────────────
     let output_bytes = std::fs::metadata(&temp_path).map(|m| m.len()).unwrap_or(0);
 
-    if output_bytes >= input_bytes {
+    let is_converted = target_format.is_some() && target_format.as_ref().unwrap().to_lowercase() != input_ext.to_lowercase();
+    if output_bytes >= input_bytes && !is_converted {
         let _ = std::fs::remove_file(&temp_path);
         return Ok(CompressResult {
             output_path: input_path,

@@ -53,7 +53,9 @@ pub async fn compress_video(
     on_progress: tauri::ipc::Channel<ProgressEvent>,
     hw: tauri::State<'_, HwEncodersState>,
     active_jobs: tauri::State<'_, ActiveJobPids>,
+    target_format: Option<String>,
 ) -> Result<CompressResult, AppError> {
+    let _ = target_format; // used by the output_path resolved extension on the frontend
     let ffmpeg = ffmpeg_sidecar_path();
     if !ffmpeg.exists() {
         return Err(AppError::Other(format!(
@@ -233,7 +235,13 @@ pub async fn compress_video(
         .map(|m| m.len())
         .unwrap_or(0);
 
-    if output_bytes >= input_bytes {
+    let input_ext = std::path::Path::new(&input_path)
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+    let is_converted = target_format.is_some() && target_format.as_ref().unwrap().to_lowercase() != input_ext.to_lowercase();
+    if output_bytes >= input_bytes && !is_converted {
         // Compressed file is not smaller — discard it and keep the original
         let _ = std::fs::remove_file(&temp_path);
         return Ok(CompressResult {
