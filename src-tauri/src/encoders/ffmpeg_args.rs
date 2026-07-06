@@ -77,6 +77,20 @@ pub fn build_audio_args(preset: &str, input_ext: &str, input: &str, output: &str
                 args.extend(["-c:a".into(), codec.into()]);
             }
         }
+        "convert" => {
+            let codec = match out_ext.as_str() {
+                "m4a" | "aac" => "aac",
+                "ogg"          => "libvorbis",
+                "opus"         => "libopus",
+                "flac"         => "flac",
+                "wav"          => "pcm_s16le",
+                _              => "libmp3lame",
+            };
+            args.extend([
+                "-c:a".into(), codec.into(),
+                "-b:a".into(), "320k".into(),
+            ]);
+        }
         _ => {
             let bitrate = match preset {
                 "less"    => "320k",
@@ -138,6 +152,12 @@ fn preset_params(preset: &str) -> PresetParams {
             preset_sw: "fast",
             cq_hw: 35,
             preset_nvenc: "p4",
+        },
+        "convert" => PresetParams {
+            crf_sw: 17,
+            preset_sw: "slow",
+            cq_hw: 17,
+            preset_nvenc: "p7",
         },
         _ => PresetParams {
             // "recommended" (default) and "lossless" fallback

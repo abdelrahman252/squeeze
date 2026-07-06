@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { Settings } from "@/types";
+import { useUiStore } from "@/store/ui";
 
 const DEFAULT_ADVANCED = {
   video: {
@@ -34,6 +35,8 @@ const DEFAULT_SETTINGS: Settings = {
   preset: "recommended",
   outputMode: "same-folder",
   filenamePattern: "{name}_squeeze{ext}",
+  filenamePatternConvert: "{name}_converted{ext}",
+  compressOnConvert: false,
   parallelJobs: 4,
   globalVideoFormat: undefined,
   globalImageFormat: undefined,
@@ -81,7 +84,10 @@ export const useSettingsStore = create<SettingsStore>()(
 // Atomic selectors (HR-7)
 export const usePreset = () => useSettingsStore((s) => s.preset);
 export const useOutputMode = () => useSettingsStore((s) => s.outputMode);
-export const useFilenamePattern = () => useSettingsStore((s) => s.filenamePattern);
+export const useFilenamePattern = () => {
+  const activeTab = useUiStore((s) => s.activeTab);
+  return useSettingsStore((s) => activeTab === "convert" ? (s.filenamePatternConvert ?? "{name}_converted{ext}") : s.filenamePattern);
+};
 export const useParallelJobs = () => useSettingsStore((s) => s.parallelJobs);
 export const useTargetFileSize = () => useSettingsStore((s) => s.targetFileSize);
 export const useCustomOutputDir = () => useSettingsStore((s) => s.customOutputDir);

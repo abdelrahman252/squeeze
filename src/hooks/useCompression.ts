@@ -45,7 +45,8 @@ export async function startSqueeze(): Promise<void> {
     customOutputDir,
     globalVideoFormat,
     globalImageFormat,
-    globalAudioFormat 
+    globalAudioFormat,
+    compressOnConvert
   } = useSettingsStore.getState();
 
   const isConvertMode = useUiStore.getState().activeTab === "convert";
@@ -103,6 +104,10 @@ export async function startSqueeze(): Promise<void> {
         });
       };
 
+      const targetPreset = isConvertMode
+        ? (job.kind === "pdf" ? "lossless" : (compressOnConvert ? preset : "convert"))
+        : preset;
+
       try {
         let result;
 
@@ -111,7 +116,7 @@ export async function startSqueeze(): Promise<void> {
             jobId,
             job.inputPath,
             outputPath,
-            preset,
+            targetPreset,
             job.probe?.durationSec ?? null,
             channel,
             targetFormat,
@@ -121,7 +126,7 @@ export async function startSqueeze(): Promise<void> {
             jobId,
             job.inputPath,
             outputPath,
-            preset,
+            targetPreset,
             job.probe?.durationSec ?? null,
             channel,
             targetFormat,
@@ -132,7 +137,7 @@ export async function startSqueeze(): Promise<void> {
             jobId,
             job.inputPath,
             outputPath,
-            preset,
+            targetPreset,
             job.probe?.durationSec ?? null,
             channel,
             targetFileSize,
@@ -143,7 +148,7 @@ export async function startSqueeze(): Promise<void> {
             jobId,
             job.inputPath,
             outputPath,
-            preset,
+            targetPreset,
             job.probe?.durationSec ?? null,
             channel,
           );

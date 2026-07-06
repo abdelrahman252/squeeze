@@ -78,11 +78,15 @@ export function OutputControls() {
       <input
         type="text"
         value={filenamePattern}
-        onChange={(e) =>
-          useSettingsStore.getState().patch({ filenamePattern: e.target.value })
-        }
+        onChange={(e) => {
+          if (activeTab === "convert") {
+            useSettingsStore.getState().patch({ filenamePatternConvert: e.target.value });
+          } else {
+            useSettingsStore.getState().patch({ filenamePattern: e.target.value });
+          }
+        }}
         className="flex-1 bg-bg-panel border border-border-main rounded-lg px-2 py-1.5 text-xs text-main placeholder-text-sub focus:outline-none focus:border-emerald-500"
-        placeholder="{name}_squeeze{ext}"
+        placeholder={activeTab === "convert" ? "{name}_converted{ext}" : "{name}_squeeze{ext}"}
       />
 
       {/* Squeeze button — right side, normal-sized, no w-full */}

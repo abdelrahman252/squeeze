@@ -19,6 +19,7 @@ fn image_preset(preset: &str) -> ImagePreset {
         "less"     => ImagePreset { jpeg_quality: 85, png_opt_level: 2, webp_quality: 85.0, lossless: false },
         "extreme"  => ImagePreset { jpeg_quality: 55, png_opt_level: 6, webp_quality: 55.0, lossless: false },
         "lossless" => ImagePreset { jpeg_quality: 95, png_opt_level: 0, webp_quality: 100.0, lossless: true },
+        "convert"  => ImagePreset { jpeg_quality: 98, png_opt_level: 1, webp_quality: 95.0, lossless: false },
         _          => ImagePreset { jpeg_quality: 75, png_opt_level: 4, webp_quality: 75.0,  lossless: false },
     }
 }

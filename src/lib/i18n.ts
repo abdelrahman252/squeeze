@@ -37,6 +37,13 @@ export const translations = {
     targetImageFormat: "Images target:",
     targetAudioFormat: "Audios target:",
     convertLabel: "Global Conversion Formats",
+    convertTipTitle: "Tip:",
+    convertTipDesc: "Pure conversion keeps high quality but does not reduce file size. For smaller files, you can enable compression below or use Compress Mode first.",
+    compressOnConvertLabel: "Compress files during conversion",
+    compressOnConvertSub: "Applies your current compression preset while changing format",
+    noVideosInQueue: "No videos in queue",
+    noImagesInQueue: "No images in queue",
+    noAudiosInQueue: "No audios in queue",
 
     // Queue / Job Settings
     targetSize: "Target Size:",
@@ -177,6 +184,13 @@ export const translations = {
     targetImageFormat: "صيغة الصور:",
     targetAudioFormat: "صيغة الصوت:",
     convertLabel: "صيغ التحويل العامة",
+    convertTipTitle: "نصيحة:",
+    convertTipDesc: "التحويل النقي يحافظ على الجودة العالية ولكنه لا يقلل من حجم الملف. للحصول على ملفات أصغر، يمكنك تفعيل الضغط أدناه أو استخدام وضع الضغط أولاً.",
+    compressOnConvertLabel: "ضغط الملفات أثناء التحويل",
+    compressOnConvertSub: "تطبيق إعداد الضغط الحالي أثناء تغيير الصيغة",
+    noVideosInQueue: "لا توجد فيديوهات في قائمة الانتظار",
+    noImagesInQueue: "لا توجد صور في قائمة الانتظار",
+    noAudiosInQueue: "لا توجد صوتيات في قائمة الانتظار",
 
     // Queue / Job Settings
     targetSize: "الحجم المستهدف:",

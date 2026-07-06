@@ -74,6 +74,8 @@ export interface Settings {
   outputMode: "same-folder" | "subfolder" | "custom";
   customOutputDir?: string;
   filenamePattern: string;
+  filenamePatternConvert?: string;
+  compressOnConvert?: boolean;
   parallelJobs: number;
   globalVideoFormat?: string;
   globalImageFormat?: string;

@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 import { formatBytesExact, middleTruncate, parentDirName, formatEta, probeLabel } from "@/lib/format";
 import { kindBadgeColor, kindLabel } from "@/lib/kinds";
 import { useJob, useJobsStore } from "@/store/jobs";
-import { usePreset } from "@/store/settings";
+import { usePreset, useSettingsStore } from "@/store/settings";
+import { useActiveTab } from "@/store/ui";
 import { estimateOutputBytes } from "@/lib/estimate";
 import { cancelJob } from "@/lib/tauri";
 import { DoneCard } from "./DoneCard";
@@ -20,6 +21,17 @@ export function JobRow({ jobId }: { jobId: string }) {
   const job    = useJob(jobId);
   const preset = usePreset();
   const [expanded, setExpanded] = useState(false);
+
+  const globalVideoFormat = useSettingsStore(s => s.globalVideoFormat);
+  const globalImageFormat = useSettingsStore(s => s.globalImageFormat);
+  const globalAudioFormat = useSettingsStore(s => s.globalAudioFormat);
+  const globalFormat = job.kind === "video" ? globalVideoFormat
+    : job.kind === "audio" ? globalAudioFormat
+    : job.kind === "image" ? globalImageFormat
+    : undefined;
+  const targetFormat = job.overrides?.targetFormat || globalFormat || null;
+  const activeTab = useActiveTab();
+  const inputExt = job.inputPath.split(".").pop()?.toUpperCase() || "";
 
   if (!job) return null;
 
@@ -114,6 +126,13 @@ export function JobRow({ jobId }: { jobId: string }) {
         </span>
 
         <div className="flex items-center gap-1.5 flex-wrap text-xs text-text-sub">
+          {activeTab === "convert" && (
+            <span className="inline-flex items-center gap-1 bg-emerald-950/40 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider leading-none mr-0.5 shrink-0">
+              {inputExt}
+              <span className="text-emerald-500 font-bold font-sans">→</span>
+              {targetFormat ? targetFormat.toUpperCase() : inputExt}
+            </span>
+          )}
           {dirName && (
             <>
               <span className="text-[10px] text-text-sub">{dirName}</span>
