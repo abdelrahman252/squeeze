@@ -29,6 +29,15 @@ export const translations = {
     presetExtDesc: "Maximum space savings, lower quality",
     presetLosslessDesc: "Zero quality loss (images/PDFs only)",
 
+    // Tabs & Convert mode
+    compressTab: "Compress Mode",
+    convertTab: "Convert Mode",
+    convertAction: "Convert",
+    targetVideoFormat: "Videos target:",
+    targetImageFormat: "Images target:",
+    targetAudioFormat: "Audios target:",
+    convertLabel: "Global Conversion Formats",
+
     // Queue / Job Settings
     targetSize: "Target Size:",
     codec: "Codec:",
@@ -150,6 +159,15 @@ export const translations = {
     presetRecommendedDesc: "أفضل توازن بين الجودة والحجم",
     presetExtDesc: "توفير أقصى مساحة، جودة أقل",
     presetLosslessDesc: "صفر فقدان في الجودة (صور وPDF فقط)",
+
+    // Tabs & Convert mode
+    compressTab: "وضع الضغط",
+    convertTab: "وضع التحويل",
+    convertAction: "تحويل",
+    targetVideoFormat: "صيغة الفيديو:",
+    targetImageFormat: "صيغة الصور:",
+    targetAudioFormat: "صيغة الصوت:",
+    convertLabel: "صيغ التحويل العامة",
 
     // Queue / Job Settings
     targetSize: "الحجم المستهدف:",

@@ -35,6 +35,9 @@ const DEFAULT_SETTINGS: Settings = {
   outputMode: "same-folder",
   filenamePattern: "{name}_squeeze{ext}",
   parallelJobs: 4,
+  globalVideoFormat: undefined,
+  globalImageFormat: undefined,
+  globalAudioFormat: undefined,
   advanced: DEFAULT_ADVANCED,
 };
 
@@ -88,3 +91,7 @@ export const useVideoAdvanced = () => useSettingsStore((s) => s.advanced.video);
 export const useAudioAdvanced = () => useSettingsStore((s) => s.advanced.audio);
 export const useImageAdvanced = () => useSettingsStore((s) => s.advanced.image);
 export const usePdfAdvanced = () => useSettingsStore((s) => s.advanced.pdf);
+
+export const useGlobalVideoFormat = () => useSettingsStore((s) => s.globalVideoFormat);
+export const useGlobalImageFormat = () => useSettingsStore((s) => s.globalImageFormat);
+export const useGlobalAudioFormat = () => useSettingsStore((s) => s.globalAudioFormat);

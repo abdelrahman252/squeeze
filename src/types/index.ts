@@ -75,6 +75,9 @@ export interface Settings {
   customOutputDir?: string;
   filenamePattern: string;
   parallelJobs: number;
+  globalVideoFormat?: string;
+  globalImageFormat?: string;
+  globalAudioFormat?: string;
   advanced: {
     video?: {
       codec?: "h264" | "h265" | "av1";

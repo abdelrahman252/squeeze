@@ -4,6 +4,7 @@ import { startSqueeze } from "@/hooks/useCompression";
 import { Zap, Loader2 } from "lucide-react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useTranslation } from "@/lib/i18n";
+import { useActiveTab } from "@/store/ui";
 
 type OutputMode = "same-folder" | "subfolder" | "custom";
 
@@ -15,6 +16,7 @@ export function OutputControls() {
   const isSqueezing     = useIsSqueezing();
   const readyCompressableCount = useReadyCompressableCount();
   const encodingJobCount = useEncodingJobCount();
+  const activeTab = useActiveTab();
 
   // Button is active when there are any ready video/audio/image jobs and we're not already compressing
   const canSqueeze = readyCompressableCount > 0 && !isSqueezing;
@@ -99,7 +101,7 @@ export function OutputControls() {
           ? <Loader2 className="h-4 w-4 animate-spin" />
           : <Zap className="h-4 w-4" />
         }
-        {isSqueezing ? `${t("statusCompressing")} ${encodingJobCount}/${readyCompressableCount + encodingJobCount}…` : t("squeeze")}
+        {isSqueezing ? `${t("statusCompressing")} ${encodingJobCount}/${readyCompressableCount + encodingJobCount}…` : (activeTab === "convert" ? t("convertAction") : t("squeeze"))}
       </button>
     </div>
   );

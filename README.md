@@ -9,7 +9,7 @@
     <a href="https://github.com/abdelrahman252/squeeze/blob/main/LICENSE"><img src="https://img.shields.io/github/license/abdelrahman252/squeeze?style=flat-square" alt="License"></a>
   </p>
 
-  <a href="https://github.com/abdelrahman252/squeeze/releases/latest/download/Squeeze_1.0.1_x64-setup.exe">
+  <a href="https://github.com/abdelrahman252/squeeze/releases/latest/download/Squeeze_1.0.2_x64-setup.exe">
     <img src="https://img.shields.io/badge/⬇_Download_for_Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Download for Windows" />
   </a><br/>
   <em>Windows 10 / 11 · 64-bit · ~70 MB</em>

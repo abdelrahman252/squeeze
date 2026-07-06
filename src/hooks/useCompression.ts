@@ -4,6 +4,7 @@ import { useSettingsStore } from "@/store/settings";
 import { compressAudio, compressImage, compressPdf, compressVideo } from "@/lib/tauri";
 import type { VideoProgressEvent } from "@/lib/tauri";
 import { buildOutputPath } from "@/lib/outputPath";
+import { useUiStore } from "@/store/ui";
 
 /**
  * Extract a human-readable string from whatever Tauri throws on command failure.
@@ -37,8 +38,17 @@ function extractErrorMessage(err: unknown): string {
  */
 export async function startSqueeze(): Promise<void> {
   const { jobs, jobIds } = useJobsStore.getState();
-  const { preset, outputMode, filenamePattern, customOutputDir } =
-    useSettingsStore.getState();
+  const { 
+    preset, 
+    outputMode, 
+    filenamePattern, 
+    customOutputDir,
+    globalVideoFormat,
+    globalImageFormat,
+    globalAudioFormat 
+  } = useSettingsStore.getState();
+
+  const isConvertMode = useUiStore.getState().activeTab === "convert";
 
   // Collect ready video + audio + image + pdf jobs
   const readyIds = jobIds.filter(
@@ -65,12 +75,21 @@ export async function startSqueeze(): Promise<void> {
       const job = useJobsStore.getState().jobs[jobId];
       if (!job) return;
 
+      const globalFormat = isConvertMode
+        ? (job.kind === "video" ? globalVideoFormat
+          : job.kind === "audio" ? globalAudioFormat
+          : job.kind === "image" ? globalImageFormat
+          : undefined)
+        : undefined;
+
+      const targetFormat = job.overrides?.targetFormat || globalFormat || null;
+
       const outputPath = buildOutputPath(
         job.inputPath,
         outputMode,
         filenamePattern,
         customOutputDir,
-        job.overrides?.targetFormat,
+        targetFormat || undefined,
       );
 
       // Each job gets its own channel — events carry jobId so routing is exact
@@ -86,7 +105,6 @@ export async function startSqueeze(): Promise<void> {
 
       try {
         let result;
-        const targetFormat = job.overrides?.targetFormat ?? null;
 
         if (job.kind === "image") {
           result = await compressImage(
