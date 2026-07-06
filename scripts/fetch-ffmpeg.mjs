@@ -71,6 +71,11 @@ function findFile(dir, name) {
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
+  if (process.platform !== 'win32') {
+    console.log('Skipping Windows FFmpeg download on non-Windows platform.');
+    process.exit(0);
+  }
+
   if (existsSync(FFMPEG_DEST) && existsSync(FFPROBE_DEST)) {
     console.log('✓  FFmpeg binaries already present — skipping download.');
     return;

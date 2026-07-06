@@ -80,6 +80,11 @@ function findInstalledGS() {
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
+  if (process.platform !== 'win32') {
+    console.log('Skipping Windows Ghostscript download on non-Windows platform.');
+    process.exit(0);
+  }
+
   mkdirSync(BINARIES_DIR, { recursive: true });
 
   // ── Step 1: Already have real binaries? ──────────────────────────────────
