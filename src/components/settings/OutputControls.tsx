@@ -63,7 +63,7 @@ export function OutputControls() {
       <select
         value={outputMode}
         onChange={(e) => handleModeChange(e.target.value as OutputMode)}
-        className="bg-bg-panel border border-border-main rounded-lg px-2 py-1.5 text-xs text-main focus:outline-none focus:border-emerald-500 cursor-pointer shrink-0 max-w-[140px] truncate"
+        className="bg-bg-panel border border-border-main rounded-lg px-2 py-1.5 text-xs text-main focus:outline-none focus:border-emerald-500 cursor-pointer shrink-0 max-w-[220px] truncate"
       >
         {modes.map((mode) => (
           <option key={mode.id} value={mode.id} className="bg-bg-app">

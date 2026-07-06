@@ -25,6 +25,7 @@ export const translations = {
     presetLossless: "Lossless",
     presetLessDesc: "Highest quality, larger files",
     presetRecDesc: "Best balance of quality and size",
+    presetRecommendedDesc: "Best balance of quality and size",
     presetExtDesc: "Maximum space savings, lower quality",
     presetLosslessDesc: "Zero quality loss (images/PDFs only)",
 
@@ -146,6 +147,7 @@ export const translations = {
     presetLossless: "بدون فقدان الجودة",
     presetLessDesc: "أعلى جودة، حجم ملفات أكبر",
     presetRecDesc: "أفضل توازن بين الجودة والحجم",
+    presetRecommendedDesc: "أفضل توازن بين الجودة والحجم",
     presetExtDesc: "توفير أقصى مساحة، جودة أقل",
     presetLosslessDesc: "صفر فقدان في الجودة (صور وPDF فقط)",
 

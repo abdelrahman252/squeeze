@@ -186,7 +186,7 @@ export function JobRow({ jobId }: { jobId: string }) {
       </span>
 
       {/* Remove / cancel button */}
-      <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity self-start mt-0.5">
+      <div className="flex items-center gap-1 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity self-start mt-0.5">
         <button
           onClick={() => setExpanded(!expanded)}
           className="p-1 rounded hover:bg-bg-panel-hover text-text-sub hover:text-main cursor-pointer"

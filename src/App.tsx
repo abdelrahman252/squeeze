@@ -79,7 +79,7 @@ export default function App() {
   return (
     <div
       dir={isRtl ? "rtl" : "ltr"}
-      className={`${theme} flex flex-col h-screen bg-app text-main overflow-hidden ${
+      className={`${theme} flex flex-col h-screen bg-bg-app text-text-main overflow-hidden ${
         maximized ? "" : "rounded-xl"
       }`}
     >
