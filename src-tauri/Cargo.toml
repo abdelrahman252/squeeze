@@ -1,6 +1,6 @@
 [package]
 name = "squeeze"
-version = "1.0.0"
+version = "1.0.1"
 description = "A fast, native Windows desktop app for compressing media"
 authors = ["abdelrahman252"]
 edition = "2021"
