@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, RefreshCw } from "lucide-react";
 import { useUiStore } from "@/store/ui";
+import { check } from "@tauri-apps/plugin-updater";
+import { toast } from "sonner";
 import { useTargetFileSize, useParallelJobs, useSettingsStore } from "@/store/settings";
 import { VideoAdvancedSettings } from "./advanced/VideoAdvancedSettings";
 import { AudioAdvancedSettings } from "./advanced/AudioAdvancedSettings";
@@ -13,6 +15,31 @@ export function AdvancedDrawer() {
   const { t, isRtl } = useTranslation();
   const isOpen = useUiStore((s) => s.isAdvancedOpen);
   const [activeTab, setActiveTab] = useState<"video" | "audio" | "image" | "pdf">("video");
+  const [isChecking, setIsChecking] = useState(false);
+
+  const handleCheckUpdates = async () => {
+    setIsChecking(true);
+    try {
+      const update = await check();
+      if (update) {
+        const ok = confirm(
+          t("updateAvailablePrompt").replace("{version}", update.version)
+        );
+        if (ok) {
+          toast.info(t("updateDownloading"));
+          await update.downloadAndInstall();
+          alert(t("updateSuccessPrompt"));
+        }
+      } else {
+        toast.success(t("noUpdatesFound"));
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(t("updateCheckFailed"));
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   const targetFileSize = useTargetFileSize();
   const parallelJobs = useParallelJobs();
@@ -138,6 +165,24 @@ export function AdvancedDrawer() {
               {activeTab === "audio" && <AudioAdvancedSettings />}
               {activeTab === "image" && <ImageAdvancedSettings />}
               {activeTab === "pdf" && <PdfAdvancedSettings />}
+            </div>
+
+            {/* Footer / Update Button */}
+            <div className="flex-shrink-0 border-t border-border-main p-4 bg-bg-panel flex flex-col gap-2">
+              <button
+                disabled={isChecking}
+                onClick={handleCheckUpdates}
+                className={`
+                  w-full py-2.5 px-4 rounded-lg font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border
+                  ${isChecking
+                    ? "bg-bg-card border-border-main text-text-sub opacity-50 cursor-not-allowed"
+                    : "bg-emerald-600/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-600/20 hover:border-emerald-500/40"
+                  }
+                `}
+              >
+                <RefreshCw className={`h-3.5 w-3.5 ${isChecking ? "animate-spin" : ""}`} />
+                {isChecking ? t("checkingUpdates") : t("checkForUpdates")}
+              </button>
             </div>
           </motion.div>
         </>

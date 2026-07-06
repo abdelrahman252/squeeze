@@ -133,6 +133,15 @@ export const translations = {
     noFilesFilterImage: "No image files in queue",
     noFilesFilterPdf: "No PDF files in queue",
     noFilesFilterAll: "No files in queue",
+
+    // Updates
+    checkForUpdates: "Check for Updates",
+    checkingUpdates: "Checking for updates...",
+    updateAvailablePrompt: "A new version (v{version}) is available. Would you like Squeeze to download and install it now?",
+    updateDownloading: "Downloading update in the background...",
+    updateSuccessPrompt: "Update installed successfully! Please restart Squeeze to apply the update.",
+    noUpdatesFound: "Squeeze is already up to date!",
+    updateCheckFailed: "Failed to check for updates. Please try again later.",
   },
   ar: {
     title: "سكويز",
@@ -264,6 +273,15 @@ export const translations = {
     noFilesFilterImage: "لا توجد صور في قائمة الانتظار",
     noFilesFilterPdf: "لا توجد ملفات PDF في قائمة الانتظار",
     noFilesFilterAll: "لا توجد ملفات في قائمة الانتظار",
+
+    // Updates
+    checkForUpdates: "التحقق من وجود تحديثات",
+    checkingUpdates: "جاري التحقق من التحديثات...",
+    updateAvailablePrompt: "يتوفر إصدار جديد (v{version}). هل ترغب في تنزيله وتثبيته الآن؟",
+    updateDownloading: "جاري تنزيل التحديث في الخلفية...",
+    updateSuccessPrompt: "تم تثبيت التحديث بنجاح! يرجى إعادة تشغيل التطبيق لتطبيق التحديث.",
+    noUpdatesFound: "تطبيق Squeeze محدّث بالفعل!",
+    updateCheckFailed: "فشل التحقق من وجود تحديثات. يرجى المحاولة لاحقاً.",
   }
 };
 
