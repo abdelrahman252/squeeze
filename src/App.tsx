@@ -76,6 +76,12 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+  }, [theme]);
+
   return (
     <div
       dir={isRtl ? "rtl" : "ltr"}
