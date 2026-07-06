@@ -15,7 +15,9 @@ fn main() {
     copy_sidecar("ffprobe", &target);
     copy_sidecar("gs", &target);
     // gsdll64.dll must sit next to gs-*.exe at runtime (gswin64c.exe loads it dynamically)
-    copy_resource("gsdll64.dll");
+    if target.contains("windows") {
+        copy_resource("gsdll64.dll");
+    }
 
     tauri_build::build()
 }

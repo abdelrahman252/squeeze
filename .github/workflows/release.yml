@@ -61,3 +61,89 @@ jobs:
           releaseBody: "See CHANGELOG for details."
           releaseDraft: false
           prerelease: false
+
+  build-macos:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - runs-on: macos-13
+            target: x86_64-apple-darwin
+          - runs-on: macos-14
+            target: aarch64-apple-darwin
+
+    runs-on: ${{ matrix.settings.runs-on }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.settings.target }}
+
+      - name: Install JS deps
+        run: npm install
+
+      - name: Install Ghostscript
+        run: brew install ghostscript
+
+      - name: Fetch and configure sidecars
+        run: |
+          TARGET="${{ matrix.settings.target }}"
+          mkdir -p src-tauri/binaries
+
+          if [ "$TARGET" = "aarch64-apple-darwin" ]; then
+            # Download ARM64 FFmpeg/FFprobe
+            curl -L "https://evermeet.cx/ffmpeg/getrelease/zip?type=arm64" -o ffmpeg.zip
+            curl -L "https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip?type=arm64" -o ffprobe.zip
+            
+            # Copy GS from Homebrew M1 location
+            cp /opt/homebrew/bin/gs src-tauri/binaries/gs-aarch64-apple-darwin
+          else
+            # Download Intel FFmpeg/FFprobe
+            curl -L "https://evermeet.cx/ffmpeg/getrelease/zip" -o ffmpeg.zip
+            curl -L "https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip" -o ffprobe.zip
+            
+            # Copy GS from Homebrew Intel location
+            cp /usr/local/bin/gs src-tauri/binaries/gs-x86_64-apple-darwin
+          fi
+
+          # Extract and name FFmpeg
+          unzip ffmpeg.zip -d src-tauri/binaries/
+          mv src-tauri/binaries/ffmpeg src-tauri/binaries/ffmpeg-$TARGET
+          chmod +x src-tauri/binaries/ffmpeg-$TARGET
+
+          # Extract and name FFprobe
+          unzip ffprobe.zip -d src-tauri/binaries/
+          mv src-tauri/binaries/ffprobe src-tauri/binaries/ffprobe-$TARGET
+          chmod +x src-tauri/binaries/ffprobe-$TARGET
+
+          # Make Ghostscript executable
+          chmod +x src-tauri/binaries/gs-$TARGET
+
+          # Clean archives
+          rm ffmpeg.zip ffprobe.zip
+
+      - name: Verify sidecar binaries
+        run: ls -lh src-tauri/binaries/
+
+      - name: Build & publish
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "Squeeze ${{ github.ref_name }}"
+          releaseBody: "See CHANGELOG for details."
+          releaseDraft: false
+          prerelease: false
+          args: --target ${{ matrix.settings.target }}
