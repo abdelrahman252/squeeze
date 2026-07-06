@@ -132,6 +132,9 @@ jobs:
           # Clean archives
           rm ffmpeg.zip ffprobe.zip
 
+          # Create a dummy file for Windows DLL to satisfy global Tauri bundler resource check
+          touch src-tauri/binaries/gsdll64.dll
+
       - name: Verify sidecar binaries
         run: ls -lh src-tauri/binaries/
 
