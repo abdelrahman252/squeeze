@@ -6,8 +6,14 @@ import type { Job } from "@/types";
 
 export function PreviewModal({ job, onClose }: { job: Job; onClose: () => void }) {
   const [sliderPos, setSliderPos] = useState(50);
-  const origUrl = convertFileSrc(job.inputPath);
-  const outUrl = job.outputPath ? convertFileSrc(job.outputPath) : null;
+  const origUrl = job.inputPath.startsWith("demo://")
+    ? "https://picsum.photos/id/1012/800/600"
+    : convertFileSrc(job.inputPath);
+  const outUrl = job.outputPath
+    ? (job.outputPath.startsWith("demo://")
+        ? "https://picsum.photos/id/1012/800/600?grayscale"
+        : convertFileSrc(job.outputPath))
+    : null;
 
   const checkerboardStyle = {
     backgroundImage: `

@@ -23,6 +23,8 @@ interface JobsState {
   clear: () => void;
   retryJob: (id: string) => void;
   setHoveredJob: (id: string | null) => void;
+  loadDemoData: () => void;
+  clearDemoData: () => void;
 
   // ── Pipeline state transitions (called via getState() — never as hooks) ───
   /** Advance a job to a new status without touching any other field. */
@@ -80,6 +82,51 @@ export const useJobsStore = create<JobsState>((set, get) => ({
   clear: () => set({ jobs: {}, jobIds: [], hoveredJobId: null }),
   
   setHoveredJob: (id) => set({ hoveredJobId: id }),
+
+  loadDemoData: () => {
+    const demoJobs = {
+      "demo-image-1": {
+        id: "demo-image-1",
+        inputPath: "demo://sample_photo.jpg",
+        name: "sample_photo.jpg",
+        outputPath: undefined,
+        kind: "image" as const,
+        addedAt: Date.now(),
+        status: "ready" as const,
+        progress: 0,
+        inputBytes: 4200000,
+        isDemoJob: true,
+        thumbnailPath: null,
+      },
+      "demo-video-1": {
+        id: "demo-video-1",
+        inputPath: "demo://promo_video.mp4",
+        name: "promo_video.mp4",
+        outputPath: undefined,
+        kind: "video" as const,
+        addedAt: Date.now() + 1,
+        status: "ready" as const,
+        progress: 0,
+        inputBytes: 45800000,
+        isDemoJob: true,
+        thumbnailPath: null,
+      }
+    };
+    set({
+      jobs: { ...get().jobs, ...demoJobs },
+      jobIds: Array.from(new Set([...get().jobIds, "demo-image-1", "demo-video-1"]))
+    });
+  },
+
+  clearDemoData: () => {
+    const jobs = { ...get().jobs };
+    delete jobs["demo-image-1"];
+    delete jobs["demo-video-1"];
+    set({
+      jobs,
+      jobIds: get().jobIds.filter(id => id !== "demo-image-1" && id !== "demo-video-1")
+    });
+  },
 
   retryJob: (id) => {
     set((s) => {

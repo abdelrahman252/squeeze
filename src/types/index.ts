@@ -60,6 +60,7 @@ export interface Job {
   errorMessage?: string;
   overrides?: JobOverrides;
   operation?: "compress" | "convert" | "remove-bg" | "enhance";
+  isDemoJob?: boolean;
 }
 
 export type CompressionPreset = "less" | "recommended" | "extreme" | "lossless";
@@ -87,6 +88,7 @@ export interface Settings {
   enhanceCompress?: boolean;
   compressOnConvert?: boolean;
   parallelJobs: number;
+  hasSeenTour: boolean;
   globalVideoFormat?: string;
   globalImageFormat?: string;
   globalAudioFormat?: string;

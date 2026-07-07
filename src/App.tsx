@@ -16,6 +16,7 @@ import { useJobsStore } from "@/store/jobs";
 import { useTranslation } from "@/lib/i18n";
 import { useUiStore } from "@/store/ui";
 import { check } from "@tauri-apps/plugin-updater";
+import { TourGuide } from "@/components/tour/TourGuide";
 
 export default function App() {
   const { isRtl } = useTranslation();
@@ -134,6 +135,9 @@ export default function App() {
 
       {/* Hardcode theme="dark" — never rely on system theme detection (bug #2) */}
       <Toaster theme="dark" position="bottom-right" closeButton />
+
+      {/* Interactive tour guide overlay */}
+      <TourGuide />
     </div>
   );
 }

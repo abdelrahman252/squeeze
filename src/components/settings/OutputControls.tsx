@@ -92,6 +92,7 @@ export function OutputControls() {
 
       {/* Squeeze button — right side, normal-sized, no w-full */}
       <button
+        id="tour-action-button"
         disabled={!canSqueeze}
         onClick={() => { void startSqueeze(); }}
         className={`

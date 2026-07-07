@@ -123,9 +123,9 @@ export function PresetCards() {
   });
 
   return (
-    <div className="flex flex-col w-full">
+    <div id="tour-settings-panel" className="flex flex-col w-full">
       {/* Mode Switcher Tabs */}
-      <div className="flex items-center gap-1 p-1 bg-bg-panel border border-border-sub rounded-lg self-start mb-3">
+      <div id="tour-tab-selector" className="flex items-center gap-1 p-1 bg-bg-panel border border-border-sub rounded-lg self-start mb-3">
         <button
           onClick={() => useUiStore.getState().setActiveTab("compress")}
           className={cn(

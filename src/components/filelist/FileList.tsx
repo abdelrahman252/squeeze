@@ -56,7 +56,7 @@ export function FileList() {
 
   return (
     // flex-col flex-1 min-h-0 — required by smol-flex-scroll-fix skill
-    <div className="flex flex-col flex-1 min-h-0 mx-3 mb-3">
+    <div id="tour-file-list" className="flex flex-col flex-1 min-h-0 mx-3 mb-3">
       {/* Filter chips — fixed height, never scrolls */}
       <TypeFilterChips counts={counts} active={activeFilter} onSelect={setActiveFilter} />
 

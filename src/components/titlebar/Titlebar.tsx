@@ -1,4 +1,4 @@
-import { Settings, Sun, Moon } from "lucide-react";
+import { Settings, Sun, Moon, HelpCircle } from "lucide-react";
 import { useUiStore } from "@/store/ui";
 import { useTranslation } from "@/lib/i18n";
 
@@ -48,6 +48,15 @@ export function Titlebar() {
           ) : (
             <Moon className="h-4 w-4" />
           )}
+        </button>
+
+        {/* Onboarding Tour button */}
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent("squeeze-restart-tour"))}
+          className="p-1.5 rounded-lg hover:bg-zinc-200/20 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
+          title={t("tourRestart")}
+        >
+          <HelpCircle className="h-4 w-4" />
         </button>
 
         {/* Settings button */}

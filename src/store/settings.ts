@@ -47,6 +47,7 @@ const DEFAULT_SETTINGS: Settings = {
   enhanceCompress: true,
   compressOnConvert: false,
   parallelJobs: 4,
+  hasSeenTour: false,
   globalVideoFormat: undefined,
   globalImageFormat: undefined,
   globalAudioFormat: undefined,

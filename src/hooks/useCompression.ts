@@ -95,6 +95,32 @@ export async function startSqueeze(): Promise<void> {
       const job = useJobsStore.getState().jobs[jobId];
       if (!job) return;
 
+      if (job.isDemoJob) {
+        const duration = 2500;
+        const steps = 25;
+        const interval = duration / steps;
+        for (let i = 1; i <= steps; i++) {
+          await new Promise((resolve) => setTimeout(resolve, interval));
+          useJobsStore.getState().updateJobProgress(jobId, {
+            progress: Math.round((i / steps) * 100),
+            speed: "Simulated 1.4x",
+            etaSec: Math.round(((steps - i) * interval) / 1000),
+            outputBytes: Math.round(job.inputBytes * 0.35 * (i / steps)),
+          });
+        }
+        const fakeOutputPath = job.kind === "image"
+          ? "demo://sample_photo_compressed.jpg"
+          : "demo://promo_video_compressed.mp4";
+
+        useJobsStore.getState().setJobOutput(
+          jobId,
+          fakeOutputPath,
+          Math.round(job.inputBytes * 0.35),
+          activeTab,
+        );
+        return;
+      }
+
       const globalFormat = isConvertMode
         ? (job.kind === "video" ? globalVideoFormat
           : job.kind === "audio" ? globalAudioFormat

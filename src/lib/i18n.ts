@@ -72,6 +72,23 @@ export const translations = {
     statusEnhancing: "Enhancing details...",
     enhanceVideoWarning: "Warning: AI video upscaling is slow on CPU. A 10s video can take 2-5 minutes.",
 
+    // Onboarding Tour
+    tourWelcomeTitle: "Welcome to Squeeze! 🚀",
+    tourWelcomeDesc: "Squeeze is a fast, local-first media compressor. To show you how it works, we loaded two sample files in your queue.",
+    tourFileListTitle: "Your Files Queue",
+    tourFileListDesc: "All files you drop into Squeeze appear here. You can see their format, original size, and estimated savings.",
+    tourTabsTitle: "Processing Modes",
+    tourTabsDesc: "Switch tabs to Compress, Convert formats, Remove background with AI, or Enhance details with AI Upscaling.",
+    tourSettingsTitle: "Operation Presets",
+    tourSettingsDesc: "Fine-tune output presets, formats, and advanced parameters (like hardware encoding) in this settings dashboard.",
+    tourActionTitle: "Squeeze it!",
+    tourActionDesc: "Click this button to process your queue. Try clicking it now to see the interactive demo run!",
+    tourNext: "Next",
+    tourPrev: "Back",
+    tourDone: "Finish",
+    tourSkip: "Skip Tour",
+    tourRestart: "Restart Tour",
+
     // Queue / Job Settings
     targetSize: "Target Size:",
     codec: "Codec:",
@@ -245,6 +262,23 @@ export const translations = {
     enhanceCompressSub: "تقليل حجم الملف بعد تحسين وتوضيح التفاصيل",
     statusEnhancing: "جاري تحسين التفاصيل...",
     enhanceVideoWarning: "تنبيه: تحسين الفيديو بالذكاء الاصطناعي بطيء على المعالج. قد يستغرق فيديو مدته 10 ثوانٍ حوالي 2-5 دقائق.",
+
+    // Onboarding Tour
+    tourWelcomeTitle: "مرحباً بك في Squeeze! 🚀",
+    tourWelcomeDesc: "برنامج Squeeze هو أداة سريعة ومحلية لضغط الوسائط. لتوضيح كيفية العمل، قمنا بإضافة ملفين تجريبيين في قائمتك.",
+    tourFileListTitle: "قائمة الملفات",
+    tourFileListDesc: "جميع الملفات التي تقوم بسحبها وإسقاطها تظهر هنا. يمكنك رؤية الصيغة، الحجم الأصلي، ونسبة التوفير المتوقعة.",
+    tourTabsTitle: "أوضاع المعالجة",
+    tourTabsDesc: "انتقل بين التبويبات للضغط، تغيير الصيغ، إزالة الخلفية بالذكاء الاصطناعي، أو تحسين التفاصيل.",
+    tourSettingsTitle: "خيارات التحكم",
+    tourSettingsDesc: "قم بتخصيص إعدادات الإخراج، الصيغ المستهدفة، والإعدادات المتقدمة (مثل تسريع العتاد) من هنا.",
+    tourActionTitle: "ابدأ المعالجة!",
+    tourActionDesc: "انقر على هذا الزر لبدء المعالجة. جرب النقر عليه الآن لمشاهدة العرض التجريبي التفاعلي!",
+    tourNext: "التالي",
+    tourPrev: "السابق",
+    tourDone: "إنهاء الجولة",
+    tourSkip: "تخطي الجولة",
+    tourRestart: "إعادة الجولة",
 
     // Queue / Job Settings
     targetSize: "الحجم المستهدف:",
