@@ -1,5 +1,6 @@
 import { useAudioAdvanced, useSettingsStore } from "@/store/settings";
 import { useTranslation } from "@/lib/i18n";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 export function AudioAdvancedSettings() {
   const { t } = useTranslation();
@@ -9,7 +10,10 @@ export function AudioAdvancedSettings() {
     <div className="space-y-6">
       {/* Codec */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("codec")}</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("codec")}
+          <Tooltip content={t("tipAudioCodec")} />
+        </label>
         <select
           value={settings?.codec ?? "aac"}
           onChange={(e) => useSettingsStore.getState().patchAudioAdvanced({ codec: e.target.value as "mp3" | "aac" | "opus" | "flac" | "wav" })}
@@ -25,7 +29,10 @@ export function AudioAdvancedSettings() {
 
       {/* Bitrate */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("bitrateLabel")} (kbps)</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("bitrateLabel")} (kbps)
+          <Tooltip content={t("tipAudioKbps")} />
+        </label>
         <input
           type="number"
           value={settings?.kbps ?? 128}
@@ -36,7 +43,10 @@ export function AudioAdvancedSettings() {
 
       {/* Sample rate */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("sampleRateLabel")} (Hz)</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("sampleRateLabel")} (Hz)
+          <Tooltip content={t("tipAudioSampleRate")} />
+        </label>
         <select
           value={settings?.sampleRate ?? ""}
           onChange={(e) => useSettingsStore.getState().patchAudioAdvanced({ sampleRate: e.target.value ? parseInt(e.target.value) : undefined })}

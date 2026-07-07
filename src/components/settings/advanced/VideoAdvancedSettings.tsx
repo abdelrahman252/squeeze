@@ -1,5 +1,6 @@
 import { useVideoAdvanced, useSettingsStore } from "@/store/settings";
 import { useTranslation } from "@/lib/i18n";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 export function VideoAdvancedSettings() {
   const { t } = useTranslation();
@@ -9,7 +10,10 @@ export function VideoAdvancedSettings() {
     <div className="space-y-6">
       {/* Codec */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("codec")}</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("codec")}
+          <Tooltip content={t("tipVideoCodec")} />
+        </label>
         <select
           value={settings?.codec ?? "h264"}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ codec: e.target.value as "h264" | "h265" | "av1" })}
@@ -25,6 +29,7 @@ export function VideoAdvancedSettings() {
       <div>
         <label className="block text-sm font-medium text-main mb-2">
           CRF ({t("qualityLabel")}): {settings?.crf ?? 23}
+          <Tooltip content={t("tipVideoCrf")} />
         </label>
         <input
           type="range"
@@ -42,7 +47,10 @@ export function VideoAdvancedSettings() {
 
       {/* Resolution scale */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("targetResolution")}</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("targetResolution")}
+          <Tooltip content={t("tipTargetResolution")} />
+        </label>
         <select
           value={settings?.targetResolution ?? "original"}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ targetResolution: e.target.value as "original" | "4k" | "1080p" | "720p" | "480p" | "custom" })}
@@ -59,7 +67,10 @@ export function VideoAdvancedSettings() {
 
       {/* FPS cap */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("fpsLabel")}</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("fpsLabel")}
+          <Tooltip content={t("tipTargetFps")} />
+        </label>
         <input
           type="number"
           value={settings?.fps ?? ""}
@@ -71,7 +82,10 @@ export function VideoAdvancedSettings() {
 
       {/* Hardware encoder */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("hwEncoder")}</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("hwEncoder")}
+          <Tooltip content={t("tipHwEncoder")} />
+        </label>
         <select
           value={settings?.hwEncoder ?? "auto"}
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ hwEncoder: e.target.value as "auto" | "nvenc" | "qsv" | "amf" | "none" })}
@@ -87,7 +101,10 @@ export function VideoAdvancedSettings() {
 
       {/* Audio bitrate */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("audioSettings")} ({t("bitrateLabel")} kbps)</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("audioSettings")} ({t("bitrateLabel")} kbps)
+          <Tooltip content={t("tipAudioKbps")} />
+        </label>
         <input
           type="number"
           value={settings?.audioKbps ?? 128}
@@ -105,7 +122,10 @@ export function VideoAdvancedSettings() {
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ faststart: e.target.checked })}
           className="accent-emerald-500 cursor-pointer"
         />
-        <label htmlFor="faststart" className="text-sm text-main cursor-pointer">{t("faststartLabel")} ({t("webPlayback")})</label>
+        <label htmlFor="faststart" className="text-sm text-main cursor-pointer">
+          {t("faststartLabel")} ({t("webPlayback")})
+          <Tooltip content={t("tipFaststart")} />
+        </label>
       </div>
 
       {/* Strip metadata */}
@@ -117,7 +137,10 @@ export function VideoAdvancedSettings() {
           onChange={(e) => useSettingsStore.getState().patchVideoAdvanced({ stripMetadata: e.target.checked })}
           className="accent-emerald-500 cursor-pointer"
         />
-        <label htmlFor="strip-metadata" className="text-sm text-main cursor-pointer">{t("stripMetadataLabel")}</label>
+        <label htmlFor="strip-metadata" className="text-sm text-main cursor-pointer">
+          {t("stripMetadataLabel")}
+          <Tooltip content={t("tipStripMetadata")} />
+        </label>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useImageAdvanced, useSettingsStore } from "@/store/settings";
 import { useTranslation } from "@/lib/i18n";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 export function ImageAdvancedSettings() {
   const { t } = useTranslation();
@@ -11,6 +12,7 @@ export function ImageAdvancedSettings() {
       <div>
         <label className="block text-sm font-medium text-main mb-2">
           {t("qualityLabel")}: {settings?.quality ?? 85}
+          <Tooltip content={t("tipImageQuality")} />
         </label>
         <input
           type="range"
@@ -28,7 +30,10 @@ export function ImageAdvancedSettings() {
 
       {/* Resize mode */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("resizeLabel")}</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("resizeLabel")}
+          <Tooltip content={t("tipTargetResolution")} />
+        </label>
         <select
           value={settings?.resize?.mode ?? "off"}
           onChange={(e) => useSettingsStore.getState().patchImageAdvanced({ resize: { mode: e.target.value as "fit" | "exact" | "off" } })}
@@ -49,7 +54,10 @@ export function ImageAdvancedSettings() {
           onChange={(e) => useSettingsStore.getState().patchImageAdvanced({ stripMetadata: e.target.checked })}
           className="accent-emerald-500 cursor-pointer"
         />
-        <label htmlFor="strip-metadata" className="text-sm text-main cursor-pointer">{t("stripMetadataLabel")}</label>
+        <label htmlFor="strip-metadata" className="text-sm text-main cursor-pointer">
+          {t("stripMetadataLabel")}
+          <Tooltip content={t("tipStripMetadata")} />
+        </label>
       </div>
     </div>
   );

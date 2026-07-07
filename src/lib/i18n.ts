@@ -89,6 +89,25 @@ export const translations = {
     tourSkip: "Skip Tour",
     tourRestart: "Restart Tour",
 
+    // Tooltips
+    tipPreset: "The compression level: Less (fast, high quality), Recommended (best balance), Extreme (high compression, lower quality).",
+    tipOutputMode: "Choose where to save the processed files: same folder, subfolder, or a custom location.",
+    tipFilenamePattern: "Pattern used to rename files. Use {name} for the original name and {ext} for the format extension.",
+    tipParallelJobs: "Number of files Squeeze will process concurrently.",
+    tipVideoCodec: "Select video encoder format. H.264 is widely compatible; H.265/AV1 offer better compression but require newer hardware.",
+    tipVideoCrf: "Constant Rate Factor: controls compression quality. Lower values mean better quality but larger files (e.g. 18-28).",
+    tipTargetResolution: "Resize the video to a standard resolution like 1080p, 720p, or keep original dimensions.",
+    tipTargetFps: "Set maximum frame rate. Lower FPS (e.g. 30/24) reduces file size for static content.",
+    tipHwEncoder: "Use graphics card hardware acceleration to speed up video compression.",
+    tipAudioKbps: "Audio bitrate: higher values mean better sound quality (e.g. 128kbps is standard).",
+    tipFaststart: "Relocate metadata to the start of the video. Highly recommended for web streaming.",
+    tipStripMetadata: "Remove camera details, GPS location, and other metadata tags to reduce file size.",
+    tipAudioCodec: "Choose audio compression format (MP3, AAC, Opus, FLAC, WAV).",
+    tipAudioChannels: "Stereo (2 channels) or Mono (1 channel).",
+    tipAudioSampleRate: "Sample frequency. 44.1kHz is CD standard, 48kHz is DVD standard.",
+    tipImageQuality: "Quality factor (0-100). 75-85 is recommended for best compression.",
+    tipPdfQuality: "Select output resolution profile. Screen (72dpi) is smallest; prepress (300dpi) is high-quality print.",
+
     // Queue / Job Settings
     targetSize: "Target Size:",
     codec: "Codec:",
@@ -279,6 +298,25 @@ export const translations = {
     tourDone: "إنهاء الجولة",
     tourSkip: "تخطي الجولة",
     tourRestart: "إعادة الجولة",
+
+    // Tooltips
+    tipPreset: "مستوى الضغط: ضغط قليل (سريع وجودة عالية)، موصى به (أفضل توازن)، ضغط فائق (أصغر حجم وجودة أقل).",
+    tipOutputMode: "اختر مكان حفظ الملفات المعالجة: نفس المجلد، مجلد فرعي، أو مسار مخصص.",
+    tipFilenamePattern: "نمط إعادة تسمية الملفات. استخدم {name} للاسم الأصلي و {ext} لامتداد الصيغة.",
+    tipParallelJobs: "عدد الملفات التي يقوم Squeeze بمعالجتها في نفس الوقت.",
+    tipVideoCodec: "اختر صيغة ترميز الفيديو. H.264 متوافق على نطاق واسع؛ H.265/AV1 يوفران ضغطاً أفضل ولكنهما يتطلبان معالجات حديثة.",
+    tipVideoCrf: "معامل معدل الثبات (CRF): يتحكم في جودة الضغط. القيم الأقل تعني جودة أعلى وحجم ملف أكبر (مثال: 18-28).",
+    tipTargetResolution: "تغيير حجم الفيديو إلى دقة قياسية مثل 1080p أو 720p، أو الاحتفاظ بالأبعاد الأصلية.",
+    tipTargetFps: "تحديد الحد الأقصى لمعدل الإطارات. تقليل الإطارات (مثل 30/24) يقلل من حجم الملف للمحتوى الثابت.",
+    tipHwEncoder: "استخدام تسريع العتاد عبر بطاقة الرسوميات لتسريع عملية ضغط الفيديو.",
+    tipAudioKbps: "معدل نقل الصوت: القيم الأعلى تعني جودة صوت أفضل (128kbps هو القياسي).",
+    tipFaststart: "نقل بيانات الفيديو الوصفية إلى البداية. موصى به بشدة للبث وتشغيل الفيديو الفوري على الويب.",
+    tipStripMetadata: "إزالة تفاصيل الكاميرا وموقع GPS وغيرها من العلامات الوصفية لتقليل حجم الملف وحماية الخصوصية.",
+    tipAudioCodec: "اختر صيغة ضغط الصوت (MP3, AAC, Opus, FLAC, WAV).",
+    tipAudioChannels: "ستيريو / ثنائي (قناتان) أو مونو / أحادي (قناة واحدة).",
+    tipAudioSampleRate: "تردد العينة. 44.1kHz هو معيار الأقراص المضغوطة، 48kHz هو معيار أقراص DVD.",
+    tipImageQuality: "عامل الجودة (0-100). الموصى به هو 75-85 لأفضل ضغط.",
+    tipPdfQuality: "اختر ملف دقة الإخراج. الشاشة (72dpi) هي الأصغر؛ الطباعة المسبقة (300dpi) للطباعة عالية الجودة.",
 
     // Queue / Job Settings
     targetSize: "الحجم المستهدف:",

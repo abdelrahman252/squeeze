@@ -1,5 +1,6 @@
 import { usePdfAdvanced, useSettingsStore } from "@/store/settings";
 import { useTranslation } from "@/lib/i18n";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 export function PdfAdvancedSettings() {
   const { t } = useTranslation();
@@ -9,7 +10,10 @@ export function PdfAdvancedSettings() {
     <div className="space-y-6">
       {/* Preset */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("compressionPreset")}</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("compressionPreset")}
+          <Tooltip content={t("tipPdfQuality")} />
+        </label>
         <select
           value={settings?.preset ?? "ebook"}
           onChange={(e) => useSettingsStore.getState().patchPdfAdvanced({ preset: e.target.value as "screen" | "ebook" | "printer" | "prepress" })}
@@ -24,7 +28,10 @@ export function PdfAdvancedSettings() {
 
       {/* DPI override */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("dpiOverride")}</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("dpiOverride")}
+          <Tooltip content={t("tipPdfQuality")} />
+        </label>
         <input
           type="number"
           value={settings?.dpi ?? ""}
@@ -36,7 +43,10 @@ export function PdfAdvancedSettings() {
 
       {/* Downsample threshold */}
       <div>
-        <label className="block text-sm font-medium text-main mb-2">{t("downsampleThreshold")} (dpi)</label>
+        <label className="block text-sm font-medium text-main mb-2">
+          {t("downsampleThreshold")} (dpi)
+          <Tooltip content={t("tipPdfQuality")} />
+        </label>
         <input
           type="number"
           value={settings?.downsampleThreshold ?? ""}
