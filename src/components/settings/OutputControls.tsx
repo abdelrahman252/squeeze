@@ -17,6 +17,7 @@ export function OutputControls() {
   const readyCompressableCount = useReadyCompressableCount();
   const encodingJobCount = useEncodingJobCount();
   const activeTab = useActiveTab();
+  const enhanceCompress = useSettingsStore(s => s.enhanceCompress) ?? true;
 
   // Button is active when there are any ready video/audio/image jobs and we're not already compressing
   const canSqueeze = readyCompressableCount > 0 && !isSqueezing;
@@ -105,7 +106,7 @@ export function OutputControls() {
           ? <Loader2 className="h-4 w-4 animate-spin" />
           : <Zap className="h-4 w-4" />
         }
-        {isSqueezing ? `${t("statusCompressing")} ${encodingJobCount}/${readyCompressableCount + encodingJobCount}…` : (activeTab === "convert" ? t("convertAction") : t("squeeze"))}
+        {isSqueezing ? `${t("statusCompressing")} ${encodingJobCount}/${readyCompressableCount + encodingJobCount}…` : (activeTab === "convert" ? t("convertAction") : (activeTab === "remove-bg" ? t("removeBgAction") : (activeTab === "enhance" ? (enhanceCompress ? t("enhanceActionAndSqueeze") : t("enhanceAction")) : t("squeeze"))))}
       </button>
     </div>
   );

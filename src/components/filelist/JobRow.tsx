@@ -175,9 +175,15 @@ export function JobRow({ jobId }: { jobId: string }) {
                 )}
               </div>
             )}
-            {(job.kind === "image" || job.kind === "pdf") && (
+            {(job.kind === "image" || job.kind === "pdf" || (job.kind === "video" && activeTab === "enhance")) && (
               <div className="flex items-center gap-2 text-[10px] text-text-sub font-mono">
-                <span className="animate-pulse">{t("statusCompressing")}</span>
+                <span className="animate-pulse">
+                  {activeTab === "remove-bg"
+                    ? t("statusProcessingBg")
+                    : activeTab === "enhance"
+                    ? t("statusEnhancing")
+                    : t("statusCompressing")}
+                </span>
               </div>
             )}
           </div>

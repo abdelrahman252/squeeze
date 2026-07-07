@@ -36,6 +36,15 @@ const DEFAULT_SETTINGS: Settings = {
   outputMode: "same-folder",
   filenamePattern: "{name}_squeeze{ext}",
   filenamePatternConvert: "{name}_converted{ext}",
+  filenamePatternRemoveBg: "{name}_nobg{ext}",
+  filenamePatternEnhance: "{name}_enhanced{ext}",
+  removeBgFormat: "png",
+  removeBgBgType: "transparent",
+  removeBgBgColor: "#ffffff",
+  removeBgModel: "general",
+  enhanceScale: 4,
+  enhanceFormat: "original",
+  enhanceCompress: true,
   compressOnConvert: false,
   parallelJobs: 4,
   globalVideoFormat: undefined,
@@ -86,7 +95,12 @@ export const usePreset = () => useSettingsStore((s) => s.preset);
 export const useOutputMode = () => useSettingsStore((s) => s.outputMode);
 export const useFilenamePattern = () => {
   const activeTab = useUiStore((s) => s.activeTab);
-  return useSettingsStore((s) => activeTab === "convert" ? (s.filenamePatternConvert ?? "{name}_converted{ext}") : s.filenamePattern);
+  return useSettingsStore((s) => {
+    if (activeTab === "convert") return s.filenamePatternConvert ?? "{name}_converted{ext}";
+    if (activeTab === "remove-bg") return s.filenamePatternRemoveBg ?? "{name}_nobg{ext}";
+    if (activeTab === "enhance") return s.filenamePatternEnhance ?? "{name}_enhanced{ext}";
+    return s.filenamePattern;
+  });
 };
 export const useParallelJobs = () => useSettingsStore((s) => s.parallelJobs);
 export const useTargetFileSize = () => useSettingsStore((s) => s.targetFileSize);

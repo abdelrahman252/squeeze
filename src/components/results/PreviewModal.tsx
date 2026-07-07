@@ -6,15 +6,26 @@ import type { Job } from "@/types";
 
 export function PreviewModal({ job, onClose }: { job: Job; onClose: () => void }) {
   const [sliderPos, setSliderPos] = useState(50);
-
   const origUrl = convertFileSrc(job.inputPath);
   const outUrl = job.outputPath ? convertFileSrc(job.outputPath) : null;
+
+  const checkerboardStyle = {
+    backgroundImage: `
+      linear-gradient(45deg, #27272a 25%, transparent 25%), 
+      linear-gradient(-45deg, #27272a 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, #27272a 75%), 
+      linear-gradient(-45deg, transparent 75%, #27272a 75%)
+    `,
+    backgroundSize: "20px 20px",
+    backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+    backgroundColor: "#18181b", // zinc-900
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-8 bg-black/80">
       <div className="relative w-full max-w-5xl bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 shadow-2xl flex flex-col h-[80vh]">
         <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 shrink-0">
-          <h2 className="text-lg font-semibold text-zinc-100">Before & After Preview</h2>
+          <h2 className="text-lg font-semibold text-zinc-100 font-sans">Before & After Preview</h2>
           <button onClick={onClose} className="p-1 text-zinc-400 hover:text-zinc-200">
             <X className="w-5 h-5" />
           </button>
@@ -30,15 +41,18 @@ export function PreviewModal({ job, onClose }: { job: Job; onClose: () => void }
                setSliderPos(((e.touches[0].clientX - rect.left) / rect.width) * 100);
              }}>
           {/* Before Image */}
-          <div className="absolute inset-0 bg-zinc-900 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
             <img src={origUrl} className="max-w-full max-h-full object-contain pointer-events-none" alt="Before" />
           </div>
           
           {/* After Image */}
           {outUrl ? (
             <div 
-              className="absolute inset-0 flex items-center justify-center bg-black overflow-hidden" 
-              style={{ clipPath: `polygon(${sliderPos}% 0, 100% 0, 100% 100%, ${sliderPos}% 100%)` }}
+              className="absolute inset-0 flex items-center justify-center overflow-hidden" 
+              style={{ 
+                clipPath: `polygon(${sliderPos}% 0, 100% 0, 100% 100%, ${sliderPos}% 100%)`,
+                ...checkerboardStyle
+              }}
             >
               <img src={outUrl} className="max-w-full max-h-full object-contain pointer-events-none" alt="After" />
             </div>

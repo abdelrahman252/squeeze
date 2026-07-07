@@ -73,11 +73,12 @@ function useCountUp(target: number, duration = 900): number {
 
 export function DoneCard({ job }: { job: Job }) {
   const { t, isRtl } = useTranslation();
+  const isRemoveBgOrEnhance = job.operation === "remove-bg" || job.operation === "enhance";
   const outputLarger =
     job.outputBytes === undefined || job.outputBytes >= job.inputBytes;
 
   const savedPct =
-    outputLarger || job.outputBytes === undefined
+    outputLarger || job.outputBytes === undefined || isRemoveBgOrEnhance
       ? 0
       : Math.round(((job.inputBytes - job.outputBytes) / job.inputBytes) * 100);
 
@@ -114,7 +115,21 @@ export function DoneCard({ job }: { job: Job }) {
       </div>
 
       {/* Savings info: input → output · saved X% */}
-      {!outputLarger && job.outputBytes !== undefined ? (
+      {isRemoveBgOrEnhance ? (
+        <div className="flex items-center gap-1.5 shrink-0 font-mono text-xs tabular-nums">
+          <span className="text-text-sub">
+            {formatBytesExact(job.inputBytes)}
+          </span>
+          {job.outputBytes !== undefined && (
+            <>
+              <span className="text-text-sub">→</span>
+              <span className="text-emerald-400 font-medium">
+                {formatBytesExact(job.outputBytes)}
+              </span>
+            </>
+          )}
+        </div>
+      ) : !outputLarger && job.outputBytes !== undefined ? (
         <div className="flex items-center gap-1.5 shrink-0 font-mono text-xs tabular-nums">
           <span className="text-text-sub">
             {formatBytesExact(job.inputBytes)}

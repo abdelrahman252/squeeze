@@ -40,7 +40,7 @@ interface JobsState {
     patch: { progress: number; speed?: string; etaSec?: number; outputBytes?: number },
   ) => void;
   /** Mark a job as done and record its final output path + size. */
-  setJobOutput: (id: string, outputPath: string, outputBytes?: number) => void;
+  setJobOutput: (id: string, outputPath: string, outputBytes?: number, operation?: "compress" | "convert" | "remove-bg" | "enhance") => void;
   /** Update per-job overrides */
   updateJobOverrides: (id: string, overrides: Partial<JobOverrides>) => void;
 }
@@ -144,7 +144,7 @@ export const useJobsStore = create<JobsState>((set, get) => ({
         : s
     ),
 
-  setJobOutput: (id, outputPath, outputBytes) =>
+  setJobOutput: (id, outputPath, outputBytes, operation) =>
     set((s) =>
       s.jobs[id]
         ? {
@@ -156,6 +156,7 @@ export const useJobsStore = create<JobsState>((set, get) => ({
                 outputPath,
                 outputBytes: outputBytes ?? s.jobs[id].outputBytes,
                 progress: 100,
+                operation: operation ?? s.jobs[id].operation,
               },
             },
           }

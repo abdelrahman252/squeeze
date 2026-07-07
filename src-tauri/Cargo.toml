@@ -37,4 +37,6 @@ mozjpeg = "0.10"
 oxipng = "9"
 webp = "0.3"
 lopdf = "0.40.0"
+tract-onnx = "0.21.3"
+ureq = "2.9.7"
 

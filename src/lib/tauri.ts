@@ -168,6 +168,56 @@ export const compressPdf = (
     onProgress,
   });
 
+/**
+ * Remove background from a single image file.
+ * Progress events are streamed via the `onProgress` channel.
+ */
+export const removeBackground = (
+  jobId: string,
+  inputPath: string,
+  outputPath: string,
+  onProgress: Channel<VideoProgressEvent>,
+  format: string,
+  bgType: string,
+  bgColor: string,
+  model: string,
+) =>
+  invoke<CompressResult>("remove_background", {
+    jobId,
+    inputPath,
+    outputPath,
+    onProgress,
+    format,
+    bgType,
+    bgColor,
+    model,
+  });
+
+/**
+ * Enhance/Upscale image or video quality.
+ * Progress events are streamed via the `onProgress` channel.
+ */
+export const enhanceMedia = (
+  jobId: string,
+  inputPath: string,
+  outputPath: string,
+  onProgress: Channel<VideoProgressEvent>,
+  scale: number,
+  format: string,
+  compress: boolean,
+  preset: string,
+) =>
+  invoke<CompressResult>("enhance_media", {
+    jobId,
+    inputPath,
+    outputPath,
+    onProgress,
+    scale,
+    format,
+    compress,
+    preset,
+  });
+
 /** Open Windows Explorer with the given file highlighted in its parent folder. */
 export const revealInExplorer = (path: string) =>
   invoke<void>("reveal_in_explorer", { path });

@@ -59,6 +59,7 @@ export interface Job {
   autoSqueeze?: boolean;
   errorMessage?: string;
   overrides?: JobOverrides;
+  operation?: "compress" | "convert" | "remove-bg" | "enhance";
 }
 
 export type CompressionPreset = "less" | "recommended" | "extreme" | "lossless";
@@ -75,6 +76,15 @@ export interface Settings {
   customOutputDir?: string;
   filenamePattern: string;
   filenamePatternConvert?: string;
+  filenamePatternRemoveBg?: string;
+  filenamePatternEnhance?: string;
+  removeBgFormat?: "png" | "webp" | "jpeg";
+  removeBgBgType?: "transparent" | "color";
+  removeBgBgColor?: string;
+  removeBgModel?: "general" | "fine-detail";
+  enhanceScale?: 2 | 4;
+  enhanceFormat?: "png" | "webp" | "jpeg" | "original";
+  enhanceCompress?: boolean;
   compressOnConvert?: boolean;
   parallelJobs: number;
   globalVideoFormat?: string;

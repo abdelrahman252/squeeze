@@ -44,6 +44,33 @@ export const translations = {
     noVideosInQueue: "No videos in queue",
     noImagesInQueue: "No images in queue",
     noAudiosInQueue: "No audios in queue",
+    
+    // Background Removal
+    removeBgTab: "Remove Background",
+    removeBgAction: "Remove BG",
+    removeBgLabel: "Background Removal Settings",
+    removeBgFormat: "Output Format:",
+    removeBgType: "Background:",
+    transparent: "Transparent",
+    solidColor: "Solid Color",
+    colorPicker: "Choose Color:",
+    removeBgModel: "AI Model Profile:",
+    modelGeneral: "General (Standard)",
+    modelFineDetail: "Fine Detail (Hair/Fur)",
+    downloadingModel: "Downloading AI Model...",
+    statusProcessingBg: "Removing background...",
+
+    // AI Upscaler / Enhancer
+    enhanceTab: "Enhance Mode",
+    enhanceAction: "Enhance",
+    enhanceActionAndSqueeze: "Enhance & Squeeze",
+    enhanceLabel: "AI Enhancer (Upscaler) Settings",
+    enhanceScaleLabel: "Upscale Resolution:",
+    enhanceFormatLabel: "Output Format:",
+    enhanceCompressLabel: "Compress enhanced output",
+    enhanceCompressSub: "Reduces file size after upscaling details",
+    statusEnhancing: "Enhancing details...",
+    enhanceVideoWarning: "Warning: AI video upscaling is slow on CPU. A 10s video can take 2-5 minutes.",
 
     // Queue / Job Settings
     targetSize: "Target Size:",
@@ -191,6 +218,33 @@ export const translations = {
     noVideosInQueue: "لا توجد فيديوهات في قائمة الانتظار",
     noImagesInQueue: "لا توجد صور في قائمة الانتظار",
     noAudiosInQueue: "لا توجد صوتيات في قائمة الانتظار",
+
+    // Background Removal
+    removeBgTab: "إزالة الخلفية",
+    removeBgAction: "إزالة الخلفية",
+    removeBgLabel: "إعدادات إزالة الخلفية",
+    removeBgFormat: "صيغة الإخراج:",
+    removeBgType: "الخلفية:",
+    transparent: "شفاف",
+    solidColor: "لون موحد",
+    colorPicker: "اختر اللون:",
+    removeBgModel: "نموذج الذكاء الاصطناعي:",
+    modelGeneral: "عام (قياسي)",
+    modelFineDetail: "تفاصيل دقيقة (شعر/فراء)",
+    downloadingModel: "جاري تحميل النموذج...",
+    statusProcessingBg: "جاري إزالة الخلفية...",
+
+    // AI Upscaler / Enhancer
+    enhanceTab: "وضع تحسين الجودة",
+    enhanceAction: "تحسين الجودة",
+    enhanceActionAndSqueeze: "تحسين وضغط",
+    enhanceLabel: "إعدادات تحسين الجودة (الذكاء الاصطناعي)",
+    enhanceScaleLabel: "مضاعفة الدقة:",
+    enhanceFormatLabel: "صيغة الإخراج:",
+    enhanceCompressLabel: "ضغط الملف المخرَج",
+    enhanceCompressSub: "تقليل حجم الملف بعد تحسين وتوضيح التفاصيل",
+    statusEnhancing: "جاري تحسين التفاصيل...",
+    enhanceVideoWarning: "تنبيه: تحسين الفيديو بالذكاء الاصطناعي بطيء على المعالج. قد يستغرق فيديو مدته 10 ثوانٍ حوالي 2-5 دقائق.",
 
     // Queue / Job Settings
     targetSize: "الحجم المستهدف:",

@@ -1,7 +1,7 @@
 import { Channel } from "@tauri-apps/api/core";
 import { useJobsStore } from "@/store/jobs";
 import { useSettingsStore } from "@/store/settings";
-import { compressAudio, compressImage, compressPdf, compressVideo } from "@/lib/tauri";
+import { compressAudio, compressImage, compressPdf, compressVideo, removeBackground, enhanceMedia } from "@/lib/tauri";
 import type { VideoProgressEvent } from "@/lib/tauri";
 import { buildOutputPath } from "@/lib/outputPath";
 import { useUiStore } from "@/store/ui";
@@ -46,20 +46,39 @@ export async function startSqueeze(): Promise<void> {
     globalVideoFormat,
     globalImageFormat,
     globalAudioFormat,
-    compressOnConvert
+    compressOnConvert,
+    removeBgFormat,
+    removeBgBgType,
+    removeBgBgColor,
+    removeBgModel,
+    enhanceScale,
+    enhanceFormat,
+    enhanceCompress
   } = useSettingsStore.getState();
 
-  const isConvertMode = useUiStore.getState().activeTab === "convert";
+  const activeTab = useUiStore.getState().activeTab;
+  const isConvertMode = activeTab === "convert";
+  const isRemoveBgMode = activeTab === "remove-bg";
+  const isEnhanceMode = activeTab === "enhance";
 
   // Collect ready video + audio + image + pdf jobs
-  const readyIds = jobIds.filter(
-    (id) =>
-      (jobs[id]?.kind === "video" ||
-        jobs[id]?.kind === "audio" ||
-        jobs[id]?.kind === "image" ||
-        jobs[id]?.kind === "pdf") &&
-      jobs[id]?.status === "ready",
-  );
+  const readyIds = jobIds.filter((id) => {
+    const job = jobs[id];
+    if (!job || job.status !== "ready") return false;
+    if (isRemoveBgMode) {
+      return job.kind === "image";
+    }
+    if (isEnhanceMode) {
+      // AI upscaling works on images and videos
+      return job.kind === "image" || job.kind === "video";
+    }
+    return (
+      job.kind === "video" ||
+      job.kind === "audio" ||
+      job.kind === "image" ||
+      job.kind === "pdf"
+    );
+  });
 
   if (readyIds.length === 0) return;
 
@@ -83,7 +102,11 @@ export async function startSqueeze(): Promise<void> {
           : undefined)
         : undefined;
 
-      const targetFormat = job.overrides?.targetFormat || globalFormat || null;
+      const targetFormat = isRemoveBgMode
+        ? (removeBgFormat || null)
+        : isEnhanceMode
+        ? (enhanceFormat === "original" ? null : enhanceFormat || null)
+        : (job.overrides?.targetFormat || globalFormat || null);
 
       const outputPath = buildOutputPath(
         job.inputPath,
@@ -111,7 +134,29 @@ export async function startSqueeze(): Promise<void> {
       try {
         let result;
 
-        if (job.kind === "image") {
+        if (isEnhanceMode) {
+          result = await enhanceMedia(
+            jobId,
+            job.inputPath,
+            outputPath,
+            channel,
+            enhanceScale || 4,
+            enhanceFormat || "original",
+            enhanceCompress ?? true,
+            preset,
+          );
+        } else if (isRemoveBgMode) {
+          result = await removeBackground(
+            jobId,
+            job.inputPath,
+            outputPath,
+            channel,
+            removeBgFormat || "png",
+            removeBgBgType || "transparent",
+            removeBgBgColor || "#ffffff",
+            removeBgModel || "general",
+          );
+        } else if (job.kind === "image") {
           result = await compressImage(
             jobId,
             job.inputPath,
@@ -159,6 +204,7 @@ export async function startSqueeze(): Promise<void> {
           jobId,
           result.outputPath,
           result.outputBytes,
+          activeTab,
         );
       } catch (err) {
         useJobsStore.getState().setJobError(jobId, extractErrorMessage(err));
