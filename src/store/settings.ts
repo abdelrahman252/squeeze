@@ -51,6 +51,13 @@ const DEFAULT_SETTINGS: Settings = {
   globalVideoFormat: undefined,
   globalImageFormat: undefined,
   globalAudioFormat: undefined,
+  resizeWidth: undefined,
+  resizeHeight: undefined,
+  audioCleanup: false,
+  autoReframe: false,
+  watermarkPath: undefined,
+  watermarkPos: "bottomRight",
+  watermarkOpacity: 0.8,
   advanced: DEFAULT_ADVANCED,
 };
 

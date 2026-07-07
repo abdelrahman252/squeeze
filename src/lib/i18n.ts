@@ -108,6 +108,24 @@ export const translations = {
     tipImageQuality: "Quality factor (0-100). 75-85 is recommended for best compression.",
     tipPdfQuality: "Select output resolution profile. Screen (72dpi) is smallest; prepress (300dpi) is high-quality print.",
 
+    // Advanced Processing Features
+    audioCleanupLabel: "Audio Noise Reduction",
+    audioCleanupSub: "Removes background static, hums, and microphone hiss.",
+    autoReframeLabel: "Auto-Reframe (Vertical 9:16)",
+    autoReframeSub: "Center-crops landscape videos to vertical format.",
+    watermarkLabel: "Watermark Overlay",
+    watermarkPathLabel: "Logo Image:",
+    watermarkPosLabel: "Position:",
+    watermarkOpacityLabel: "Opacity:",
+    resizeWidthLabel: "Resize Width (px):",
+    resizeHeightLabel: "Resize Height (px):",
+    selectWatermark: "Select Watermark Logo",
+    browse: "Browse",
+    tipAudioCleanup: "Uses audio filtering to suppress noise and hums from vocal tracks.",
+    tipAutoReframe: "Crops video into vertical 9:16 aspect ratio, ideal for YouTube Shorts/TikTok.",
+    tipWatermark: "Overlays a transparent logo image at a selected corner with custom transparency.",
+    tipResizeWidth: "Override output width (aspect ratio is maintained if height is left empty).",
+
     // Queue / Job Settings
     targetSize: "Target Size:",
     codec: "Codec:",
@@ -317,6 +335,24 @@ export const translations = {
     tipAudioSampleRate: "تردد العينة. 44.1kHz هو معيار الأقراص المضغوطة، 48kHz هو معيار أقراص DVD.",
     tipImageQuality: "عامل الجودة (0-100). الموصى به هو 75-85 لأفضل ضغط.",
     tipPdfQuality: "اختر ملف دقة الإخراج. الشاشة (72dpi) هي الأصغر؛ الطباعة المسبقة (300dpi) للطباعة عالية الجودة.",
+
+    // Advanced Processing Features
+    audioCleanupLabel: "إزالة الضوضاء الصوتية",
+    audioCleanupSub: "إزالة التشويش، الصفير، والضجيج من الخلفية الصوتية.",
+    autoReframeLabel: "إعادة التأطير التلقائي (عمودي 9:16)",
+    autoReframeSub: "قص الفيديو الأفقي ليصبح عمودياً بالكامل.",
+    watermarkLabel: "العلامة المائية",
+    watermarkPathLabel: "صورة الشعار:",
+    watermarkPosLabel: "الموقع:",
+    watermarkOpacityLabel: "الشفافية:",
+    resizeWidthLabel: "تغيير العرض (بكسل):",
+    resizeHeightLabel: "تغيير الارتفاع (بكسل):",
+    selectWatermark: "اختر صورة العلامة المائية",
+    browse: "استعراض",
+    tipAudioCleanup: "يستخدم مصفاة الترددات الصوتية لكتم الضجيج وهسيس الميكروفون من الصوت.",
+    tipAutoReframe: "يقص الفيديو إلى نسبة طولية 9:16 لتناسب مقاطع TikTok و YouTube Shorts.",
+    tipWatermark: "يضيف شعاراً مائياً شفافاً في زاوية محددة مع التحكم في مستوى الشفافية.",
+    tipResizeWidth: "تحديد عرض مخصص للإخراج (يتم الحفاظ على الأبعاد التناسبية إذا ترك الارتفاع فارغاً).",
 
     // Queue / Job Settings
     targetSize: "الحجم المستهدف:",

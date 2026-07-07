@@ -77,6 +77,13 @@ export const compressVideo = (
   onProgress: Channel<VideoProgressEvent>,
   targetFileSize: number | null,
   targetFormat: string | null,
+  resizeWidth: number | null,
+  resizeHeight: number | null,
+  audioCleanup: boolean,
+  autoReframe: boolean,
+  watermarkPath: string | null,
+  watermarkPos: string | null,
+  watermarkOpacity: number | null,
 ) =>
   invoke<CompressResult>("compress_video", {
     jobId,
@@ -87,6 +94,13 @@ export const compressVideo = (
     durationSec,
     onProgress,
     targetFormat,
+    resizeWidth,
+    resizeHeight,
+    audioCleanup,
+    autoReframe,
+    watermarkPath,
+    watermarkPos,
+    watermarkOpacity,
   });
 
 /** Kill a running FFmpeg process and clean up the partial output file. */
@@ -108,6 +122,11 @@ export const compressImage = (
   durationSec: number | null,
   onProgress: Channel<VideoProgressEvent>,
   targetFormat: string | null,
+  resizeWidth: number | null,
+  resizeHeight: number | null,
+  watermarkPath: string | null,
+  watermarkPos: string | null,
+  watermarkOpacity: number | null,
 ) =>
   invoke<CompressResult>("compress_image", {
     jobId,
@@ -117,6 +136,11 @@ export const compressImage = (
     durationSec,
     onProgress,
     targetFormat,
+    resizeWidth,
+    resizeHeight,
+    watermarkPath,
+    watermarkPos,
+    watermarkOpacity,
   });
 
 /**
@@ -133,6 +157,7 @@ export const compressAudio = (
   durationSec: number | null,
   onProgress: Channel<VideoProgressEvent>,
   targetFormat: string | null,
+  audioCleanup: boolean,
 ) =>
   invoke<CompressResult>("compress_audio", {
     jobId,
@@ -142,6 +167,7 @@ export const compressAudio = (
     durationSec,
     onProgress,
     targetFormat,
+    audioCleanup,
   });
 
 /**

@@ -5,6 +5,7 @@ import { Tooltip } from "@/components/ui/Tooltip";
 export function AudioAdvancedSettings() {
   const { t } = useTranslation();
   const settings = useAudioAdvanced();
+  const settingsStore = useSettingsStore();
 
   return (
     <div className="space-y-6">
@@ -57,6 +58,21 @@ export function AudioAdvancedSettings() {
           <option value="44100" className="bg-bg-app">44100</option>
           <option value="22050" className="bg-bg-app">22050</option>
         </select>
+      </div>
+
+      {/* Audio Cleanup */}
+      <div className="flex items-center gap-2 border-t border-border-main pt-4">
+        <input
+          type="checkbox"
+          id="audio-cleanup-audio"
+          checked={settingsStore.audioCleanup}
+          onChange={(e) => useSettingsStore.getState().patch({ audioCleanup: e.target.checked })}
+          className="accent-emerald-500 cursor-pointer"
+        />
+        <label htmlFor="audio-cleanup-audio" className="text-sm text-main cursor-pointer">
+          {t("audioCleanupLabel")}
+          <Tooltip content={t("tipAudioCleanup")} />
+        </label>
       </div>
     </div>
   );

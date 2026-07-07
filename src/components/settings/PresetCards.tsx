@@ -223,6 +223,7 @@ export function PresetCards() {
                       <option value="" className="bg-bg-app">{t("original")} (No conversion)</option>
                       <option value="mp4" className="bg-bg-app">MP4</option>
                       <option value="webm" className="bg-bg-app">WebM</option>
+                      <option value="gif" className="bg-bg-app">GIF (Animated)</option>
                     </select>
                   </>
                 ) : (

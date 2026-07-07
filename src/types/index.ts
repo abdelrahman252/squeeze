@@ -92,6 +92,13 @@ export interface Settings {
   globalVideoFormat?: string;
   globalImageFormat?: string;
   globalAudioFormat?: string;
+  resizeWidth?: number;
+  resizeHeight?: number;
+  audioCleanup: boolean;
+  autoReframe: boolean;
+  watermarkPath?: string;
+  watermarkPos?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "center";
+  watermarkOpacity?: number;
   advanced: {
     video?: {
       codec?: "h264" | "h265" | "av1";

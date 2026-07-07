@@ -209,6 +209,7 @@ pub fn build_video_args(
         .unwrap_or("")
         .to_lowercase();
     let is_webm = out_ext == "webm";
+    let is_gif = out_ext == "gif";
 
     if is_webm {
         args.extend(["-c:v".into(), "libvpx-vp9".into()]);
@@ -229,6 +230,8 @@ pub fn build_video_args(
                 "-b:v".into(), "0".into()
             ]);
         }
+    } else if is_gif {
+        args.extend(["-c:v".into(), "gif".into()]);
     } else {
         // Video codec — prefer hardware, fall back to software
         if hw.nvenc {
@@ -270,8 +273,10 @@ pub fn build_video_args(
         }
     }
 
-    // Audio: always re-encode to Opus (for WebM) or AAC 128 kbps
-    if is_webm {
+    // Audio: always re-encode to Opus (for WebM) or AAC 128 kbps (except for GIF)
+    if is_gif {
+        args.extend(["-an".into()]);
+    } else if is_webm {
         args.extend([
             "-c:a".into(), "libopus".into(),
             "-b:a".into(), "128k".into(),
@@ -284,7 +289,7 @@ pub fn build_video_args(
     }
 
     // +faststart: move moov atom to the front for web streaming
-    if faststart && !is_webm {
+    if faststart && !is_webm && !is_gif {
         args.extend(["-movflags".into(), "+faststart".into()]);
     }
 

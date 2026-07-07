@@ -183,6 +183,7 @@ export async function startSqueeze(): Promise<void> {
             removeBgModel || "general",
           );
         } else if (job.kind === "image") {
+          const { resizeWidth, resizeHeight, watermarkPath, watermarkPos, watermarkOpacity } = useSettingsStore.getState();
           result = await compressImage(
             jobId,
             job.inputPath,
@@ -191,8 +192,14 @@ export async function startSqueeze(): Promise<void> {
             job.probe?.durationSec ?? null,
             channel,
             targetFormat,
+            resizeWidth ?? null,
+            resizeHeight ?? null,
+            watermarkPath ?? null,
+            watermarkPos ?? null,
+            watermarkOpacity ?? null,
           );
         } else if (job.kind === "audio") {
+          const { audioCleanup } = useSettingsStore.getState();
           result = await compressAudio(
             jobId,
             job.inputPath,
@@ -201,8 +208,10 @@ export async function startSqueeze(): Promise<void> {
             job.probe?.durationSec ?? null,
             channel,
             targetFormat,
+            audioCleanup,
           );
         } else if (job.kind === "video") {
+          const { resizeWidth, resizeHeight, audioCleanup, autoReframe, watermarkPath, watermarkPos, watermarkOpacity } = useSettingsStore.getState();
           const targetFileSize = job.overrides?.targetFileSize ?? null;
           result = await compressVideo(
             jobId,
@@ -213,6 +222,13 @@ export async function startSqueeze(): Promise<void> {
             channel,
             targetFileSize,
             targetFormat,
+            resizeWidth ?? null,
+            resizeHeight ?? null,
+            audioCleanup,
+            autoReframe,
+            watermarkPath ?? null,
+            watermarkPos ?? null,
+            watermarkOpacity ?? null,
           );
         } else {
           result = await compressPdf(

@@ -54,6 +54,13 @@ pub async fn compress_video(
     hw: tauri::State<'_, HwEncodersState>,
     active_jobs: tauri::State<'_, ActiveJobPids>,
     target_format: Option<String>,
+    resize_width: Option<u32>,
+    resize_height: Option<u32>,
+    audio_cleanup: Option<bool>,
+    auto_reframe: Option<bool>,
+    watermark_path: Option<String>,
+    watermark_pos: Option<String>,
+    watermark_opacity: Option<f32>,
 ) -> Result<CompressResult, AppError> {
     let _ = target_format; // used by the output_path resolved extension on the frontend
     let ffmpeg = ffmpeg_sidecar_path();
@@ -96,7 +103,79 @@ pub async fn compress_video(
 
     // Build arg list using probed HW encoder info
     let hw_info = hw.0.clone();
-    let args = build_video_args(&preset, &hw_info, &input_path, &temp_path, true, target_file_size, duration_sec);
+    let mut args = build_video_args(&preset, &hw_info, &input_path, &temp_path, true, target_file_size, duration_sec);
+
+    // Pop the trailing output configuration flags to inject filters before them
+    let output_arg = args.pop().unwrap(); // temp_path
+    let nostats_arg = args.pop().unwrap(); // -nostats
+    let pipe_arg = args.pop().unwrap(); // pipe:1
+    let prog_arg = args.pop().unwrap(); // -progress
+
+    // If watermark_path is provided, insert it as the second input stream (-i watermark_path)
+    if let Some(ref wm_path) = watermark_path {
+        if std::path::Path::new(wm_path).exists() {
+            args.insert(3, "-i".to_string());
+            args.insert(4, wm_path.clone());
+        }
+    }
+
+    // Build filter complex string
+    let mut filter_complex = String::new();
+
+    let video_src = if auto_reframe.unwrap_or(false) {
+        filter_complex.push_str("[0:v]crop=ih*9/16:ih[cropped];");
+        "[cropped]"
+    } else {
+        "[0:v]"
+    };
+
+    let video_scaled = if let (Some(w), Some(h)) = (resize_width, resize_height) {
+        filter_complex.push_str(&format!("{video_src}scale={w}:{h}[scaled];"));
+        "[scaled]"
+    } else if let Some(w) = resize_width {
+        filter_complex.push_str(&format!("{video_src}scale={w}:-2[scaled];"));
+        "[scaled]"
+    } else if let Some(h) = resize_height {
+        filter_complex.push_str(&format!("{video_src}scale=-2:{h}[scaled];"));
+        "[scaled]"
+    } else {
+        video_src
+    };
+
+    let final_v_label = if watermark_path.is_some() && std::path::Path::new(watermark_path.as_ref().unwrap()).exists() {
+        let opacity = watermark_opacity.unwrap_or(1.0);
+        let pos = watermark_pos.clone().unwrap_or_else(|| "bottomRight".to_string());
+
+        let xy = match pos.as_str() {
+            "topLeft" => "10:10",
+            "topRight" => "main_w-overlay_w-10:10",
+            "bottomLeft" => "10:main_h-overlay_h-10",
+            "center" => "(main_w-overlay_w)/2:(main_h-overlay_h)/2",
+            _ => "main_w-overlay_w-10:main_h-overlay_h-10", // bottomRight
+        };
+
+        filter_complex.push_str(&format!("[1:v]format=rgba,colorchannelmixer=aa={opacity}[wm];"));
+        filter_complex.push_str(&format!("{video_scaled}[wm]overlay={xy}[outv]"));
+        "[outv]"
+    } else {
+        video_scaled
+    };
+
+    if !filter_complex.is_empty() {
+        args.extend(["-filter_complex".into(), filter_complex]);
+        args.extend(["-map".into(), final_v_label.into()]);
+        args.extend(["-map".into(), "0:a?".into()]);
+    }
+
+    if audio_cleanup.unwrap_or(false) {
+        args.extend(["-af".into(), "afftdn".into()]);
+    }
+
+    // Re-append the trailing output config flags
+    args.push(prog_arg);
+    args.push(pipe_arg);
+    args.push(nostats_arg);
+    args.push(output_arg);
 
     let mut cmd = TokioCommand::new(&ffmpeg);
     cmd.args(&args)

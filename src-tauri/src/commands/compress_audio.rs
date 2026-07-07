@@ -25,6 +25,7 @@ pub async fn compress_audio(
     on_progress: tauri::ipc::Channel<ProgressEvent>,
     active_jobs: tauri::State<'_, ActiveJobPids>,
     target_format: Option<String>,
+    audio_cleanup: Option<bool>,
 ) -> Result<CompressResult, AppError> {
     let ffmpeg = ffmpeg_sidecar_path();
     if !ffmpeg.exists() {
@@ -85,7 +86,23 @@ pub async fn compress_audio(
     };
 
     let input_bytes = std::fs::metadata(&input_path)?.len();
-    let args = build_audio_args(&preset, &input_ext, &input_path, &temp_path);
+    let mut args = build_audio_args(&preset, &input_ext, &input_path, &temp_path);
+
+    // Pop the trailing output configuration flags to inject filters before them
+    let output_arg = args.pop().unwrap(); // temp_path
+    let nostats_arg = args.pop().unwrap(); // -nostats
+    let pipe_arg = args.pop().unwrap(); // pipe:1
+    let prog_arg = args.pop().unwrap(); // -progress
+
+    if audio_cleanup.unwrap_or(false) {
+        args.extend(["-af".into(), "afftdn".into()]);
+    }
+
+    // Re-append the trailing output config flags
+    args.push(prog_arg);
+    args.push(pipe_arg);
+    args.push(nostats_arg);
+    args.push(output_arg);
 
     let mut cmd = TokioCommand::new(&ffmpeg);
     cmd.args(&args)

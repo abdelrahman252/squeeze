@@ -188,11 +188,11 @@ pub async fn enhance_media(
     };
 
     let is_video = match target_ext.as_str() {
-        "mp4" | "mkv" | "mov" | "webm" | "avi" => true,
+        "mp4" | "mkv" | "mov" | "webm" | "avi" | "gif" => true,
         _ => {
             // also check file extension of input path
             let in_ext = in_path.extension().and_then(|e| e.to_str()).unwrap_or("").to_lowercase();
-            matches!(in_ext.as_str(), "mp4" | "mkv" | "mov" | "webm" | "avi")
+            matches!(in_ext.as_str(), "mp4" | "mkv" | "mov" | "webm" | "avi" | "gif")
         }
     };
 
@@ -349,26 +349,39 @@ pub async fn enhance_media(
         let temp_assembled_video = temp_dir.join(format!("assembled.{}", target_ext));
 
         let mut cmd = TokioCommand::new(&ffmpeg);
-        cmd.args([
-            "-y",
-            "-r",
-            &fps.to_string(),
-            "-i",
-            &out_frames_dir.join("frame_%06d.png").to_string_lossy(),
-            "-i",
-            &input_path,
-            "-map",
-            "0:v",
-            "-map",
-            "1:a?",
-            "-c:v",
-            "libx264",
-            "-pix_fmt",
-            "yuv420p",
-            "-c:a",
-            "copy",
-            &temp_assembled_video.to_string_lossy(),
-        ]);
+        if target_ext == "gif" {
+            cmd.args([
+                "-y",
+                "-r",
+                &fps.to_string(),
+                "-i",
+                &out_frames_dir.join("frame_%06d.png").to_string_lossy(),
+                "-vf",
+                "split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse",
+                &temp_assembled_video.to_string_lossy(),
+            ]);
+        } else {
+            cmd.args([
+                "-y",
+                "-r",
+                &fps.to_string(),
+                "-i",
+                &out_frames_dir.join("frame_%06d.png").to_string_lossy(),
+                "-i",
+                &input_path,
+                "-map",
+                "0:v",
+                "-map",
+                "1:a?",
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+                "-c:a",
+                "copy",
+                &temp_assembled_video.to_string_lossy(),
+            ]);
+        }
         #[cfg(target_os = "windows")]
         cmd.creation_flags(CREATE_NO_WINDOW);
 
@@ -381,7 +394,7 @@ pub async fn enhance_media(
         }
 
         // 5. Optionally Compress the assembled upscaled video
-        let final_path_str = if compress {
+        let final_path_str = if compress && target_ext != "gif" {
             let _ = on_progress.send(ProgressEvent {
                 job_id: job_id.to_string(),
                 fraction: 0.92,
