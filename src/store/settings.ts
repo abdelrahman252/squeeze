@@ -38,6 +38,7 @@ const DEFAULT_SETTINGS: Settings = {
   filenamePatternConvert: "{name}_converted{ext}",
   filenamePatternRemoveBg: "{name}_nobg{ext}",
   filenamePatternEnhance: "{name}_enhanced{ext}",
+  filenamePatternRemoveWatermark: "{name}_nowatermark{ext}",
   removeBgFormat: "png",
   removeBgBgType: "transparent",
   removeBgBgColor: "#ffffff",
@@ -58,6 +59,12 @@ const DEFAULT_SETTINGS: Settings = {
   watermarkPath: undefined,
   watermarkPos: "bottomRight",
   watermarkOpacity: 0.8,
+  removeWatermarkPreset: "topRight",
+  removeWatermarkX: 75,
+  removeWatermarkY: 5,
+  removeWatermarkW: 20,
+  removeWatermarkH: 10,
+  removeWatermarkBand: 4,
   advanced: DEFAULT_ADVANCED,
 };
 
@@ -107,6 +114,7 @@ export const useFilenamePattern = () => {
     if (activeTab === "convert") return s.filenamePatternConvert ?? "{name}_converted{ext}";
     if (activeTab === "remove-bg") return s.filenamePatternRemoveBg ?? "{name}_nobg{ext}";
     if (activeTab === "enhance") return s.filenamePatternEnhance ?? "{name}_enhanced{ext}";
+    if (activeTab === "remove-watermark") return s.filenamePatternRemoveWatermark ?? "{name}_nowatermark{ext}";
     return s.filenamePattern;
   });
 };

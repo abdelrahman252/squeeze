@@ -247,3 +247,30 @@ export const enhanceMedia = (
 /** Open Windows Explorer with the given file highlighted in its parent folder. */
 export const revealInExplorer = (path: string) =>
   invoke<void>("reveal_in_explorer", { path });
+
+/**
+ * Remove watermark from a single image or video file.
+ * Progress events are streamed via the `onProgress` channel.
+ */
+export const removeWatermark = (
+  jobId: string,
+  inputPath: string,
+  outputPath: string,
+  onProgress: Channel<VideoProgressEvent>,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  band: number,
+) =>
+  invoke<CompressResult>("remove_watermark", {
+    jobId,
+    inputPath,
+    outputPath,
+    onProgress,
+    x,
+    y,
+    w,
+    h,
+    band,
+  });

@@ -1,7 +1,7 @@
 import { Channel } from "@tauri-apps/api/core";
 import { useJobsStore } from "@/store/jobs";
 import { useSettingsStore } from "@/store/settings";
-import { compressAudio, compressImage, compressPdf, compressVideo, removeBackground, enhanceMedia } from "@/lib/tauri";
+import { compressAudio, compressImage, compressPdf, compressVideo, removeBackground, enhanceMedia, removeWatermark } from "@/lib/tauri";
 import type { VideoProgressEvent } from "@/lib/tauri";
 import { buildOutputPath } from "@/lib/outputPath";
 import { useUiStore } from "@/store/ui";
@@ -53,13 +53,19 @@ export async function startSqueeze(): Promise<void> {
     removeBgModel,
     enhanceScale,
     enhanceFormat,
-    enhanceCompress
+    enhanceCompress,
+    removeWatermarkX,
+    removeWatermarkY,
+    removeWatermarkW,
+    removeWatermarkH,
+    removeWatermarkBand,
   } = useSettingsStore.getState();
 
   const activeTab = useUiStore.getState().activeTab;
   const isConvertMode = activeTab === "convert";
   const isRemoveBgMode = activeTab === "remove-bg";
   const isEnhanceMode = activeTab === "enhance";
+  const isRemoveWatermarkMode = activeTab === "remove-watermark";
 
   // Collect ready video + audio + image + pdf jobs
   const readyIds = jobIds.filter((id) => {
@@ -68,8 +74,8 @@ export async function startSqueeze(): Promise<void> {
     if (isRemoveBgMode) {
       return job.kind === "image";
     }
-    if (isEnhanceMode) {
-      // AI upscaling works on images and videos
+    if (isEnhanceMode || isRemoveWatermarkMode) {
+      // AI upscaling and watermark removal work on images and videos
       return job.kind === "image" || job.kind === "video";
     }
     return (
@@ -132,6 +138,8 @@ export async function startSqueeze(): Promise<void> {
         ? (removeBgFormat || null)
         : isEnhanceMode
         ? (enhanceFormat === "original" ? null : enhanceFormat || null)
+        : isRemoveWatermarkMode
+        ? null
         : (job.overrides?.targetFormat || globalFormat || null);
 
       const outputPath = buildOutputPath(
@@ -181,6 +189,18 @@ export async function startSqueeze(): Promise<void> {
             removeBgBgType || "transparent",
             removeBgBgColor || "#ffffff",
             removeBgModel || "general",
+          );
+        } else if (isRemoveWatermarkMode) {
+          result = await removeWatermark(
+            jobId,
+            job.inputPath,
+            outputPath,
+            channel,
+            removeWatermarkX ?? 75,
+            removeWatermarkY ?? 5,
+            removeWatermarkW ?? 20,
+            removeWatermarkH ?? 10,
+            removeWatermarkBand ?? 4,
           );
         } else if (job.kind === "image") {
           const { resizeWidth, resizeHeight, watermarkPath, watermarkPos, watermarkOpacity } = useSettingsStore.getState();

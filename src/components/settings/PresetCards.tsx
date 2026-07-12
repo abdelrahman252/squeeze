@@ -12,6 +12,7 @@ import { formatBytes } from "@/lib/format";
 import { useTranslation } from "@/lib/i18n";
 import { useActiveTab } from "@/store/ui";
 import { cn } from "@/lib/utils";
+import type { Settings } from "@/types";
 
 function PresetCard({
   labelKey,
@@ -91,6 +92,47 @@ export function PresetCards() {
   const enhanceScale = useSettingsStore(s => s.enhanceScale) || 4;
   const enhanceFormat = useSettingsStore(s => s.enhanceFormat) || "original";
   const enhanceCompress = useSettingsStore(s => s.enhanceCompress) ?? true;
+
+  const removeWatermarkPreset = useSettingsStore(s => s.removeWatermarkPreset) || "topRight";
+  const removeWatermarkX = useSettingsStore(s => s.removeWatermarkX) ?? 75;
+  const removeWatermarkY = useSettingsStore(s => s.removeWatermarkY) ?? 5;
+  const removeWatermarkW = useSettingsStore(s => s.removeWatermarkW) ?? 20;
+  const removeWatermarkH = useSettingsStore(s => s.removeWatermarkH) ?? 10;
+  const removeWatermarkBand = useSettingsStore(s => s.removeWatermarkBand) ?? 4;
+
+  function handleWatermarkPresetChange(preset: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "custom") {
+    const patch: Partial<Settings> = { removeWatermarkPreset: preset };
+    if (preset === "topLeft") {
+      patch.removeWatermarkX = 5;
+      patch.removeWatermarkY = 5;
+      patch.removeWatermarkW = 20;
+      patch.removeWatermarkH = 10;
+    } else if (preset === "topRight") {
+      patch.removeWatermarkX = 75;
+      patch.removeWatermarkY = 5;
+      patch.removeWatermarkW = 20;
+      patch.removeWatermarkH = 10;
+    } else if (preset === "bottomLeft") {
+      patch.removeWatermarkX = 5;
+      patch.removeWatermarkY = 85;
+      patch.removeWatermarkW = 20;
+      patch.removeWatermarkH = 10;
+    } else if (preset === "bottomRight") {
+      patch.removeWatermarkX = 75;
+      patch.removeWatermarkY = 85;
+      patch.removeWatermarkW = 20;
+      patch.removeWatermarkH = 10;
+    }
+    useSettingsStore.getState().patch(patch);
+  }
+
+  const watermarkPresets: { id: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "custom"; label: string }[] = [
+    { id: "topLeft", label: t("presetTopLeft") },
+    { id: "topRight", label: t("presetTopRight") },
+    { id: "bottomLeft", label: t("presetBottomLeft") },
+    { id: "bottomRight", label: t("presetBottomRight") },
+    { id: "custom", label: t("presetCustom") },
+  ];
 
   const jobsList = Object.values(jobs);
   const videoInputExts = Array.from(new Set(jobsList.filter(j => j.kind === "video").map(j => j.inputPath.split(".").pop()?.toUpperCase()))).filter(Boolean);
@@ -399,7 +441,7 @@ export function PresetCards() {
             </div>
           </div>
         </div>
-      ) : (
+      ) : activeTab === "enhance" ? (
         /* Enhance Mode settings */
         <div className="flex flex-col w-full gap-3 mb-4">
           <div className="text-xs font-semibold text-text-sub tracking-wider uppercase mb-1">
@@ -504,6 +546,156 @@ export function PresetCards() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      ) : (
+        /* Remove Watermark settings */
+        <div className="flex flex-col w-full gap-3 mb-4">
+          <div className="text-xs font-semibold text-text-sub tracking-wider uppercase mb-1">
+            {t("removeWatermarkLabel")}
+          </div>
+
+          {jobsList.length > 0 && imageInputExts.length === 0 && videoInputExts.length === 0 && (
+            <div className="p-3 rounded-lg border border-rose-500/30 bg-rose-500/5 text-xs text-rose-400 font-medium">
+              ⚠️ None of the files in your queue are images or videos. Watermark Removal only supports image and video files.
+            </div>
+          )}
+
+          {jobsList.some(j => j.kind === "pdf" || j.kind === "audio") && (
+            <div className="p-3 rounded-lg border border-blue-500/30 bg-blue-500/5 text-xs text-blue-400 font-medium">
+              ℹ️ Audio and PDF files in the queue will be skipped during watermark removal.
+            </div>
+          )}
+
+          <div className="flex gap-4 flex-wrap w-full">
+            {/* Position Preset selector card */}
+            <div className="flex-grow flex-shrink-0 basis-[250px] p-3.5 rounded-xl border border-border-main bg-bg-panel flex flex-col gap-2.5">
+              <label className="text-xs font-semibold text-text-sub">{t("watermarkLocationPreset")}</label>
+              <div className="grid grid-cols-2 gap-2">
+                {watermarkPresets.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleWatermarkPresetChange(item.id)}
+                    className={cn(
+                      "px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer",
+                      removeWatermarkPreset === item.id
+                        ? "border-emerald-500 bg-emerald-950/20 text-emerald-400 font-semibold"
+                        : "border-border-main bg-bg-panel text-text-sub hover:border-zinc-500 hover:text-main",
+                      item.id === "custom" && "col-span-2"
+                    )}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sliders card */}
+            <div className="flex-grow flex-shrink-0 basis-[350px] p-3.5 rounded-xl border border-border-main bg-bg-panel flex flex-col gap-3">
+              {/* X and Y sliders */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between text-xs">
+                    <span className="font-semibold text-text-sub">{t("watermarkXPos")}</span>
+                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkX}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={removeWatermarkX}
+                    onChange={(e) => {
+                      useSettingsStore.getState().patch({
+                        removeWatermarkPreset: "custom",
+                        removeWatermarkX: parseInt(e.target.value)
+                      });
+                    }}
+                    className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between text-xs">
+                    <span className="font-semibold text-text-sub">{t("watermarkYPos")}</span>
+                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkY}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={removeWatermarkY}
+                    onChange={(e) => {
+                      useSettingsStore.getState().patch({
+                        removeWatermarkPreset: "custom",
+                        removeWatermarkY: parseInt(e.target.value)
+                      });
+                    }}
+                    className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  />
+                </div>
+
+                {/* Width and Height sliders */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between text-xs">
+                    <span className="font-semibold text-text-sub">{t("watermarkWidth")}</span>
+                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkW}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="50"
+                    value={removeWatermarkW}
+                    onChange={(e) => {
+                      useSettingsStore.getState().patch({
+                        removeWatermarkPreset: "custom",
+                        removeWatermarkW: parseInt(e.target.value)
+                      });
+                    }}
+                    className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between text-xs">
+                    <span className="font-semibold text-text-sub">{t("watermarkHeight")}</span>
+                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkH}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="50"
+                    value={removeWatermarkH}
+                    onChange={(e) => {
+                      useSettingsStore.getState().patch({
+                        removeWatermarkPreset: "custom",
+                        removeWatermarkH: parseInt(e.target.value)
+                      });
+                    }}
+                    className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  />
+                </div>
+
+                {/* Fuzziness/Band slider */}
+                <div className="flex flex-col gap-1.5 col-span-2">
+                  <div className="flex justify-between text-xs">
+                    <span className="font-semibold text-text-sub">{t("watermarkBand")}</span>
+                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkBand}px</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="20"
+                    value={removeWatermarkBand}
+                    onChange={(e) => {
+                      useSettingsStore.getState().patch({
+                        removeWatermarkBand: parseInt(e.target.value)
+                      });
+                    }}
+                    className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

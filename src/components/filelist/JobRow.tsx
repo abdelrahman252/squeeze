@@ -183,6 +183,8 @@ export function JobRow({ jobId }: { jobId: string }) {
                     ? t("statusProcessingBg")
                     : activeTab === "enhance"
                     ? t("statusEnhancing")
+                    : activeTab === "remove-watermark"
+                    ? t("statusRemovingWatermark")
                     : t("statusCompressing")}
                 </span>
               </div>

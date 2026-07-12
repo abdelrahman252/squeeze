@@ -48,7 +48,7 @@ export function TourGuide() {
       title: t("tourFileListTitle"),
       desc: t("tourFileListDesc"),
       selector: "#tour-file-list",
-      placement: "bottom",
+      placement: "top",
     },
     {
       title: t("tourTabsTitle"),
@@ -147,36 +147,36 @@ export function TourGuide() {
 
     const spacing = 16;
     const rect = highlightRect;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const tooltipWidth = 340;
+    const tooltipHeight = 180; // approximate height of our card
+
+    let top = 0;
+    let left = 0;
+    let transform = "";
 
     switch (stepInfo.placement) {
       case "top":
-        return {
-          top: `${window.scrollY + rect.top - spacing}px`,
-          left: `${window.scrollX + rect.left + rect.width / 2}px`,
-          transform: "translate(-50%, -100%)",
-          position: "absolute" as const,
-        };
+        top = rect.top - spacing;
+        left = rect.left + rect.width / 2;
+        transform = "translate(-50%, -100%)";
+        break;
       case "bottom":
-        return {
-          top: `${window.scrollY + rect.bottom + spacing}px`,
-          left: `${window.scrollX + rect.left + rect.width / 2}px`,
-          transform: "translate(-50%, 0)",
-          position: "absolute" as const,
-        };
+        top = rect.bottom + spacing;
+        left = rect.left + rect.width / 2;
+        transform = "translate(-50%, 0)";
+        break;
       case "left":
-        return {
-          top: `${window.scrollY + rect.top + rect.height / 2}px`,
-          left: `${window.scrollX + rect.left - spacing}px`,
-          transform: isRtl ? "translate(0, -50%)" : "translate(-100%, -50%)",
-          position: "absolute" as const,
-        };
+        top = rect.top + rect.height / 2;
+        left = rect.left - spacing;
+        transform = isRtl ? "translate(0, -50%)" : "translate(-100%, -50%)";
+        break;
       case "right":
-        return {
-          top: `${window.scrollY + rect.top + rect.height / 2}px`,
-          left: `${window.scrollX + rect.right + spacing}px`,
-          transform: isRtl ? "translate(-100%, -50%)" : "translate(0, -50%)",
-          position: "absolute" as const,
-        };
+        top = rect.top + rect.height / 2;
+        left = rect.right + spacing;
+        transform = isRtl ? "translate(-100%, -50%)" : "translate(0, -50%)";
+        break;
       default:
         return {
           top: "50%",
@@ -185,6 +185,42 @@ export function TourGuide() {
           position: "fixed" as const,
         };
     }
+
+    // Boundary check and clamping
+    // 1. Clamp horizontal (left) position so the tooltip stays within screen borders (with 12px margin)
+    const minLeft = tooltipWidth / 2 + 12;
+    const maxLeft = viewportWidth - tooltipWidth / 2 - 12;
+    const clampedLeft = Math.max(minLeft, Math.min(maxLeft, left));
+
+    // 2. Clamp vertical (top) position so it fits vertically
+    let clampedTop = top;
+    if (stepInfo.placement === "top") {
+      // The tooltip sits above `top`. Bounding box: [top - tooltipHeight, top]
+      // If it would go above the screen (top < tooltipHeight + 12), flip it to bottom of the element
+      if (top - tooltipHeight < 12) {
+        clampedTop = rect.bottom + spacing;
+        transform = "translate(-50%, 0)"; // Flip to bottom
+      }
+    } else if (stepInfo.placement === "bottom") {
+      // The tooltip sits below `top`. Bounding box: [top, top + tooltipHeight]
+      // If it would go below the screen (top + tooltipHeight > viewportHeight - 12), flip it to top of the element
+      if (top + tooltipHeight > viewportHeight - 12) {
+        clampedTop = rect.top - spacing;
+        transform = "translate(-50%, -100%)"; // Flip to top
+      }
+    } else {
+      // For left/right placements, center is at `top`. Bounding box: [top - tooltipHeight/2, top + tooltipHeight/2]
+      const minTop = tooltipHeight / 2 + 12;
+      const maxTop = viewportHeight - tooltipHeight / 2 - 12;
+      clampedTop = Math.max(minTop, Math.min(maxTop, top));
+    }
+
+    return {
+      top: `${clampedTop}px`,
+      left: `${clampedLeft}px`,
+      transform,
+      position: "fixed" as const,
+    };
   };
 
   return (
@@ -230,7 +266,7 @@ export function TourGuide() {
       >
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-bold text-emerald-400 tracking-wider uppercase bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-900/30">
-            {t("tourWelcomeTitle").includes("🚀") ? "SQUEEZE TOUR" : "جولة تفاعلية"}
+            {isRtl ? "جولة تفاعلية" : "SQUEEZE TOUR"}
           </span>
           <button 
             onClick={handleSkip}
@@ -271,7 +307,7 @@ export function TourGuide() {
                 onClick={handlePrev}
                 className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors cursor-pointer flex items-center gap-1"
               >
-                <ArrowLeft className="w-3 h-3" />
+                {isRtl ? <ArrowRight className="w-3 h-3" /> : <ArrowLeft className="w-3 h-3" />}
                 {t("tourPrev")}
               </button>
             )}
@@ -288,7 +324,7 @@ export function TourGuide() {
               ) : (
                 <>
                   {t("tourNext")}
-                  <ArrowRight className="w-3 h-3" />
+                  {isRtl ? <ArrowLeft className="w-3 h-3" /> : <ArrowRight className="w-3 h-3" />}
                 </>
               )}
             </button>

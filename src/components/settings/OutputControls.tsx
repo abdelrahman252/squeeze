@@ -82,12 +82,28 @@ export function OutputControls() {
         onChange={(e) => {
           if (activeTab === "convert") {
             useSettingsStore.getState().patch({ filenamePatternConvert: e.target.value });
+          } else if (activeTab === "remove-bg") {
+            useSettingsStore.getState().patch({ filenamePatternRemoveBg: e.target.value });
+          } else if (activeTab === "enhance") {
+            useSettingsStore.getState().patch({ filenamePatternEnhance: e.target.value });
+          } else if (activeTab === "remove-watermark") {
+            useSettingsStore.getState().patch({ filenamePatternRemoveWatermark: e.target.value });
           } else {
             useSettingsStore.getState().patch({ filenamePattern: e.target.value });
           }
         }}
         className="flex-1 bg-bg-panel border border-border-main rounded-lg px-2 py-1.5 text-xs text-main placeholder-text-sub focus:outline-none focus:border-emerald-500"
-        placeholder={activeTab === "convert" ? "{name}_converted{ext}" : "{name}_squeeze{ext}"}
+        placeholder={
+          activeTab === "convert"
+            ? "{name}_converted{ext}"
+            : activeTab === "remove-bg"
+            ? "{name}_nobg{ext}"
+            : activeTab === "enhance"
+            ? "{name}_enhanced{ext}"
+            : activeTab === "remove-watermark"
+            ? "{name}_nowatermark{ext}"
+            : "{name}_squeeze{ext}"
+        }
       />
 
       {/* Squeeze button — right side, normal-sized, no w-full */}
@@ -107,7 +123,7 @@ export function OutputControls() {
           ? <Loader2 className="h-4 w-4 animate-spin" />
           : <Zap className="h-4 w-4" />
         }
-        {isSqueezing ? `${t("statusCompressing")} ${encodingJobCount}/${readyCompressableCount + encodingJobCount}…` : (activeTab === "convert" ? t("convertAction") : (activeTab === "remove-bg" ? t("removeBgAction") : (activeTab === "enhance" ? (enhanceCompress ? t("enhanceActionAndSqueeze") : t("enhanceAction")) : t("squeeze"))))}
+        {isSqueezing ? `${t("statusCompressing")} ${encodingJobCount}/${readyCompressableCount + encodingJobCount}…` : (activeTab === "convert" ? t("convertAction") : (activeTab === "remove-bg" ? t("removeBgAction") : (activeTab === "enhance" ? (enhanceCompress ? t("enhanceActionAndSqueeze") : t("enhanceAction")) : activeTab === "remove-watermark" ? t("removeWatermarkAction") : t("squeeze"))))}
       </button>
     </div>
   );

@@ -60,6 +60,23 @@ export const translations = {
     downloadingModel: "Downloading AI Model...",
     statusProcessingBg: "Removing background...",
 
+    // Watermark Removal
+    removeWatermarkTab: "Remove Watermark",
+    removeWatermarkAction: "Remove Logo",
+    removeWatermarkLabel: "Watermark Removal Settings",
+    watermarkLocationPreset: "Watermark Position:",
+    watermarkXPos: "X Position (Left to Right):",
+    watermarkYPos: "Y Position (Top to Bottom):",
+    watermarkWidth: "Width:",
+    watermarkHeight: "Height:",
+    watermarkBand: "Fuzziness (Smoothness):",
+    presetTopLeft: "Top Left",
+    presetTopRight: "Top Right",
+    presetBottomLeft: "Bottom Left",
+    presetBottomRight: "Bottom Right",
+    presetCustom: "Custom Position",
+    statusRemovingWatermark: "Removing watermark...",
+
     // AI Upscaler / Enhancer
     enhanceTab: "Enhance Mode",
     enhanceAction: "Enhance",
@@ -292,6 +309,23 @@ export const translations = {
     modelFineDetail: "تفاصيل دقيقة (شعر/فراء)",
     downloadingModel: "جاري تحميل النموذج...",
     statusProcessingBg: "جاري إزالة الخلفية...",
+
+    // Watermark Removal
+    removeWatermarkTab: "إزالة العلامة المائية",
+    removeWatermarkAction: "إزالة العلامة",
+    removeWatermarkLabel: "إعدادات إزالة العلامة المائية",
+    watermarkLocationPreset: "موقع العلامة المائية:",
+    watermarkXPos: "الموقع الأفقي (X):",
+    watermarkYPos: "الموقع الرأسي (Y):",
+    watermarkWidth: "العرض:",
+    watermarkHeight: "الارتفاع:",
+    watermarkBand: "التنعيم (الحواف):",
+    presetTopLeft: "أعلى اليسار",
+    presetTopRight: "أعلى اليمين",
+    presetBottomLeft: "أسفل اليسار",
+    presetBottomRight: "أسفل اليمين",
+    presetCustom: "موقع مخصص",
+    statusRemovingWatermark: "جاري إزالة العلامة المائية...",
 
     // AI Upscaler / Enhancer
     enhanceTab: "وضع تحسين الجودة",

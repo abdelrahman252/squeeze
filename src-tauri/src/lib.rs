@@ -12,6 +12,7 @@ use commands::compress_image::compress_image;
 use commands::compress_pdf::compress_pdf;
 use commands::remove_bg::remove_background;
 use commands::enhance::enhance_media;
+use commands::remove_watermark::remove_watermark;
 use encoders::hw_detect::{probe_hw_encoders, HwEncodersState};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -39,6 +40,7 @@ pub fn run() {
             compress_pdf,
             remove_background,
             enhance_media,
+            remove_watermark,
             cancel_job,
         ])
         .run(tauri::generate_context!())

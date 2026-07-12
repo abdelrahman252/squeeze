@@ -13,7 +13,7 @@ use crate::commands::compress_video::CompressResult;
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const U2NET_URL: &str = "https://huggingface.co/facefusion/models-3.5.0/resolve/main/u2net.onnx";
+const U2NET_URL: &str = "https://huggingface.co/facefusion/models-3.5.0/resolve/main/u2net_general.onnx";
 const U2NETP_URL: &str = "https://huggingface.co/facefusion/models-3.5.0/resolve/main/u2netp.onnx";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -210,7 +210,7 @@ pub async fn remove_background(
     let (model_filename, model_url) = if model == "fine-detail" {
         ("u2netp.onnx", U2NETP_URL)
     } else {
-        ("u2net.onnx", U2NET_URL)
+        ("u2net_general.onnx", U2NET_URL)
     };
     let model_path = models_dir.join(model_filename);
 

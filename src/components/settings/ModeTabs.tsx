@@ -53,6 +53,17 @@ export function ModeTabs() {
         >
           {t("enhanceTab")}
         </button>
+        <button
+          onClick={() => useUiStore.getState().setActiveTab("remove-watermark")}
+          className={cn(
+            "px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
+            activeTab === "remove-watermark"
+              ? "bg-emerald-600 text-white shadow shadow-emerald-600/30"
+              : "text-text-sub hover:text-main"
+          )}
+        >
+          {t("removeWatermarkTab")}
+        </button>
       </div>
     </div>
   );

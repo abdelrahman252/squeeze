@@ -42,7 +42,7 @@ interface JobsState {
     patch: { progress: number; speed?: string; etaSec?: number; outputBytes?: number },
   ) => void;
   /** Mark a job as done and record its final output path + size. */
-  setJobOutput: (id: string, outputPath: string, outputBytes?: number, operation?: "compress" | "convert" | "remove-bg" | "enhance") => void;
+  setJobOutput: (id: string, outputPath: string, outputBytes?: number, operation?: "compress" | "convert" | "remove-bg" | "enhance" | "remove-watermark") => void;
   /** Update per-job overrides */
   updateJobOverrides: (id: string, overrides: Partial<JobOverrides>) => void;
 }

@@ -20,7 +20,7 @@ const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const REAL_ESRGAN_URL: &str = "https://huggingface.co/FuryTMP/RealESR_Gx4_fp16/resolve/main/RealESR_Gx4.onnx";
+const REAL_ESRGAN_URL: &str = "https://huggingface.co/FuryTMP/RealESR_Gx4_fp16/resolve/main/RealESR_Gx4_fp16.onnx";
 
 // ─── Downloader ───────────────────────────────────────────────────────────────
 
@@ -37,7 +37,7 @@ fn download_model_with_progress(
     let total_bytes = response
         .header("content-length")
         .and_then(|l| l.parse::<u64>().ok())
-        .unwrap_or(4_900_000); // approx RealESR_Gx4.onnx size
+        .unwrap_or(2_450_000); // approx RealESR_Gx4_fp16.onnx size
 
     let mut temp_dest = File::create(dest_path.with_extension("tmp"))
         .map_err(|e| AppError::Other(format!("Failed to create temporary model file: {e}")))?;
@@ -172,7 +172,7 @@ pub async fn enhance_media(
     let models_dir = app_dir.join("models");
     std::fs::create_dir_all(&models_dir).map_err(|e| AppError::Other(e.to_string()))?;
 
-    let model_path = models_dir.join("RealESR_Gx4.onnx");
+    let model_path = models_dir.join("RealESR_Gx4_fp16.onnx");
     if !model_path.exists() {
         download_model_with_progress(REAL_ESRGAN_URL, &model_path, &job_id, &on_progress)?;
     }

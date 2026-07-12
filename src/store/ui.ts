@@ -9,12 +9,12 @@ interface UiState {
   activeKindFilter: KindFilter;
   theme: "dark" | "light";
   lang: "en" | "ar";
-  activeTab: "compress" | "convert" | "remove-bg" | "enhance";
+  activeTab: "compress" | "convert" | "remove-bg" | "enhance" | "remove-watermark";
   setAdvancedOpen: (v: boolean) => void;
   setKindFilter: (v: KindFilter) => void;
   setTheme: (v: "dark" | "light") => void;
   setLang: (v: "en" | "ar") => void;
-  setActiveTab: (v: "compress" | "convert" | "remove-bg" | "enhance") => void;
+  setActiveTab: (v: "compress" | "convert" | "remove-bg" | "enhance" | "remove-watermark") => void;
 }
 
 export const useUiStore = create<UiState>()(

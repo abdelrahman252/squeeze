@@ -59,7 +59,7 @@ export interface Job {
   autoSqueeze?: boolean;
   errorMessage?: string;
   overrides?: JobOverrides;
-  operation?: "compress" | "convert" | "remove-bg" | "enhance";
+  operation?: "compress" | "convert" | "remove-bg" | "enhance" | "remove-watermark";
   isDemoJob?: boolean;
 }
 
@@ -79,6 +79,7 @@ export interface Settings {
   filenamePatternConvert?: string;
   filenamePatternRemoveBg?: string;
   filenamePatternEnhance?: string;
+  filenamePatternRemoveWatermark?: string;
   removeBgFormat?: "png" | "webp" | "jpeg";
   removeBgBgType?: "transparent" | "color";
   removeBgBgColor?: string;
@@ -99,6 +100,12 @@ export interface Settings {
   watermarkPath?: string;
   watermarkPos?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "center";
   watermarkOpacity?: number;
+  removeWatermarkPreset?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "custom";
+  removeWatermarkX?: number;
+  removeWatermarkY?: number;
+  removeWatermarkW?: number;
+  removeWatermarkH?: number;
+  removeWatermarkBand?: number;
   advanced: {
     video?: {
       codec?: "h264" | "h265" | "av1";
