@@ -10,6 +10,7 @@ import { useJobsStore } from "@/store/jobs";
 import type { NewJobInput } from "@/store/jobs";
 import { EmptyState } from "./EmptyState";
 import { useTranslation } from "@/lib/i18n";
+import { useActiveTab } from "@/store/ui";
 
 const VIDEO_EXTS = ["mp4", "mov", "mkv", "webm", "avi", "m4v", "wmv", "flv"];
 const AUDIO_EXTS = ["mp3", "m4a", "aac", "wav", "flac", "ogg", "opus", "wma"];
@@ -24,21 +25,44 @@ interface DropzoneProps {
 
 export function Dropzone({ isDraggingOver, hasFiles }: DropzoneProps) {
   const { t } = useTranslation();
+  const activeTab = useActiveTab();
 
   async function handleOpenDialog() {
     if (typeof window === "undefined" || !(window as any).__TAURI_INTERNALS__ || !(window as any).__TAURI_INTERNALS__.metadata) {
       alert(t("openDialogError"));
       return;
     }
-    const selected = await open({
-      multiple: true,
-      filters: [
-        { name: "All supported", extensions: ALL_EXTS },
+
+    let dialogFilters = [
+      { name: "All supported", extensions: ALL_EXTS },
+      { name: "Video",         extensions: VIDEO_EXTS },
+      { name: "Audio",         extensions: AUDIO_EXTS },
+      { name: "Images",        extensions: IMAGE_EXTS },
+      { name: "PDF",           extensions: PDF_EXTS   },
+    ];
+
+    if (activeTab === "remove-bg") {
+      dialogFilters = [
+        { name: "Images",        extensions: IMAGE_EXTS },
+      ];
+    } else if (activeTab === "enhance") {
+      dialogFilters = [
+        { name: "Video & Images", extensions: [...VIDEO_EXTS, ...IMAGE_EXTS] },
+        { name: "Video",         extensions: VIDEO_EXTS },
+        { name: "Images",        extensions: IMAGE_EXTS },
+      ];
+    } else if (activeTab === "convert") {
+      dialogFilters = [
+        { name: "Video & Audio & Images", extensions: [...VIDEO_EXTS, ...AUDIO_EXTS, ...IMAGE_EXTS] },
         { name: "Video",         extensions: VIDEO_EXTS },
         { name: "Audio",         extensions: AUDIO_EXTS },
         { name: "Images",        extensions: IMAGE_EXTS },
-        { name: "PDF",           extensions: PDF_EXTS   },
-      ],
+      ];
+    }
+
+    const selected = await open({
+      multiple: true,
+      filters: dialogFilters,
     });
 
     if (!selected) return;
@@ -91,12 +115,13 @@ export function Dropzone({ isDraggingOver, hasFiles }: DropzoneProps) {
             <motion.div
               whileHover={{ scale: 1.01 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              onClick={handleOpenDialog}
               className={cn(
-                "flex flex-col flex-1 items-center justify-center gap-4 min-h-[260px]",
+                "flex flex-col flex-1 items-center justify-center gap-4 min-h-[260px] cursor-pointer",
                 "rounded-xl border-2 border-dashed transition-colors",
                 isDraggingOver
                   ? "border-emerald-500 bg-emerald-950/30 shadow-lg shadow-emerald-500/20"
-                  : "border-border-main hover:border-zinc-500"
+                  : "border-border-main hover:border-zinc-500 hover:bg-zinc-950/10"
               )}
             >
               <motion.div
@@ -108,8 +133,7 @@ export function Dropzone({ isDraggingOver, hasFiles }: DropzoneProps) {
               </motion.div>
               <EmptyState isDraggingOver={isDraggingOver} />
               <button
-                onClick={handleOpenDialog}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-bg-panel hover:bg-bg-panel-hover text-main text-sm transition-colors cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-bg-panel hover:bg-bg-panel-hover text-main text-sm transition-colors pointer-events-none"
               >
                 <Upload className="h-4 w-4" />
                 {t("openFiles")}

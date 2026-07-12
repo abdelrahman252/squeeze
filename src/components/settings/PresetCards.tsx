@@ -10,7 +10,7 @@ import { useJobs, useJobCount } from "@/store/jobs";
 import { getPresetEstimate } from "@/lib/estimate";
 import { formatBytes } from "@/lib/format";
 import { useTranslation } from "@/lib/i18n";
-import { useUiStore, useActiveTab } from "@/store/ui";
+import { useActiveTab } from "@/store/ui";
 import { cn } from "@/lib/utils";
 
 function PresetCard({
@@ -124,54 +124,6 @@ export function PresetCards() {
 
   return (
     <div id="tour-settings-panel" className="flex flex-col w-full">
-      {/* Mode Switcher Tabs */}
-      <div id="tour-tab-selector" className="flex items-center gap-1 p-1 bg-bg-panel border border-border-sub rounded-lg self-start mb-3">
-        <button
-          onClick={() => useUiStore.getState().setActiveTab("compress")}
-          className={cn(
-            "px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
-            activeTab === "compress"
-              ? "bg-emerald-600 text-white shadow shadow-emerald-600/30"
-              : "text-text-sub hover:text-main"
-          )}
-        >
-          {t("compressTab")}
-        </button>
-        <button
-          onClick={() => useUiStore.getState().setActiveTab("convert")}
-          className={cn(
-            "px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
-            activeTab === "convert"
-              ? "bg-emerald-600 text-white shadow shadow-emerald-600/30"
-              : "text-text-sub hover:text-main"
-          )}
-        >
-          {t("convertTab")}
-        </button>
-        <button
-          onClick={() => useUiStore.getState().setActiveTab("remove-bg")}
-          className={cn(
-            "px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
-            activeTab === "remove-bg"
-              ? "bg-emerald-600 text-white shadow shadow-emerald-600/30"
-              : "text-text-sub hover:text-main"
-          )}
-        >
-          {t("removeBgTab")}
-        </button>
-        <button
-          onClick={() => useUiStore.getState().setActiveTab("enhance")}
-          className={cn(
-            "px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
-            activeTab === "enhance"
-              ? "bg-emerald-600 text-white shadow shadow-emerald-600/30"
-              : "text-text-sub hover:text-main"
-          )}
-        >
-          {t("enhanceTab")}
-        </button>
-      </div>
-
       {activeTab === "compress" ? (
         <div className="flex gap-3 mb-4 flex-wrap w-full">
           {presetsList.map((preset, idx) => (

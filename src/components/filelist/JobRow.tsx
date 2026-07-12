@@ -25,15 +25,16 @@ export function JobRow({ jobId }: { jobId: string }) {
   const globalVideoFormat = useSettingsStore(s => s.globalVideoFormat);
   const globalImageFormat = useSettingsStore(s => s.globalImageFormat);
   const globalAudioFormat = useSettingsStore(s => s.globalAudioFormat);
+  const activeTab = useActiveTab();
+
+  if (!job) return null;
+
   const globalFormat = job.kind === "video" ? globalVideoFormat
     : job.kind === "audio" ? globalAudioFormat
     : job.kind === "image" ? globalImageFormat
     : undefined;
   const targetFormat = job.overrides?.targetFormat || globalFormat || null;
-  const activeTab = useActiveTab();
   const inputExt = job.inputPath.split(".").pop()?.toUpperCase() || "";
-
-  if (!job) return null;
 
   // Done → collapse to compact DoneCard (layout animation handled by parent)
   if (job.status === "done") return <DoneCard job={job} />;

@@ -36,6 +36,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -61,7 +62,7 @@
   "plugins": {
     "updater": {
       "endpoints": [
-        "https://github.com/abdelrahman252/squeeze/releases/latest/download/updater.json"
+        "https://github.com/abdelrahman252/squeeze/releases/latest/download/latest.json"
       ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDYzQjRFMzRDMzlCMDIzMEIKUldRTEk3QTVUT08wWStDNUdIT2JjMEl0Y3F0MUQxVmRZaHRtT0dmNzlkNlluNDRud0xyNHVSSVMK"
     }

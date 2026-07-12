@@ -2,6 +2,7 @@ import { LayoutGroup, motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Toaster, toast } from "sonner";
 import { Titlebar } from "@/components/titlebar/Titlebar";
+import { ModeTabs } from "@/components/settings/ModeTabs";
 import { Dropzone } from "@/components/dropzone/Dropzone";
 import { FileList } from "@/components/filelist/FileList";
 import { QueueTotalBanner } from "@/components/filelist/QueueTotalBanner";
@@ -91,6 +92,7 @@ export default function App() {
       }`}
     >
       <Titlebar />
+      <ModeTabs />
 
       {/* Drag handlers cover the entire content area so drops work over FileList too */}
       <LayoutGroup>
