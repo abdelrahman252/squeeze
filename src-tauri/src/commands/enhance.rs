@@ -1,6 +1,7 @@
 use std::path::{Path, PathBuf};
 use std::io::{Read, Write};
 use std::fs::File;
+use tauri::Manager;
 use tauri::ipc::Channel;
 use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
 use tract_onnx::prelude::*;
@@ -65,6 +66,7 @@ fn download_model_with_progress(
         let _ = on_progress.send(ProgressEvent {
             job_id: job_id.to_string(),
             fraction,
+            fps: None,
             speed: Some(format!("Downloading AI Model... {:.1} MB", downloaded as f32 / 1_000_000.0)),
             eta_sec: None,
             current_bytes: None,
@@ -208,6 +210,7 @@ pub async fn enhance_media(
         let _ = on_progress.send(ProgressEvent {
             job_id: job_id.to_string(),
             fraction: 0.15,
+            fps: None,
             speed: Some("Enhancing image details...".to_string()),
             eta_sec: None,
             current_bytes: None,
@@ -218,6 +221,7 @@ pub async fn enhance_media(
         let _ = on_progress.send(ProgressEvent {
             job_id: job_id.to_string(),
             fraction: 0.85,
+            fps: None,
             speed: Some("Finalizing file encoding...".to_string()),
             eta_sec: None,
             current_bytes: None,
@@ -238,6 +242,11 @@ pub async fn enhance_media(
                 None,
                 on_progress.clone(),
                 Some(target_ext),
+                None,
+                None,
+                None,
+                None,
+                None,
             ).await?;
 
             let _ = std::fs::remove_file(&temp_enhanced_path);
@@ -276,6 +285,7 @@ pub async fn enhance_media(
         let _ = on_progress.send(ProgressEvent {
             job_id: job_id.to_string(),
             fraction: 0.12,
+            fps: None,
             speed: Some("Extracting video frames...".to_string()),
             eta_sec: None,
             current_bytes: None,
@@ -331,6 +341,7 @@ pub async fn enhance_media(
             let _ = on_progress.send(ProgressEvent {
                 job_id: job_id.to_string(),
                 fraction,
+                fps: None,
                 speed: Some(format!("AI Upscaling frame {}/{}", i + 1, total_frames)),
                 eta_sec: None,
                 current_bytes: None,
@@ -341,6 +352,7 @@ pub async fn enhance_media(
         let _ = on_progress.send(ProgressEvent {
             job_id: job_id.to_string(),
             fraction: 0.88,
+            fps: None,
             speed: Some("Reassembling enhanced video frames...".to_string()),
             eta_sec: None,
             current_bytes: None,
@@ -398,6 +410,7 @@ pub async fn enhance_media(
             let _ = on_progress.send(ProgressEvent {
                 job_id: job_id.to_string(),
                 fraction: 0.92,
+                fps: None,
                 speed: Some("Squeezing enhanced video...".to_string()),
                 eta_sec: None,
                 current_bytes: None,
@@ -414,6 +427,13 @@ pub async fn enhance_media(
                 hw,
                 active_jobs,
                 Some(target_ext),
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
             ).await?;
 
             let _ = std::fs::remove_dir_all(&temp_dir);

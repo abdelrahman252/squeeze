@@ -1,6 +1,7 @@
 use std::path::{Path, PathBuf};
 use std::io::{Read, Write};
 use std::fs::File;
+use tauri::Manager;
 use tauri::ipc::Channel;
 use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
 use tract_onnx::prelude::*;
