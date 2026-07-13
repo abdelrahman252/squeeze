@@ -24,6 +24,7 @@ export function Titlebar() {
       <div className="flex items-center">
         <img src="/logo.png" className="h-6 w-auto me-2" alt={t("title")} draggable={false} />
         <span className="text-sm font-semibold text-main">{t("title")}</span>
+        <span className="text-[10px] text-zinc-500 font-mono ms-2 bg-zinc-800 px-1.5 py-0.5 rounded">v1.0.15</span>
       </div>
       
       {/* Control buttons: left of Windows caption buttons (always on the right) */}
