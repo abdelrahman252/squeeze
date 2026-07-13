@@ -123,7 +123,21 @@ export function OutputControls() {
           ? <Loader2 className="h-4 w-4 animate-spin" />
           : <Zap className="h-4 w-4" />
         }
-        {isSqueezing ? `${t("statusCompressing")} ${encodingJobCount}/${readyCompressableCount + encodingJobCount}…` : (activeTab === "convert" ? t("convertAction") : (activeTab === "remove-bg" ? t("removeBgAction") : (activeTab === "enhance" ? (enhanceCompress ? t("enhanceActionAndSqueeze") : t("enhanceAction")) : activeTab === "remove-watermark" ? t("removeWatermarkAction") : t("squeeze"))))}
+        {isSqueezing ? (
+          `${
+            activeTab === "convert" ? t("statusConverting") :
+            activeTab === "remove-bg" ? t("statusProcessingBg") :
+            activeTab === "enhance" ? t("statusEnhancing") :
+            activeTab === "remove-watermark" ? t("statusRemovingWatermark") :
+            t("statusCompressing")
+          } ${encodingJobCount}/${readyCompressableCount + encodingJobCount}…`
+        ) : (
+          activeTab === "convert" ? t("convertAction") :
+          activeTab === "remove-bg" ? t("removeBgAction") :
+          activeTab === "enhance" ? (enhanceCompress ? t("enhanceActionAndSqueeze") : t("enhanceAction")) :
+          activeTab === "remove-watermark" ? t("removeWatermarkAction") :
+          t("squeeze")
+        )}
       </button>
     </div>
   );

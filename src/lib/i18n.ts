@@ -158,6 +158,8 @@ export const translations = {
     statusQueued: "Queued",
     statusAnalyzing: "Analyzing…",
     statusCompressing: "Compressing…",
+    statusConverting: "Converting…",
+    statusProcessing: "Processing…",
     statusFailed: "Failed",
     statusDone: "Done",
     statusOptimal: "Already optimal",
@@ -185,12 +187,15 @@ export const translations = {
 
     // Summary banner
     summaryTitle: "Squeeze Compression Summary",
+    summaryTitleGeneric: "Squeeze Process Summary",
     copiedSummary: "Copied summary to clipboard!",
     failedCopySummary: "Failed to copy summary",
     filesProcessed: "files processed",
+    processedFiles: "files processed",
     totalSaved: "Total Saved",
     copySummary: "Copy Summary",
     estimatingTotal: "Estimated total",
+    estimatingTotalGeneric: "Queue size",
     original: "Original",
 
     // Advanced Drawer
@@ -408,6 +413,8 @@ export const translations = {
     statusQueued: "في الانتظار",
     statusAnalyzing: "جاري التحليل…",
     statusCompressing: "جاري الضغط…",
+    statusConverting: "جاري التحويل…",
+    statusProcessing: "جاري المعالجة…",
     statusFailed: "فشل",
     statusDone: "مكتمل",
     statusOptimal: "مثالي بالفعل",
@@ -435,12 +442,15 @@ export const translations = {
 
     // Summary banner
     summaryTitle: "ملخص ضغط سكويز",
+    summaryTitleGeneric: "ملخص عملية Squeeze",
     copiedSummary: "تم نسخ الملخص إلى الحافظة!",
     failedCopySummary: "فشل نسخ الملخص",
     filesProcessed: "ملفات تم معالجتها",
+    processedFiles: "ملفات تم معالجتها",
     totalSaved: "إجمالي المساحة الموفرة",
     copySummary: "نسخ الملخص",
     estimatingTotal: "الإجمالي التقديري",
+    estimatingTotalGeneric: "حجم قائمة الانتظار",
     original: "الأصلي",
 
     // Advanced Drawer

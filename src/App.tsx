@@ -120,16 +120,32 @@ export default function App() {
                 exit={{ opacity: 0, y: 20, pointerEvents: "none" }}
                 transition={{ duration: 0.2 }}
               >
-                <FileList />
-                
-                {activeTab === "remove-watermark" && <InteractivePreview />}
-                
-                <QueueTotalBanner />
-                
-                <div className="px-3 pb-3 shrink-0">
-                  <PresetCards />
-                  <OutputControls />
-                </div>
+                {activeTab === "remove-watermark" ? (
+                  /* Premium Split-screen Workspace for Watermark Removal */
+                  <div className="flex flex-1 min-h-0 w-full px-3 pb-3 gap-3 overflow-hidden">
+                    {/* Left Sidebar Column: File Queue and Settings */}
+                    <div className="flex flex-col w-[350px] shrink-0 min-h-0 gap-3 overflow-y-auto pr-1">
+                      <FileList />
+                      <PresetCards />
+                    </div>
+                    
+                    {/* Right Editor Column: Zoomable Preview & Output controls */}
+                    <div className="flex flex-col flex-grow min-h-0 gap-3">
+                      <InteractivePreview />
+                      <OutputControls />
+                    </div>
+                  </div>
+                ) : (
+                  /* Standard single-column layout for all other modes */
+                  <>
+                    <FileList />
+                    <QueueTotalBanner />
+                    <div className="px-3 pb-3 shrink-0">
+                      <PresetCards />
+                      <OutputControls />
+                    </div>
+                  </>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

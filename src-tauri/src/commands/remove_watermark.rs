@@ -75,27 +75,43 @@ pub async fn remove_watermark(
     let mut delogo_w = (width * w) / 100;
     let mut delogo_h = (height * h) / 100;
 
+    // Enforce 1-pixel margin from the left and top edges
+    if delogo_x < 1 {
+        delogo_x = 1;
+    }
+    if delogo_y < 1 {
+        delogo_y = 1;
+    }
+
     // FFmpeg delogo requires width and height to be at least 2 pixels
     if delogo_w < 2 { delogo_w = 2; }
     if delogo_h < 2 { delogo_h = 2; }
 
-    // Boundary guards
-    if delogo_x + delogo_w > width {
-        if width > delogo_w {
-            delogo_x = width - delogo_w;
+    // Enforce 1-pixel margin from the right edge
+    if delogo_x + delogo_w > width.saturating_sub(1) {
+        if width > delogo_w + 2 {
+            delogo_x = width - 1 - delogo_w;
         } else {
-            delogo_x = 0;
-            delogo_w = width;
+            delogo_x = 1;
+            delogo_w = width.saturating_sub(2);
         }
     }
-    if delogo_y + delogo_h > height {
-        if height > delogo_h {
-            delogo_y = height - delogo_h;
+
+    // Enforce 1-pixel margin from the bottom edge
+    if delogo_y + delogo_h > height.saturating_sub(1) {
+        if height > delogo_h + 2 {
+            delogo_y = height - 1 - delogo_h;
         } else {
-            delogo_y = 0;
-            delogo_h = height;
+            delogo_y = 1;
+            delogo_h = height.saturating_sub(2);
         }
     }
+
+    // Final safety clamps
+    if delogo_w < 2 { delogo_w = 2; }
+    if delogo_h < 2 { delogo_h = 2; }
+    if delogo_x < 1 { delogo_x = 1; }
+    if delogo_y < 1 { delogo_y = 1; }
 
     // 3. Determine if media is video
     let in_path = Path::new(&input_path);

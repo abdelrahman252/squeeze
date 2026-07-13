@@ -8,6 +8,7 @@ import { PreviewModal } from "./../results/PreviewModal";
 import { Thumbnail } from "./Thumbnail";
 import type { Job } from "@/types";
 import { useTranslation } from "@/lib/i18n";
+import { useSettingsStore } from "@/store/settings";
 
 // ── Animated SVG checkmark ────────────────────────────────────────────────────
 // Circle outline draws in, then the tick draws in 150 ms later.
@@ -74,11 +75,17 @@ function useCountUp(target: number, duration = 900): number {
 export function DoneCard({ job }: { job: Job }) {
   const { t, isRtl } = useTranslation();
   const isRemoveBgOrEnhance = job.operation === "remove-bg" || job.operation === "enhance";
+  const compressOnConvert = useSettingsStore(s => s.compressOnConvert) ?? false;
+  const isCompressionSavingsMode = 
+    job.operation === undefined ||
+    job.operation === "compress" || 
+    (job.operation === "convert" && compressOnConvert);
+
   const outputLarger =
     job.outputBytes === undefined || job.outputBytes >= job.inputBytes;
 
   const savedPct =
-    outputLarger || job.outputBytes === undefined || isRemoveBgOrEnhance
+    outputLarger || job.outputBytes === undefined || isRemoveBgOrEnhance || !isCompressionSavingsMode
       ? 0
       : Math.round(((job.inputBytes - job.outputBytes) / job.inputBytes) * 100);
 
@@ -115,7 +122,7 @@ export function DoneCard({ job }: { job: Job }) {
       </div>
 
       {/* Savings info: input → output · saved X% */}
-      {isRemoveBgOrEnhance ? (
+      {isRemoveBgOrEnhance || !isCompressionSavingsMode ? (
         <div className="flex items-center gap-1.5 shrink-0 font-mono text-xs tabular-nums">
           <span className="text-text-sub">
             {formatBytesExact(job.inputBytes)}

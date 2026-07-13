@@ -49,18 +49,29 @@ export function JobRow({ jobId }: { jobId: string }) {
   const displayName = middleTruncate(job.name, 50);
 
   const effectivePreset = job.overrides?.preset || preset;
-  const estimateBytes = estimateOutputBytes(
-    { kind: job.kind, sizeBytes: job.inputBytes, probe: job.probe },
-    effectivePreset,
-  );
+  const compressOnConvert = useSettingsStore(s => s.compressOnConvert) ?? false;
+  const isCompressOrConvertWithCompression = 
+    activeTab === "compress" || 
+    (activeTab === "convert" && compressOnConvert);
+
+  const estimateBytes = isCompressOrConvertWithCompression
+    ? estimateOutputBytes(
+        { kind: job.kind, sizeBytes: job.inputBytes, probe: job.probe },
+        effectivePreset,
+      )
+    : undefined;
   
   let estimateLabel = "—";
-  if (job.kind === "video" && job.overrides?.targetFileSize) {
-    estimateLabel = `~${job.overrides.targetFileSize} MB`;
-  } else if (estimateBytes !== undefined) {
-    estimateLabel = `~${formatBytesExact(estimateBytes)}`;
-  } else if (job.kind === "pdf") {
-    estimateLabel = "";
+  if (isCompressOrConvertWithCompression) {
+    if (job.kind === "video" && job.overrides?.targetFileSize) {
+      estimateLabel = `~${job.overrides.targetFileSize} MB`;
+    } else if (estimateBytes !== undefined) {
+      estimateLabel = `~${formatBytesExact(estimateBytes)}`;
+    } else if (job.kind === "pdf") {
+      estimateLabel = "";
+    }
+  } else {
+    estimateLabel = "—";
   }
   const codecBadge =
     job.kind === "video" && job.probe?.videoCodec
@@ -193,6 +204,8 @@ export function JobRow({ jobId }: { jobId: string }) {
                     ? t("statusEnhancing")
                     : activeTab === "remove-watermark"
                     ? t("statusRemovingWatermark")
+                    : activeTab === "convert"
+                    ? t("statusConverting")
                     : t("statusCompressing")}
                 </span>
               </div>

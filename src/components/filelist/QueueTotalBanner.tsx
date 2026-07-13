@@ -12,7 +12,8 @@ import {
   useDoneJobCount,
   useFirstOutputPath,
 } from "@/store/jobs";
-import { usePreset } from "@/store/settings";
+import { usePreset, useSettingsStore } from "@/store/settings";
+import { useActiveTab } from "@/store/ui";
 import { formatBytes, formatBytesExact } from "@/lib/format";
 import { estimateOutputBytes } from "@/lib/estimate";
 import { revealInExplorer } from "@/lib/tauri";
@@ -31,6 +32,11 @@ export function QueueTotalBanner() {
   const firstOutputPath = useFirstOutputPath();
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const activeTab = useActiveTab();
+  const compressOnConvert = useSettingsStore(s => s.compressOnConvert) ?? false;
+  const isCompressionSavingsMode = 
+    activeTab === "compress" || 
+    (activeTab === "convert" && compressOnConvert);
 
   if (jobCount === 0) return null;
 
@@ -41,10 +47,12 @@ export function QueueTotalBanner() {
     const failedCount  = jobIds.filter(id => jobs[id]?.status === "failed").length;
 
     const copySummary = () => {
-      let text = `${t("summaryTitle")}:\n`;
+      let text = `${isCompressionSavingsMode ? t("summaryTitle") : t("summaryTitleGeneric")}:\n`;
       text += `Total Input: ${formatBytesExact(totalInput)}\n`;
       text += `Total Output: ${formatBytesExact(totalOutput)}\n`;
-      text += `Saved: ${savedLabel}\n`;
+      if (isCompressionSavingsMode) {
+        text += `Saved: ${savedLabel}\n`;
+      }
       text += `Files Processed: ${doneCount} | Failed: ${failedCount}\n\n`;
       for (const id of jobIds) {
         const j = jobs[id];
@@ -78,14 +86,26 @@ export function QueueTotalBanner() {
             </span>
             <span className="text-zinc-500">·</span>
             <span className="text-zinc-300">
-              {isRtl ? (
-                <>
-                  وفرت <span className="font-mono font-semibold text-emerald-400">{savedLabel}</span> عبر <span className="font-semibold text-zinc-200">{doneCount}</span> ملفات.
-                </>
+              {isCompressionSavingsMode ? (
+                isRtl ? (
+                  <>
+                    وفرت <span className="font-mono font-semibold text-emerald-400">{savedLabel}</span> عبر <span className="font-semibold text-zinc-200">{doneCount}</span> ملفات.
+                  </>
+                ) : (
+                  <>
+                    Saved <span className="font-mono font-semibold text-emerald-400">{savedLabel}</span> across <span className="font-semibold text-zinc-200">{doneCount}</span> files.
+                  </>
+                )
               ) : (
-                <>
-                  Saved <span className="font-mono font-semibold text-emerald-400">{savedLabel}</span> across <span className="font-semibold text-zinc-200">{doneCount}</span> files.
-                </>
+                isRtl ? (
+                  <>
+                    تم معالجة <span className="font-semibold text-zinc-200">{doneCount}</span> ملفات (المخرج: <span className="font-mono font-semibold text-emerald-400">{formatBytesExact(totalOutput)}</span>).
+                  </>
+                ) : (
+                  <>
+                    Processed <span className="font-semibold text-zinc-200">{doneCount}</span> files (Output: <span className="font-mono font-semibold text-emerald-400">{formatBytesExact(totalOutput)}</span>).
+                  </>
+                )
               )}
             </span>
             {failedCount > 0 && (
@@ -177,6 +197,11 @@ export function QueueTotalBanner() {
       ? Math.round((saved / totalInput) * 100)
       : undefined;
 
+  const isAnyProbing = jobIds.some(id => {
+    const job = jobs[id];
+    return job && (job.status === "probing" || job.status === "thumbnailing" || job.status === "queued");
+  });
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -187,27 +212,40 @@ export function QueueTotalBanner() {
         transition={{ duration: 0.2, ease: "easeOut" }}
         className="flex items-center gap-2 px-4 py-2 mx-3 mb-2 rounded-lg bg-bg-panel border border-border-main text-xs text-text-sub shrink-0"
       >
-        <span className="font-medium text-main">{t("estimatingTotal")}</span>
+        <span className="font-medium text-main">
+          {isCompressionSavingsMode ? t("estimatingTotal") : t("estimatingTotalGeneric")}
+        </span>
         <span className="text-zinc-600">·</span>
         <span className="font-mono">{formatBytesExact(totalInput)}</span>
-        {allReady && (
+        {isCompressionSavingsMode ? (
           <>
-            <span className="text-zinc-600">→</span>
-            <span className="font-mono text-emerald-400 font-medium">
-              {formatBytes(totalEstimated)}
-            </span>
-            {savedPct !== undefined && savedPct > 0 && (
+            {allReady && (
               <>
-                <span className="text-zinc-600">·</span>
-                <span className="text-emerald-400">
-                  {isRtl ? `يوفر ~${savedPct}%` : `saves ~${savedPct}%`}
+                <span className="text-zinc-600">→</span>
+                <span className="font-mono text-emerald-400 font-medium">
+                  {formatBytes(totalEstimated)}
                 </span>
+                {savedPct !== undefined && savedPct > 0 && (
+                  <>
+                    <span className="text-zinc-600">·</span>
+                    <span className="text-emerald-400">
+                      {isRtl ? `يوفر ~${savedPct}%` : `saves ~${savedPct}%`}
+                    </span>
+                  </>
+                )}
               </>
             )}
+            {!allReady && (
+              <span className="text-zinc-600 italic">{t("statusAnalyzing")}</span>
+            )}
           </>
-        )}
-        {!allReady && (
-          <span className="text-zinc-600 italic">{t("statusAnalyzing")}</span>
+        ) : (
+          isAnyProbing && (
+            <>
+              <span className="text-zinc-600">·</span>
+              <span className="text-zinc-600 italic">{t("statusAnalyzing")}</span>
+            </>
+          )
         )}
       </motion.div>
     </AnimatePresence>
