@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use tokio::io::{AsyncBufReadExt, AsyncReadExt, BufReader};
 use tokio::process::Command as TokioCommand;
 use tauri::ipc::Channel;
@@ -8,8 +8,6 @@ use crate::jobs::progress::ProgressEvent;
 use crate::commands::compress_video::{CompressResult, ActiveJobPids};
 use crate::encoders::ffmpeg_sidecar_path;
 
-#[cfg(target_os = "windows")]
-use std::os::windows::process::CommandExt;
 #[cfg(target_os = "windows")]
 const CREATE_NO_WINDOW: u32 = 0x08000000;
 
@@ -23,7 +21,7 @@ pub async fn remove_watermark(
     y: u32,
     w: u32,
     h: u32,
-    band: u32,
+    _band: u32,
     active_jobs: tauri::State<'_, ActiveJobPids>,
 ) -> Result<CompressResult, AppError> {
     let ffmpeg = ffmpeg_sidecar_path();

@@ -3,7 +3,7 @@ use std::io::{Read, Write};
 use std::fs::File;
 use tauri::Manager;
 use tauri::ipc::Channel;
-use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
+use image::{DynamicImage, ImageBuffer, Rgba};
 use tract_onnx::prelude::*;
 use tract_onnx::prelude::tract_ndarray::Array4;
 use tokio::process::Command as TokioCommand;
@@ -13,8 +13,6 @@ use crate::jobs::progress::ProgressEvent;
 use crate::commands::compress_video::{CompressResult, ActiveJobPids};
 use crate::encoders::ffmpeg_sidecar_path;
 
-#[cfg(target_os = "windows")]
-use std::os::windows::process::CommandExt;
 #[cfg(target_os = "windows")]
 const CREATE_NO_WINDOW: u32 = 0x08000000;
 
@@ -123,7 +121,7 @@ fn upscale_image_data(
 
     // 4. Map output [1, 3, H*4, W*4] back to ImageBuffer
     let output_tensor = result[0]
-        .to_array_view::<f32>()
+        .to_plain_array_view::<f32>()
         .map_err(|e| AppError::Other(format!("Failed to map output tensor view: {e}")))?;
 
     let out_w = w * 4;

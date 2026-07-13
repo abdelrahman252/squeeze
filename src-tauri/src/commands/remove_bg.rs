@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::io::{Read, Write};
 use std::fs::File;
 use tauri::Manager;
@@ -124,7 +124,7 @@ fn run_segmentation(
         .map_err(|e| AppError::Other(format!("Model execution failure: {e}")))?;
 
     // Extract prediction d0 (shape: [1, 1, 320, 320])
-    let output_tensor = result[0].to_array_view::<f32>()
+    let output_tensor = result[0].to_plain_array_view::<f32>()
         .map_err(|e| AppError::Other(format!("Failed to map output tensor view: {e}")))?;
 
     let mut mask = ImageBuffer::new(model_input_size, model_input_size);

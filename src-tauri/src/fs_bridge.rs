@@ -59,6 +59,7 @@ pub fn get_path_info(path: String) -> Result<PathInfo, AppError> {
 
 /// Open Windows Explorer with the given file selected (highlight it in its folder).
 #[tauri::command]
+#[allow(unused_variables)]
 pub fn reveal_in_explorer(path: String) -> Result<(), AppError> {
     #[cfg(target_os = "windows")]
     {
