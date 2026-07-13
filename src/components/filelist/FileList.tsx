@@ -7,11 +7,14 @@ import { TypeFilterChips } from "./TypeFilterChips";
 import { JobRow } from "./JobRow";
 
 import { useTranslation } from "@/lib/i18n";
+import { useActiveTab } from "@/store/ui";
+import { cn } from "@/lib/utils";
 
 export function FileList() {
   const { t } = useTranslation();
   const storeJobIds = useAllJobIds();
   const storeJobs   = useJobsStore((s) => s.jobs);
+  const activeTab = useActiveTab();
   const [activeFilter, setActiveFilter] = useState<FileKind | "all">("all");
 
   // Keep a ref snapshot of the last non-empty queue.
@@ -56,7 +59,13 @@ export function FileList() {
 
   return (
     // flex-col flex-1 min-h-0 — required by smol-flex-scroll-fix skill
-    <div id="tour-file-list" className="flex flex-col flex-1 min-h-0 mx-3 mb-3">
+    <div 
+      id="tour-file-list" 
+      className={cn(
+        "flex flex-col min-h-0 mx-3 mb-3",
+        activeTab === "remove-watermark" ? "h-[130px] shrink-0" : "flex-1"
+      )}
+    >
       {/* Filter chips — fixed height, never scrolls */}
       <TypeFilterChips counts={counts} active={activeFilter} onSelect={setActiveFilter} />
 

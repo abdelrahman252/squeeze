@@ -191,16 +191,22 @@ export async function startSqueeze(): Promise<void> {
             removeBgModel || "general",
           );
         } else if (isRemoveWatermarkMode) {
+          const jobX = job.overrides?.removeWatermarkX ?? removeWatermarkX ?? 75;
+          const jobY = job.overrides?.removeWatermarkY ?? removeWatermarkY ?? 5;
+          const jobW = job.overrides?.removeWatermarkW ?? removeWatermarkW ?? 20;
+          const jobH = job.overrides?.removeWatermarkH ?? removeWatermarkH ?? 10;
+          const jobBand = job.overrides?.removeWatermarkBand ?? removeWatermarkBand ?? 4;
+
           result = await removeWatermark(
             jobId,
             job.inputPath,
             outputPath,
             channel,
-            removeWatermarkX ?? 75,
-            removeWatermarkY ?? 5,
-            removeWatermarkW ?? 20,
-            removeWatermarkH ?? 10,
-            removeWatermarkBand ?? 4,
+            jobX,
+            jobY,
+            jobW,
+            jobH,
+            jobBand,
           );
         } else if (job.kind === "image") {
           const { resizeWidth, resizeHeight, watermarkPath, watermarkPos, watermarkOpacity } = useSettingsStore.getState();

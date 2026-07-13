@@ -7,6 +7,7 @@ import { Dropzone } from "@/components/dropzone/Dropzone";
 import { FileList } from "@/components/filelist/FileList";
 import { QueueTotalBanner } from "@/components/filelist/QueueTotalBanner";
 import { PresetCards } from "@/components/settings/PresetCards";
+import { InteractivePreview } from "@/components/settings/InteractivePreview";
 import { startSqueeze } from "@/hooks/useCompression";
 import { OutputControls } from "@/components/settings/OutputControls";
 import { AdvancedDrawer } from "@/components/settings/AdvancedDrawer";
@@ -22,6 +23,7 @@ import { TourGuide } from "@/components/tour/TourGuide";
 export default function App() {
   const { isRtl } = useTranslation();
   const theme = useUiStore((s) => s.theme);
+  const activeTab = useUiStore((s) => s.activeTab);
   const maximized  = useMaximized();
   useShortcuts();
   const { isDraggingOver, onDragOver, onDragLeave, onDrop } = useDragDrop();
@@ -119,6 +121,8 @@ export default function App() {
                 transition={{ duration: 0.2 }}
               >
                 <FileList />
+                
+                {activeTab === "remove-watermark" && <InteractivePreview />}
                 
                 <QueueTotalBanner />
                 

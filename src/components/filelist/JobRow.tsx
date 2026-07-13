@@ -5,7 +5,7 @@ import type { CompressionPreset, JobOverrides } from "@/types";
 import { cn } from "@/lib/utils";
 import { formatBytesExact, middleTruncate, parentDirName, formatEta, probeLabel } from "@/lib/format";
 import { kindBadgeColor, kindLabel } from "@/lib/kinds";
-import { useJob, useJobsStore } from "@/store/jobs";
+import { useJob, useJobsStore, useSelectedJobId } from "@/store/jobs";
 import { usePreset, useSettingsStore } from "@/store/settings";
 import { useActiveTab } from "@/store/ui";
 import { estimateOutputBytes } from "@/lib/estimate";
@@ -20,6 +20,8 @@ export function JobRow({ jobId }: { jobId: string }) {
   const { t } = useTranslation();
   const job    = useJob(jobId);
   const preset = usePreset();
+  const selectedJobId = useSelectedJobId();
+  const isSelected = selectedJobId === jobId;
   const [expanded, setExpanded] = useState(false);
 
   const globalVideoFormat = useSettingsStore(s => s.globalVideoFormat);
@@ -114,7 +116,13 @@ export function JobRow({ jobId }: { jobId: string }) {
   // ── Normal / encoding state ─────────────────────────────────────────────────
   return (
     <div 
-      className="flex flex-col rounded-lg bg-bg-panel border border-border-sub hover:bg-bg-panel-hover transition-colors group overflow-hidden"
+      onClick={() => useJobsStore.getState().setSelectedJobId(jobId)}
+      className={cn(
+        "flex flex-col rounded-lg border transition-all group overflow-hidden cursor-pointer",
+        isSelected 
+          ? "border-emerald-500 bg-emerald-950/10 shadow shadow-emerald-500/10" 
+          : "border-border-sub bg-bg-panel hover:bg-bg-panel-hover hover:border-zinc-700"
+      )}
       onMouseEnter={() => useJobsStore.getState().setHoveredJob(jobId)}
       onMouseLeave={() => useJobsStore.getState().setHoveredJob(null)}
     >

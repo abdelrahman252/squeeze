@@ -6,13 +6,13 @@ import {
   useGlobalImageFormat,
   useGlobalAudioFormat 
 } from "@/store/settings";
-import { useJobs, useJobCount } from "@/store/jobs";
+import { useJobs, useJobCount, useSelectedJob, useJobsStore } from "@/store/jobs";
 import { getPresetEstimate } from "@/lib/estimate";
 import { formatBytes } from "@/lib/format";
 import { useTranslation } from "@/lib/i18n";
 import { useActiveTab } from "@/store/ui";
 import { cn } from "@/lib/utils";
-import type { Settings } from "@/types";
+import type { JobOverrides } from "@/types";
 
 function PresetCard({
   labelKey,
@@ -93,15 +93,17 @@ export function PresetCards() {
   const enhanceFormat = useSettingsStore(s => s.enhanceFormat) || "original";
   const enhanceCompress = useSettingsStore(s => s.enhanceCompress) ?? true;
 
-  const removeWatermarkPreset = useSettingsStore(s => s.removeWatermarkPreset) || "topRight";
-  const removeWatermarkX = useSettingsStore(s => s.removeWatermarkX) ?? 75;
-  const removeWatermarkY = useSettingsStore(s => s.removeWatermarkY) ?? 5;
-  const removeWatermarkW = useSettingsStore(s => s.removeWatermarkW) ?? 20;
-  const removeWatermarkH = useSettingsStore(s => s.removeWatermarkH) ?? 10;
-  const removeWatermarkBand = useSettingsStore(s => s.removeWatermarkBand) ?? 4;
+  const selectedJob = useSelectedJob();
+
+  const removeWatermarkPreset = selectedJob?.overrides?.removeWatermarkPreset ?? useSettingsStore.getState().removeWatermarkPreset ?? "topRight";
+  const removeWatermarkX = selectedJob?.overrides?.removeWatermarkX ?? useSettingsStore.getState().removeWatermarkX ?? 75;
+  const removeWatermarkY = selectedJob?.overrides?.removeWatermarkY ?? useSettingsStore.getState().removeWatermarkY ?? 5;
+  const removeWatermarkW = selectedJob?.overrides?.removeWatermarkW ?? useSettingsStore.getState().removeWatermarkW ?? 20;
+  const removeWatermarkH = selectedJob?.overrides?.removeWatermarkH ?? useSettingsStore.getState().removeWatermarkH ?? 10;
+  const removeWatermarkBand = selectedJob?.overrides?.removeWatermarkBand ?? useSettingsStore.getState().removeWatermarkBand ?? 4;
 
   function handleWatermarkPresetChange(preset: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "custom") {
-    const patch: Partial<Settings> = { removeWatermarkPreset: preset };
+    const patch: Partial<JobOverrides> = { removeWatermarkPreset: preset };
     if (preset === "topLeft") {
       patch.removeWatermarkX = 5;
       patch.removeWatermarkY = 5;
@@ -123,7 +125,20 @@ export function PresetCards() {
       patch.removeWatermarkW = 20;
       patch.removeWatermarkH = 10;
     }
-    useSettingsStore.getState().patch(patch);
+    
+    if (selectedJob) {
+      useJobsStore.getState().updateJobOverrides(selectedJob.id, patch);
+    } else {
+      useSettingsStore.getState().patch(patch as any);
+    }
+  }
+
+  function updateWatermark(patch: Partial<JobOverrides>) {
+    if (selectedJob) {
+      useJobsStore.getState().updateJobOverrides(selectedJob.id, patch);
+    } else {
+      useSettingsStore.getState().patch(patch as any);
+    }
   }
 
   const watermarkPresets: { id: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "custom"; label: string }[] = [
@@ -605,7 +620,7 @@ export function PresetCards() {
                     max="100"
                     value={removeWatermarkX}
                     onChange={(e) => {
-                      useSettingsStore.getState().patch({
+                      updateWatermark({
                         removeWatermarkPreset: "custom",
                         removeWatermarkX: parseInt(e.target.value)
                       });
@@ -625,7 +640,7 @@ export function PresetCards() {
                     max="100"
                     value={removeWatermarkY}
                     onChange={(e) => {
-                      useSettingsStore.getState().patch({
+                      updateWatermark({
                         removeWatermarkPreset: "custom",
                         removeWatermarkY: parseInt(e.target.value)
                       });
@@ -646,7 +661,7 @@ export function PresetCards() {
                     max="50"
                     value={removeWatermarkW}
                     onChange={(e) => {
-                      useSettingsStore.getState().patch({
+                      updateWatermark({
                         removeWatermarkPreset: "custom",
                         removeWatermarkW: parseInt(e.target.value)
                       });
@@ -666,7 +681,7 @@ export function PresetCards() {
                     max="50"
                     value={removeWatermarkH}
                     onChange={(e) => {
-                      useSettingsStore.getState().patch({
+                      updateWatermark({
                         removeWatermarkPreset: "custom",
                         removeWatermarkH: parseInt(e.target.value)
                       });
@@ -687,7 +702,7 @@ export function PresetCards() {
                     max="20"
                     value={removeWatermarkBand}
                     onChange={(e) => {
-                      useSettingsStore.getState().patch({
+                      updateWatermark({
                         removeWatermarkBand: parseInt(e.target.value)
                       });
                     }}

@@ -29,6 +29,13 @@ export interface JobOverrides {
   lossless?: boolean;
   resize?: boolean;
   targetFormat?: string;
+  removeWatermarkX?: number;
+  removeWatermarkY?: number;
+  removeWatermarkW?: number;
+  removeWatermarkH?: number;
+  removeWatermarkPreset?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "custom";
+  removeWatermarkShape?: "box" | "circle";
+  removeWatermarkBand?: number;
 }
 
 export interface Job {
@@ -106,6 +113,7 @@ export interface Settings {
   removeWatermarkW?: number;
   removeWatermarkH?: number;
   removeWatermarkBand?: number;
+  removeWatermarkShape?: "box" | "circle";
   advanced: {
     video?: {
       codec?: "h264" | "h265" | "av1";

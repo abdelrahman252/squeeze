@@ -15,6 +15,7 @@ interface JobsState {
   jobs: Record<string, Job>;
   jobIds: string[];
   hoveredJobId: string | null;
+  selectedJobId: string | null;
 
   // ── Actions (batch / multi-job) ─────────────────────────────────────────────
   /** Enqueue new files with status='queued' and kick off the probe pipeline. */
@@ -23,6 +24,7 @@ interface JobsState {
   clear: () => void;
   retryJob: (id: string) => void;
   setHoveredJob: (id: string | null) => void;
+  setSelectedJobId: (id: string | null) => void;
   loadDemoData: () => void;
   clearDemoData: () => void;
 
@@ -53,6 +55,7 @@ export const useJobsStore = create<JobsState>((set, get) => ({
   jobs: {},
   jobIds: [],
   hoveredJobId: null,
+  selectedJobId: null,
 
   addFiles: (files) => {
     const now = Date.now();
@@ -62,7 +65,9 @@ export const useJobsStore = create<JobsState>((set, get) => ({
       newJobs[f.id] = { ...f, addedAt: now, status: "queued", progress: 0 };
       newIds.push(f.id);
     }
-    set({ jobs: newJobs, jobIds: newIds });
+    const currentSelected = get().selectedJobId;
+    const nextSelected = currentSelected || (files[0] ? files[0].id : null);
+    set({ jobs: newJobs, jobIds: newIds, selectedJobId: nextSelected });
     // Fire-and-forget: one async pipeline task per file (HR-6 compliant)
     for (const f of files) {
       void kickOffPipeline(f.id, f.inputPath, f.kind, f.inputBytes);
@@ -72,16 +77,20 @@ export const useJobsStore = create<JobsState>((set, get) => ({
   removeJob: (id) =>
     set((s) => {
       const { [id]: _dropped, ...rest } = s.jobs;
+      const filteredIds = s.jobIds.filter((x) => x !== id);
+      const nextSelected = s.selectedJobId === id ? (filteredIds[0] || null) : s.selectedJobId;
       return { 
         jobs: rest, 
-        jobIds: s.jobIds.filter((x) => x !== id),
-        hoveredJobId: s.hoveredJobId === id ? null : s.hoveredJobId
+        jobIds: filteredIds,
+        hoveredJobId: s.hoveredJobId === id ? null : s.hoveredJobId,
+        selectedJobId: nextSelected
       };
     }),
 
-  clear: () => set({ jobs: {}, jobIds: [], hoveredJobId: null }),
+  clear: () => set({ jobs: {}, jobIds: [], hoveredJobId: null, selectedJobId: null }),
   
   setHoveredJob: (id) => set({ hoveredJobId: id }),
+  setSelectedJobId: (id) => set({ selectedJobId: id }),
 
   loadDemoData: () => {
     const demoJobs = {
@@ -112,9 +121,12 @@ export const useJobsStore = create<JobsState>((set, get) => ({
         thumbnailPath: null,
       }
     };
+    const currentSelected = get().selectedJobId;
+    const nextSelected = currentSelected || "demo-image-1";
     set({
       jobs: { ...get().jobs, ...demoJobs },
-      jobIds: Array.from(new Set([...get().jobIds, "demo-image-1", "demo-video-1"]))
+      jobIds: Array.from(new Set([...get().jobIds, "demo-image-1", "demo-video-1"])),
+      selectedJobId: nextSelected,
     });
   },
 
@@ -122,9 +134,14 @@ export const useJobsStore = create<JobsState>((set, get) => ({
     const jobs = { ...get().jobs };
     delete jobs["demo-image-1"];
     delete jobs["demo-video-1"];
+    const filteredIds = get().jobIds.filter(id => id !== "demo-image-1" && id !== "demo-video-1");
+    const nextSelected = (get().selectedJobId === "demo-image-1" || get().selectedJobId === "demo-video-1")
+      ? (filteredIds[0] || null)
+      : get().selectedJobId;
     set({
       jobs,
-      jobIds: get().jobIds.filter(id => id !== "demo-image-1" && id !== "demo-video-1")
+      jobIds: filteredIds,
+      selectedJobId: nextSelected,
     });
   },
 
@@ -429,4 +446,11 @@ export const useFirstOutputPath = () =>
       if (path) return path;
     }
     return undefined;
+  });
+
+export const useSelectedJobId = () => useJobsStore((s) => s.selectedJobId);
+export const useSelectedJob = () =>
+  useJobsStore((s) => {
+    const id = s.selectedJobId;
+    return id ? s.jobs[id] : null;
   });
