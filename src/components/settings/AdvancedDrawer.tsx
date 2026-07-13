@@ -70,7 +70,7 @@ export function AdvancedDrawer() {
             animate={{ x: 0 }}
             exit={{ x: isRtl ? "-100%" : "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className={`fixed top-0 h-full w-[384px] bg-bg-panel shadow-2xl z-50 flex flex-col ${
+            className={`fixed top-0 h-full w-[384px] bg-bg-panel-hover shadow-2xl z-50 flex flex-col ${
               isRtl ? "left-0 border-r border-border-main" : "right-0 border-l border-border-main"
             }`}
           >
@@ -105,7 +105,7 @@ export function AdvancedDrawer() {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4">
               {/* Global settings */}
               <div className="mb-6 pb-6 border-b border-border-main">
                 <h3 className="text-sm font-medium text-main mb-4">{t("globalLabel")}</h3>
@@ -168,7 +168,7 @@ export function AdvancedDrawer() {
             </div>
 
             {/* Footer / Update Button */}
-            <div className="flex-shrink-0 border-t border-border-main p-4 bg-bg-panel flex flex-col gap-2">
+            <div className="flex-shrink-0 border-t border-border-main p-4 bg-bg-panel-hover flex flex-col gap-2">
               <button
                 disabled={isChecking}
                 onClick={handleCheckUpdates}
