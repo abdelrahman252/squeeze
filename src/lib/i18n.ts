@@ -62,7 +62,7 @@ export const translations = {
 
     // Watermark Removal
     removeWatermarkTab: "Remove Watermark",
-    removeWatermarkAction: "Remove Logo",
+    removeWatermarkAction: "Remove Watermark",
     removeWatermarkLabel: "Watermark Removal Settings",
     watermarkLocationPreset: "Watermark Position:",
     watermarkXPos: "X Position (Left to Right):",

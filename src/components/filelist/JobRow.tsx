@@ -1,5 +1,5 @@
 import { X, RotateCcw, Settings2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { CompressionPreset, JobOverrides } from "@/types";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ import { cancelJob } from "@/lib/tauri";
 import { DoneCard } from "./DoneCard";
 import { Thumbnail } from "./Thumbnail";
 import { useTranslation } from "@/lib/i18n";
+import { ErrorLogModal } from "./../results/ErrorLogModal";
 
 // ── Job row ───────────────────────────────────────────────────────────────────
 
@@ -23,32 +24,39 @@ export function JobRow({ jobId }: { jobId: string }) {
   const selectedJobId = useSelectedJobId();
   const isSelected = selectedJobId === jobId;
   const [expanded, setExpanded] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   const globalVideoFormat = useSettingsStore(s => s.globalVideoFormat);
   const globalImageFormat = useSettingsStore(s => s.globalImageFormat);
   const globalAudioFormat = useSettingsStore(s => s.globalAudioFormat);
   const activeTab = useActiveTab();
 
-  if (!job) return null;
+  const lastJobRef = useRef<typeof job | null>(null);
+  if (job) {
+    lastJobRef.current = job;
+  }
+  const displayJob = job || lastJobRef.current;
 
-  const globalFormat = job.kind === "video" ? globalVideoFormat
-    : job.kind === "audio" ? globalAudioFormat
-    : job.kind === "image" ? globalImageFormat
+  if (!displayJob) return null;
+
+  const globalFormat = displayJob.kind === "video" ? globalVideoFormat
+    : displayJob.kind === "audio" ? globalAudioFormat
+    : displayJob.kind === "image" ? globalImageFormat
     : undefined;
-  const targetFormat = job.overrides?.targetFormat || globalFormat || null;
-  const inputExt = job.inputPath.split(".").pop()?.toUpperCase() || "";
+  const targetFormat = displayJob.overrides?.targetFormat || globalFormat || null;
+  const inputExt = displayJob.inputPath.split(".").pop()?.toUpperCase() || "";
 
   // Done → collapse to compact DoneCard (layout animation handled by parent)
-  if (job.status === "done") return <DoneCard job={job} />;
+  if (displayJob.status === "done") return <DoneCard job={displayJob} />;
 
-  const isFailed   = job.status === "failed";
-  const isEncoding = job.status === "encoding";
-  const isProbing  = job.status === "probing" || job.status === "thumbnailing";
-  const meta       = probeLabel(job.probe, job.kind);
-  const dirName    = parentDirName(job.inputPath);
-  const displayName = middleTruncate(job.name, 50);
+  const isFailed   = displayJob.status === "failed";
+  const isEncoding = displayJob.status === "encoding";
+  const isProbing  = displayJob.status === "probing" || displayJob.status === "thumbnailing";
+  const meta       = probeLabel(displayJob.probe, displayJob.kind);
+  const dirName    = parentDirName(displayJob.inputPath);
+  const displayName = middleTruncate(displayJob.name, 50);
 
-  const effectivePreset = job.overrides?.preset || preset;
+  const effectivePreset = displayJob.overrides?.preset || preset;
   const compressOnConvert = useSettingsStore(s => s.compressOnConvert) ?? false;
   const isCompressOrConvertWithCompression = 
     activeTab === "compress" || 
@@ -56,26 +64,26 @@ export function JobRow({ jobId }: { jobId: string }) {
 
   const estimateBytes = isCompressOrConvertWithCompression
     ? estimateOutputBytes(
-        { kind: job.kind, sizeBytes: job.inputBytes, probe: job.probe },
+        { kind: displayJob.kind, sizeBytes: displayJob.inputBytes, probe: displayJob.probe },
         effectivePreset,
       )
     : undefined;
   
   let estimateLabel = "—";
   if (isCompressOrConvertWithCompression) {
-    if (job.kind === "video" && job.overrides?.targetFileSize) {
-      estimateLabel = `~${job.overrides.targetFileSize} MB`;
+    if (displayJob.kind === "video" && displayJob.overrides?.targetFileSize) {
+      estimateLabel = `~${displayJob.overrides.targetFileSize} MB`;
     } else if (estimateBytes !== undefined) {
       estimateLabel = `~${formatBytesExact(estimateBytes)}`;
-    } else if (job.kind === "pdf") {
+    } else if (displayJob.kind === "pdf") {
       estimateLabel = "";
     }
   } else {
     estimateLabel = "—";
   }
   const codecBadge =
-    job.kind === "video" && job.probe?.videoCodec
-      ? job.probe.videoCodec.toUpperCase()
+    displayJob.kind === "video" && displayJob.probe?.videoCodec
+      ? displayJob.probe.videoCodec.toUpperCase()
       : null;
 
   // ── Failed state ────────────────────────────────────────────────────────────
@@ -86,20 +94,31 @@ export function JobRow({ jobId }: { jobId: string }) {
         onMouseEnter={() => useJobsStore.getState().setHoveredJob(jobId)}
         onMouseLeave={() => useJobsStore.getState().setHoveredJob(null)}
       >
-        <Thumbnail job={job} />
+        <Thumbnail job={displayJob} />
         <div className="flex flex-col flex-1 min-w-0 gap-0.5">
-          <span className="text-sm font-medium text-text-sub truncate" title={job.name}>
+          <span className="text-sm font-medium text-text-sub truncate" title={displayJob.name}>
             {displayName}
           </span>
           <div className="flex items-center gap-2 text-xs">
-            <span className="font-mono text-text-sub">{formatBytesExact(job.inputBytes)}</span>
+            <span className="font-mono text-text-sub">{formatBytesExact(displayJob.inputBytes)}</span>
             <span className="text-text-sub">·</span>
             <span className="text-red-500 font-medium">{t("statusFailed")}</span>
           </div>
-          {job.errorMessage && (
-            <span className="text-[10px] text-text-sub truncate max-w-xs" title={job.errorMessage}>
-              {job.errorMessage}
-            </span>
+          {displayJob.errorMessage && (
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="text-[10px] text-text-sub truncate max-w-[200px]" title={displayJob.errorMessage}>
+                {displayJob.errorMessage}
+              </span>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowErrorModal(true);
+                }}
+                className="text-[10px] font-semibold text-rose-400 hover:text-rose-300 underline cursor-pointer shrink-0"
+              >
+                [Show Log]
+              </button>
+            </div>
           )}
         </div>
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
@@ -120,6 +139,16 @@ export function JobRow({ jobId }: { jobId: string }) {
             <X className="h-3.5 w-3.5" />
           </button>
         </div>
+
+        <AnimatePresence>
+          {showErrorModal && (
+            <ErrorLogModal 
+              jobName={displayJob.name} 
+              errorMessage={displayJob.errorMessage || ""} 
+              onClose={() => setShowErrorModal(false)} 
+            />
+          )}
+        </AnimatePresence>
       </div>
     );
   }
@@ -138,10 +167,10 @@ export function JobRow({ jobId }: { jobId: string }) {
       onMouseLeave={() => useJobsStore.getState().setHoveredJob(null)}
     >
       <div className="relative flex items-start gap-3 px-3 py-2">
-        <Thumbnail job={job} />
+        <Thumbnail job={displayJob} />
 
       <div className="flex flex-col flex-1 min-w-0 gap-0.5">
-        <span className="text-sm font-medium text-main truncate" title={job.name}>
+        <span className="text-sm font-medium text-main truncate" title={displayJob.name}>
           {displayName}
         </span>
 
@@ -159,7 +188,7 @@ export function JobRow({ jobId }: { jobId: string }) {
               <span className="text-text-sub">·</span>
             </>
           )}
-          <span className="font-mono">{formatBytesExact(job.inputBytes)}</span>
+          <span className="font-mono">{formatBytesExact(displayJob.inputBytes)}</span>
           {meta && (
             <>
               <span className="text-text-sub">·</span>
@@ -177,25 +206,25 @@ export function JobRow({ jobId }: { jobId: string }) {
         {isEncoding && (
           <div className="mt-1 flex flex-col gap-0.5">
             <div className="h-1 w-full rounded-full bg-bg-card overflow-hidden">
-              {(job.kind === "image" || job.kind === "pdf") ? (
+              {(displayJob.kind === "image" || displayJob.kind === "pdf") ? (
                 <div className="h-full w-full rounded-full bg-gradient-to-r from-emerald-500 via-cyan-500 to-emerald-500 bg-[length:200%_100%] animate-[pulse_1.5s_ease-in-out_infinite]" />
               ) : (
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-[width] duration-300"
-                  style={{ width: `${job.progress ?? 0}%` }}
+                  style={{ width: `${displayJob.progress ?? 0}%` }}
                 />
               )}
             </div>
-            {!(job.kind === "image" || job.kind === "pdf") && (
+            {!(displayJob.kind === "image" || displayJob.kind === "pdf") && (
               <div className="flex items-center gap-2 text-[10px] text-text-sub font-mono tabular-nums">
-                <span>{job.progress ?? 0}%</span>
-                {job.speed && <span>{job.speed}</span>}
-                {job.etaSec !== undefined && job.etaSec > 0 && (
-                  <span>ETA {formatEta(job.etaSec)}</span>
+                <span>{displayJob.progress ?? 0}%</span>
+                {displayJob.speed && <span>{displayJob.speed}</span>}
+                {displayJob.etaSec !== undefined && displayJob.etaSec > 0 && (
+                  <span>ETA {formatEta(displayJob.etaSec)}</span>
                 )}
               </div>
             )}
-            {(job.kind === "image" || job.kind === "pdf" || (job.kind === "video" && activeTab === "enhance")) && (
+            {(displayJob.kind === "image" || displayJob.kind === "pdf" || (displayJob.kind === "video" && activeTab === "enhance")) && (
               <div className="flex items-center gap-2 text-[10px] text-text-sub font-mono">
                 <span className="animate-pulse">
                   {activeTab === "remove-bg"
@@ -228,10 +257,10 @@ export function JobRow({ jobId }: { jobId: string }) {
       <span
         className={cn(
           "text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wide shrink-0 w-[4.5rem] inline-flex items-center justify-center self-start mt-0.5",
-          kindBadgeColor(job.kind),
+          kindBadgeColor(displayJob.kind),
         )}
       >
-        {kindLabel(job.kind)}
+        {kindLabel(displayJob.kind)}
       </span>
 
       {/* Remove / cancel button */}
@@ -265,7 +294,7 @@ export function JobRow({ jobId }: { jobId: string }) {
             className="px-3 pb-2 flex flex-col"
           >
             <div className="pt-2 border-t border-border-main">
-              <JobRowSettings jobId={jobId} />
+              <JobRowSettings job={displayJob} />
             </div>
           </motion.div>
         )}
@@ -274,13 +303,12 @@ export function JobRow({ jobId }: { jobId: string }) {
   );
 }
 
-function JobRowSettings({ jobId }: { jobId: string }) {
-  const { t } = useTranslation();
-  const job = useJob(jobId);
-  if (!job) return null;
+import type { Job } from "@/types";
 
+function JobRowSettings({ job }: { job: Job }) {
+  const { t } = useTranslation();
   const overrides = job.overrides || {};
-  const update = (patch: Partial<JobOverrides>) => useJobsStore.getState().updateJobOverrides(jobId, patch);
+  const update = (patch: Partial<JobOverrides>) => useJobsStore.getState().updateJobOverrides(job.id, patch);
 
   if (job.kind === "video") {
     return (

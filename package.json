@@ -1,7 +1,7 @@
 {
   "name": "squeeze",
   "private": true,
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A fast, native Windows desktop app for compressing media.",
   "type": "module",
   "scripts": {

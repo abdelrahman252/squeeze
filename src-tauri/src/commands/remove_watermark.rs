@@ -128,7 +128,7 @@ pub async fn remove_watermark(
     if is_video {
         args.extend([
             "-vf".to_string(),
-            format!("delogo=x={}:y={}:w={}:h={}:band={}", delogo_x, delogo_y, delogo_w, delogo_h, band),
+            format!("delogo=x={}:y={}:w={}:h={}", delogo_x, delogo_y, delogo_w, delogo_h),
             "-map".to_string(),
             "0:v".to_string(),
             "-map".to_string(),
@@ -143,7 +143,9 @@ pub async fn remove_watermark(
     } else {
         args.extend([
             "-vf".to_string(),
-            format!("delogo=x={}:y={}:w={}:h={}:band={}", delogo_x, delogo_y, delogo_w, delogo_h, band),
+            format!("delogo=x={}:y={}:w={}:h={}", delogo_x, delogo_y, delogo_w, delogo_h),
+            "-update".to_string(),
+            "1".to_string(),
         ]);
     }
 

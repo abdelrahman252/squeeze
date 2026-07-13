@@ -285,11 +285,12 @@ export function InteractivePreview() {
       <div className="relative flex-1 flex items-center justify-center bg-zinc-950 p-2 overflow-hidden min-h-0">
         <div
           style={{
+            aspectRatio: job.probe?.width && job.probe?.height ? `${job.probe.width}/${job.probe.height}` : undefined,
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: "center center",
             transition: isDragging ? "none" : "transform 0.15s ease-out",
           }}
-          className="relative max-h-full max-w-full select-none flex items-center justify-center"
+          className="relative max-h-full max-w-full select-none"
         >
           {job.kind === "video" ? (
             <video
@@ -299,12 +300,12 @@ export function InteractivePreview() {
               loop
               muted
               playsInline
-              className="max-h-[300px] max-w-full object-contain rounded-md block bg-black"
+              className="w-full h-full object-contain rounded-md block bg-black"
             />
           ) : (
             <img
               src={url}
-              className="max-h-[300px] max-w-full object-contain rounded-md block bg-black pointer-events-none"
+              className="w-full h-full object-contain rounded-md block bg-black pointer-events-none"
               alt="Preview"
             />
           )}

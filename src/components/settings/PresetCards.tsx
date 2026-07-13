@@ -610,9 +610,25 @@ export function PresetCards() {
               {/* X and Y sliders */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between text-xs">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="font-semibold text-text-sub">{t("watermarkXPos")}</span>
-                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkX}%</span>
+                    <div className="flex items-center gap-0.5">
+                      <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        value={removeWatermarkX}
+                        onChange={(e) => {
+                          const val = Math.min(100, Math.max(0, parseInt(e.target.value) || 0));
+                          updateWatermark({
+                            removeWatermarkPreset: "custom",
+                            removeWatermarkX: val
+                          });
+                        }}
+                        className="w-10 h-4 px-1 text-center font-mono text-[11px] font-semibold text-emerald-400 bg-bg-app border border-border-main rounded focus:outline-none focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-text select-text"
+                      />
+                      <span className="text-zinc-500 text-[10px] font-semibold">%</span>
+                    </div>
                   </div>
                   <input
                     type="range"
@@ -630,9 +646,25 @@ export function PresetCards() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between text-xs">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="font-semibold text-text-sub">{t("watermarkYPos")}</span>
-                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkY}%</span>
+                    <div className="flex items-center gap-0.5">
+                      <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        value={removeWatermarkY}
+                        onChange={(e) => {
+                          const val = Math.min(100, Math.max(0, parseInt(e.target.value) || 0));
+                          updateWatermark({
+                            removeWatermarkPreset: "custom",
+                            removeWatermarkY: val
+                          });
+                        }}
+                        className="w-10 h-4 px-1 text-center font-mono text-[11px] font-semibold text-emerald-400 bg-bg-app border border-border-main rounded focus:outline-none focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-text select-text"
+                      />
+                      <span className="text-zinc-500 text-[10px] font-semibold">%</span>
+                    </div>
                   </div>
                   <input
                     type="range"
@@ -651,9 +683,25 @@ export function PresetCards() {
 
                 {/* Width and Height sliders */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between text-xs">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="font-semibold text-text-sub">{t("watermarkWidth")}</span>
-                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkW}%</span>
+                    <div className="flex items-center gap-0.5">
+                      <input
+                        type="number"
+                        min={1}
+                        max={50}
+                        value={removeWatermarkW}
+                        onChange={(e) => {
+                          const val = Math.min(50, Math.max(1, parseInt(e.target.value) || 1));
+                          updateWatermark({
+                            removeWatermarkPreset: "custom",
+                            removeWatermarkW: val
+                          });
+                        }}
+                        className="w-10 h-4 px-1 text-center font-mono text-[11px] font-semibold text-emerald-400 bg-bg-app border border-border-main rounded focus:outline-none focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-text select-text"
+                      />
+                      <span className="text-zinc-500 text-[10px] font-semibold">%</span>
+                    </div>
                   </div>
                   <input
                     type="range"
@@ -671,9 +719,25 @@ export function PresetCards() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between text-xs">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="font-semibold text-text-sub">{t("watermarkHeight")}</span>
-                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkH}%</span>
+                    <div className="flex items-center gap-0.5">
+                      <input
+                        type="number"
+                        min={1}
+                        max={50}
+                        value={removeWatermarkH}
+                        onChange={(e) => {
+                          const val = Math.min(50, Math.max(1, parseInt(e.target.value) || 1));
+                          updateWatermark({
+                            removeWatermarkPreset: "custom",
+                            removeWatermarkH: val
+                          });
+                        }}
+                        className="w-10 h-4 px-1 text-center font-mono text-[11px] font-semibold text-emerald-400 bg-bg-app border border-border-main rounded focus:outline-none focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-text select-text"
+                      />
+                      <span className="text-zinc-500 text-[10px] font-semibold">%</span>
+                    </div>
                   </div>
                   <input
                     type="range"
@@ -692,9 +756,24 @@ export function PresetCards() {
 
                 {/* Fuzziness/Band slider */}
                 <div className="flex flex-col gap-1.5 col-span-2">
-                  <div className="flex justify-between text-xs">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="font-semibold text-text-sub">{t("watermarkBand")}</span>
-                    <span className="font-mono text-emerald-400 font-semibold">{removeWatermarkBand}px</span>
+                    <div className="flex items-center gap-0.5">
+                      <input
+                        type="number"
+                        min={1}
+                        max={20}
+                        value={removeWatermarkBand}
+                        onChange={(e) => {
+                          const val = Math.min(20, Math.max(1, parseInt(e.target.value) || 1));
+                          updateWatermark({
+                            removeWatermarkBand: val
+                          });
+                        }}
+                        className="w-10 h-4 px-1 text-center font-mono text-[11px] font-semibold text-emerald-400 bg-bg-app border border-border-main rounded focus:outline-none focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-text select-text"
+                      />
+                      <span className="text-zinc-500 text-[10px] font-semibold">px</span>
+                    </div>
                   </div>
                   <input
                     type="range"
