@@ -582,9 +582,9 @@ export function PresetCards() {
             </div>
           )}
 
-          <div className="flex gap-4 flex-wrap w-full">
+          <div className="flex flex-col gap-3 w-full">
             {/* Position Preset selector card */}
-            <div className="flex-grow flex-shrink-0 basis-[250px] p-3.5 rounded-xl border border-border-main bg-bg-panel flex flex-col gap-2.5">
+            <div className="w-full p-3.5 rounded-xl border border-border-main bg-bg-panel flex flex-col gap-2.5">
               <label className="text-xs font-semibold text-text-sub">{t("watermarkLocationPreset")}</label>
               <div className="grid grid-cols-2 gap-2">
                 {watermarkPresets.map((item) => (
@@ -606,7 +606,7 @@ export function PresetCards() {
             </div>
 
             {/* Sliders card */}
-            <div className="flex-grow flex-shrink-0 basis-[350px] p-3.5 rounded-xl border border-border-main bg-bg-panel flex flex-col gap-3">
+            <div className="w-full p-3.5 rounded-xl border border-border-main bg-bg-panel flex flex-col gap-3">
               {/* X and Y sliders */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">

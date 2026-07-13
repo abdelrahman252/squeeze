@@ -151,8 +151,8 @@ export function InteractivePreview() {
       useJobsStore.getState().updateJobOverrides(job.id, {
         removeWatermarkX: Math.round(coords.x),
         removeWatermarkY: Math.round(coords.y),
-        removeWatermarkW: 2,
-        removeWatermarkH: 2,
+        removeWatermarkW: 5,
+        removeWatermarkH: 5,
         removeWatermarkPreset: "custom",
       });
     }

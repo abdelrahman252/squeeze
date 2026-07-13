@@ -125,24 +125,24 @@ export default function App() {
                   <div className="flex flex-1 min-h-0 w-full px-3 pb-3 gap-3 overflow-hidden">
                     {/* Left Sidebar Column: File Queue and Settings */}
                     <div className="flex flex-col w-[350px] shrink-0 min-h-0 gap-3 overflow-y-auto pr-1">
-                      <FileList />
-                      <PresetCards />
+                      <FileList key="watermark-file-list" />
+                      <PresetCards key="watermark-preset-cards" />
                     </div>
                     
                     {/* Right Editor Column: Zoomable Preview & Output controls */}
                     <div className="flex flex-col flex-grow min-h-0 gap-3">
                       <InteractivePreview />
-                      <OutputControls />
+                      <OutputControls key="watermark-output-controls" />
                     </div>
                   </div>
                 ) : (
                   /* Standard single-column layout for all other modes */
                   <>
-                    <FileList />
+                    <FileList key="standard-file-list" />
                     <QueueTotalBanner />
                     <div className="px-3 pb-3 shrink-0">
-                      <PresetCards />
-                      <OutputControls />
+                      <PresetCards key="standard-preset-cards" />
+                      <OutputControls key="standard-output-controls" />
                     </div>
                   </>
                 )}
